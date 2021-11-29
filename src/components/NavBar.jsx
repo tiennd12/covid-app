@@ -2,8 +2,8 @@ import React from 'react'
 
 export const NavBar = () => {
         return (
-            <div>
-                <h1>Tra cứu tình trạng tiêm chủng</h1>
-            </div>
+            <nav>
+                <h1>TRA CỨU TÌNH TRẠNG TIÊM CHỦNG</h1>
+            </nav>
         )
 }
