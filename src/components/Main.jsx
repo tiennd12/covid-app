@@ -1,8 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export const Main = ({ inputPhone, setInputPhone, inputId, setInputId }) => {
   const inputPhoneHandler = (e) => {
-      setInputPhone(e.target.value);
+    setInputPhone(e.target.value);
   };
   const inputIdHandler = (e) => {
     setInputId(e.target.value);
@@ -19,7 +20,7 @@ export const Main = ({ inputPhone, setInputPhone, inputId, setInputId }) => {
 
   return (
     <div>
-      <form>
+      <form className="look-form">
         <input
           type="text"
           className="phone-input"
@@ -37,6 +38,11 @@ export const Main = ({ inputPhone, setInputPhone, inputId, setInputId }) => {
         <button className="submit-button" onClick={submitHandler}>
           Tra cứu
         </button>
+        <p>Hoặc đăng nhập   
+        <Link to="/login">
+          <span> tại đây</span>
+        </Link>
+        </p>
       </form>
     </div>
   );

@@ -9,6 +9,7 @@ import {
   Routes,
 } from "react-router-dom";
 import Login from "./components/Login";
+import Register from "./components/Register";
 
 function App() {
   const [inputPhone, setInputPhone] = useState("");
@@ -44,6 +45,7 @@ function App() {
               />
             }
           />
+          <Route path="/register" element={<Register />} ></Route>
         </Routes>
       </div>
     </Router>

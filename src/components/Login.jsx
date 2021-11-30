@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import Example from "./DatePicker";
 
 const Login = ({
   inputUsername,
@@ -6,16 +8,16 @@ const Login = ({
   inputPassword,
   setInputPassword,
 }) => {
-    const inputUsernameHandler = (e) => {
-        setInputUsername(e.target.value)
-    };
-    const inputPasswordHandler = (e) => {
-        setInputPassword(e.target.value)
-    };
-    const loginSubmitHandler = (e) => {
-        e.preventDefault();
-        console.log(inputUsername, inputPassword)
-    }
+  const inputUsernameHandler = (e) => {
+    setInputUsername(e.target.value);
+  };
+  const inputPasswordHandler = (e) => {
+    setInputPassword(e.target.value);
+  };
+  const loginSubmitHandler = (e) => {
+    e.preventDefault();
+    console.log(inputUsername, inputPassword);
+  };
 
   return (
     <div>
@@ -35,10 +37,16 @@ const Login = ({
           onChange={inputPasswordHandler}
           value={inputPassword}
         />
-        <button className="login-button" onClick={loginSubmitHandler} >Đăng Nhập</button>
+        <button className="login-button" onClick={loginSubmitHandler}>
+          Đăng Nhập
+        </button>
       </form>
+      <Link to="/register">
       <p>Tạo tài khoản mới</p>
-      <p>Quên mật khẩu?</p>
+      </Link>
+      <Link to="/recover">
+        <p>Quên mật khẩu?</p>
+      </Link>
     </div>
   );
 };
