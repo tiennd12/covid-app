@@ -13,6 +13,8 @@ import Login from "./components/Login";
 function App() {
   const [inputPhone, setInputPhone] = useState("");
   const [inputId, setInputId] = useState("");
+  const [inputUsername, setInputUsername] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
 
   return (
     <Router>
@@ -31,7 +33,17 @@ function App() {
             }
           ></Route>
 
-          <Route path="/login" element={<Login />} />
+          <Route
+            path="/login"
+            element={
+              <Login
+                inputUsername={inputUsername}
+                setInputUsername={setInputUsername}
+                inputPassword={inputPassword}
+                setInputPassword={setInputPassword}
+              />
+            }
+          />
         </Routes>
       </div>
     </Router>

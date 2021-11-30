@@ -1,10 +1,10 @@
 import React from "react";
 
 export const Main = ({ inputPhone, setInputPhone, inputId, setInputId }) => {
-  const phoneInputHandler = (e) => {
+  const inputPhoneHandler = (e) => {
       setInputPhone(e.target.value);
   };
-  const idInputHandler = (e) => {
+  const inputIdHandler = (e) => {
     setInputId(e.target.value);
   };
   const submitHandler = (e) => {
@@ -24,18 +24,18 @@ export const Main = ({ inputPhone, setInputPhone, inputId, setInputId }) => {
           type="text"
           className="phone-input"
           placeholder="Nhập số điện thoại"
-          onChange={phoneInputHandler}
+          onChange={inputPhoneHandler}
           value={inputPhone}
         />
         <input
           type="text"
           className="id-input"
           placeholder="Nhập số CMND/CCCD"
-          onChange={idInputHandler}
+          onChange={inputIdHandler}
           value={inputId}
         />
         <button className="submit-button" onClick={submitHandler}>
-          Gửi
+          Tra cứu
         </button>
       </form>
     </div>
