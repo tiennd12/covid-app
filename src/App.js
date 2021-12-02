@@ -12,40 +12,14 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 
 function App() {
-  const [inputPhone, setInputPhone] = useState("");
-  const [inputId, setInputId] = useState("");
-  const [inputUsername, setInputUsername] = useState("");
-  const [inputPassword, setInputPassword] = useState("");
-
   return (
     <Router>
       <div className="App">
         <NavBar />
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Main
-                inputPhone={inputPhone}
-                setInputPhone={setInputPhone}
-                inputId={inputId}
-                setInputId={setInputId}
-              />
-            }
-          ></Route>
-
-          <Route
-            path="/login"
-            element={
-              <Login
-                inputUsername={inputUsername}
-                setInputUsername={setInputUsername}
-                inputPassword={inputPassword}
-                setInputPassword={setInputPassword}
-              />
-            }
-          />
-          <Route path="/register" element={<Register />} ></Route>
+          <Route path="/" element={<Main />}></Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />}></Route>
         </Routes>
       </div>
     </Router>

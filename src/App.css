@@ -7,6 +7,11 @@ nav {
     display: flex;
 }
 
-.App {
-    text-align: center;
+nav a:hover {
+    color: white;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
 }

@@ -1,13 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Example from "./DatePicker";
 
-const Login = ({
-  inputUsername,
-  setInputUsername,
-  inputPassword,
-  setInputPassword,
-}) => {
+const Login = () => {
+  const [inputUsername, setInputUsername] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
+
   const inputUsernameHandler = (e) => {
     setInputUsername(e.target.value);
   };
@@ -42,7 +39,7 @@ const Login = ({
         </button>
       </form>
       <Link to="/register">
-      <p>Tạo tài khoản mới</p>
+        <p>Tạo tài khoản mới</p>
       </Link>
       <Link to="/recover">
         <p>Quên mật khẩu?</p>
