@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-export const Main = ({ inputPhone, setInputPhone, inputId, setInputId }) => {
+export const Main = () => {
+  const [inputPhone, setInputPhone] = useState("");
+  const [inputId, setInputId] = useState("");
+
   const inputPhoneHandler = (e) => {
     setInputPhone(e.target.value);
   };
@@ -38,10 +41,12 @@ export const Main = ({ inputPhone, setInputPhone, inputId, setInputId }) => {
         <button className="submit-button" onClick={submitHandler}>
           Tra cứu
         </button>
-        <p>Hoặc đăng nhập   
-        <Link to="/login">
-          <span> tại đây</span>
-        </Link>
+
+        <p>
+          <span>Hoặc đăng nhập </span>
+          <Link to="/login">
+            <span>tại đây</span>
+          </Link>
         </p>
       </form>
     </div>
