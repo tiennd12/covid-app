@@ -26,9 +26,9 @@ const db = getFirestore()
 
 // collection ref
 const colRef = collection(db, "Users")
+const loginRef = collection(db, "login")
+    // get collection data
 
-// get collection data
 
 
-
-export { app, db, colRef };
+export { app, db, colRef, loginRef };
