@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getDocs } from "@firebase/firestore";
-import { colRef } from "../firebase/firebase";
+import {addDoc, onSnapshot } from "@firebase/firestore";
+import { loginRef } from "../firebase/firebase";
 
 const Login = () => {
   const [inputUsername, setInputUsername] = useState("");
   const [inputPassword, setInputPassword] = useState("");
-  const [test, setTest] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
 
   const inputUsernameHandler = (e) => {
     setInputUsername(e.target.value);
@@ -17,17 +17,22 @@ const Login = () => {
   const loginSubmitHandler = (e) => {
     e.preventDefault();
     console.log(inputUsername, inputPassword);
+
+    addDoc(loginRef, {
+      username: inputUsername,
+      password: inputPassword
+    });
+    setInputUsername("");
+    setInputPassword("");
   };
 
   useEffect(() => {
-    console.log("lna ngu vl");
-    getDocs(colRef).then((snapshot) => {
+    onSnapshot(loginRef, (snapshot) => {
       let users = []
       snapshot.docs.forEach((doc) => {
         users.push({ ...doc.data(), id:doc.id })
-        setTest(users)
-        console.log(test, users)
       })
+      setUserInfo(users)
     });
   }, []);
  
@@ -59,9 +64,9 @@ const Login = () => {
       <Link to="/recover">
         <p>Quên mật khẩu?</p>
       </Link>
-      {test && test.map((user) => (
+      {userInfo && userInfo.map((user) => (
         <div  key={user.id}>
-        <h1> { user.name }</h1>
+        <h1> { user.username }</h1>
         </div>
       ))}
     </div>
