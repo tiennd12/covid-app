@@ -1,12 +1,34 @@
 import React, { useState } from "react";
 
 const Register = () => {
+    const [inputEmail, setInputEmail] = useState("");
+    const [inputPassword, setInputPassword] = useState("");
+    const [inputRepeatPassword, setInputRepeatPassword] = useState("");
+    const [inputPhone, setInputPhone] = useState("");
+    const [inputDate, setInputDate] = useState("");
+
+    const inputEmailHandler = (e) => {
+      setInputEmail(e.target.value);
+    };
+    const inputPasswordHandler = (e) => {
+      setInputPassword(e.target.value);
+    };
+    const inputRepeatPasswordHandler = (e) => {
+      setInputRepeatPassword(e.target.value);
+    };
+    const inputPhoneHandler = (e) => {
+      setInputPhone(e.target.value);
+    };
+    const inputDateHandler = (e) => {
+      setInputDate(e.target.value);
+    };
+
   return (
     <div>
       <form className="register-form">
         <div>
           <label>Email</label>
-          <input type="text" className="register-id" placeholder="Email" />
+          <input type="text" className="register-id" placeholder="Email" onChange={inputEmailHandler} value={inputEmail} />
         </div>
         <div>
           <label>Mật khẩu</label>
@@ -14,6 +36,8 @@ const Register = () => {
             type="password"
             className="register-password"
             placeholder="Mật khẩu"
+            onChange={inputPasswordHandler}
+            value={inputPassword}
           />
         </div>
         <div>
@@ -22,14 +46,18 @@ const Register = () => {
             type="password"
             className="register-password-repeat"
             placeholder="Nhập lại mật khẩu"
+            onChange={inputRepeatPasswordHandler}
+            value={inputRepeatPassword}
           />
         </div>
         <div>
           <label>Số điện thoại</label>
           <input
-            type="text"
+            type="number"
             className="register-phone"
             placeholder="Số điện thoại"
+            onChange={inputPhoneHandler}
+            value={inputPhone}
           />
         </div>
         <div>
