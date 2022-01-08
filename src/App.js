@@ -1,10 +1,8 @@
 import "./App.css";
-import { useState } from "react";
 import { NavBar } from "./components/NavBar";
 import { Main } from "./components/Main";
 import {
   BrowserRouter as Router,
-  Switch,
   Route,
   Routes,
 } from "react-router-dom";
@@ -18,7 +16,7 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Main />}></Route>
-          <Route path="/login" element={<Login />} />
+          {<Route path="/login" element={<Login />} />}
           <Route path="/register" element={<Register />}></Route>
         </Routes>
       </div>

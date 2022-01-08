@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import {addDoc, onSnapshot } from "@firebase/firestore";
-import { loginRef } from "../firebase/firebase";
+import { addDoc, onSnapshot } from "@firebase/firestore";
+import { loginRef, auth } from "../firebase/firebase";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const Login = () => {
   const [inputUsername, setInputUsername] = useState("");
@@ -17,25 +19,26 @@ const Login = () => {
   const loginSubmitHandler = (e) => {
     e.preventDefault();
     console.log(inputUsername, inputPassword);
-
     addDoc(loginRef, {
       username: inputUsername,
-      password: inputPassword
+      password: inputPassword,
     });
     setInputUsername("");
     setInputPassword("");
   };
 
+
+
   useEffect(() => {
     onSnapshot(loginRef, (snapshot) => {
-      let users = []
+      let users = [];
       snapshot.docs.forEach((doc) => {
-        users.push({ ...doc.data(), id:doc.id })
-      })
-      setUserInfo(users)
+        users.push({ ...doc.data(), id: doc.id });
+      });
+      setUserInfo(users);
     });
   }, []);
- 
+
   return (
     <div>
       <h1>Đăng nhập</h1>
@@ -64,13 +67,15 @@ const Login = () => {
       <Link to="/recover">
         <p>Quên mật khẩu?</p>
       </Link>
-      {userInfo && userInfo.map((user) => (
-        <div  key={user.id}>
-        <h1> { user.username }</h1>
-        </div>
-      ))}
+      {userInfo &&
+        userInfo.map((user) => (
+          <div key={user.id}>
+            <h1> {user.username}</h1>
+          </div>
+        ))}
     </div>
   );
 };
 
 export default Login;
+

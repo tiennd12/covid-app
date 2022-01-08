@@ -1,47 +1,96 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Name from "./Name";
+import { addDoc } from "@firebase/firestore";
+import { dataRef } from "../firebase/firebase";
 
 const Register = () => {
   const [inputEmail, setInputEmail] = useState("");
-  const [inputPassword, setInputPassword] = useState("");
-  const [inputRepeatPassword, setInputRepeatPassword] = useState("");
+  const [inputName, setInputName] = useState("");
   const [inputPhone, setInputPhone] = useState("");
   const [inputDate, setInputDate] = useState("");
-  const [inputCity, setInputCity] = useState([]);
-  const [inputCityCode, setInputCityCode] = useState("");
-  const [inputDistrict, setInputDistrict] = useState([]);
 
+  const [fetchData, setFetchData] = useState([]);
+  const [inputCity, setInputCity] = useState("");
+
+  const [district, setDistrict] = useState([]);
+  const [inputDistrict, setInputDistrict] = useState("");
+
+  const [ward, setWard] = useState([]);
+  const [inputWard, setInputWard] = useState("");
 
   const inputEmailHandler = (e) => {
     setInputEmail(e.target.value);
   };
-  const inputPasswordHandler = (e) => {
-    setInputPassword(e.target.value);
-  };
-  const inputRepeatPasswordHandler = (e) => {
-    setInputRepeatPassword(e.target.value);
-  };
-  const inputPhoneHandler = (e) => {
-    setInputPhone(e.target.value);
+  const inputNameHandler = (e) => {
+    setInputName(e.target.value);
   };
   const inputDateHandler = (e) => {
     setInputDate(e.target.value);
   };
-  const inputCityCodeHandler = (e) => {
-    setInputCityCode(e.target.value);
-  }
+
+  const inputSubmithandler = (e) => {
+    e.preventDefault();
+    if (district && ward) {
+      addDoc(dataRef, {
+        city: district.name,
+        district: ward.name,
+        ward: inputWard,
+        name: inputName,
+        email: inputEmail,
+        phone: inputPhone,
+        dob: inputDate,
+      })
+    }
+    // add data to collection
+
+    setInputEmail("");
+    setInputPhone("");
+    setInputDate("");
+    setInputName("");
+  };
+
+  const cityHandler = (e) => {
+    setInputCity(e.target.value);
+    setInputDistrict("");
+    setInputWard("");
+  };
+
+  const districtHandler = (e) => {
+    setInputDistrict(e.target.value);
+    setInputWard("");
+  };
+
+  const fetchDistrict = async () => {
+    const { data } = await axios.get(
+      `https://provinces.open-api.vn/api/p/${inputCity}?depth=2`
+    );
+    return setDistrict(data);
+  };
+
+  const fetchWard = async () => {
+    if (inputDistrict) {
+      const { data } = await axios.get(
+        `https://provinces.open-api.vn/api/d/${inputDistrict}?depth=2`
+      );
+      return setWard(data);
+    }
+  };
+
+  console.log(typeof cityName);
+
+  // const fetchExactWard = async
 
   useEffect(() => {
     axios.get("https://provinces.open-api.vn/api/?depth=1").then((result) => {
       const { data } = result;
-      
-      setInputCity(data);
-      // data.map((val) => {setInputCityCode(val.code)})
-    });
-  }, []);
 
-  console.log(inputCityCode)
+      setFetchData(data);
+    });
+    fetchDistrict();
+    fetchWard();
+  }, [inputCity, inputDistrict]);
+
+  console.log(inputCity, inputDistrict, inputWard, ward.name, district.name);
 
   return (
     <div>
@@ -57,23 +106,13 @@ const Register = () => {
           />
         </div>
         <div>
-          <label>Mật khẩu: </label>
+          <label>Họ và tên: </label>
           <input
-            type="password"
-            className="register-password"
-            placeholder="Mật khẩu"
-            onChange={inputPasswordHandler}
-            value={inputPassword}
-          />
-        </div>
-        <div>
-          <label>Nhập lại mật khẩu: </label>
-          <input
-            type="password"
-            className="register-password-repeat"
-            placeholder="Nhập lại mật khẩu"
-            onChange={inputRepeatPasswordHandler}
-            value={inputRepeatPassword}
+            type="text"
+            className="register-name"
+            placeholder="Họ và tên"
+            onChange={inputNameHandler}
+            value={inputName}
           />
         </div>
         <div>
@@ -82,7 +121,7 @@ const Register = () => {
             type="number"
             className="register-phone"
             placeholder="Số điện thoại"
-            onChange={inputPhoneHandler}
+            onChange={(e) => setInputPhone(e.target.value)}
             value={inputPhone}
           />
         </div>
@@ -97,29 +136,62 @@ const Register = () => {
         </div>
         <div>
           <label>Thành phố</label>
-          <select className="register-city" onChange={inputCityCodeHandler} >
-            {inputCity && inputCity.map((val) => (
-              <option key={val.code}>{val.name}</option>
-            ))}
+          <select
+            className="register-city"
+            onChange={cityHandler}
+            value={inputCity}
+          >
+            <option value="" disabled>
+              Chọn thành phố
+            </option>
+            {fetchData &&
+              fetchData.map((val) => (
+                <option key={val.code} value={val.code}>
+                  {val.name}
+                </option>
+              ))}
           </select>
         </div>
         <div>
           <label>Quận/Huyện</label>
-          <select className="register-district" onChange={inputCityCodeHandler} >
-            {inputCity && inputCity.map((val) => (
-              <Name val={val} />
-            ))}
+          <select
+            className="register-district"
+            onChange={districtHandler}
+            value={inputDistrict}
+          >
+            <option value="" disabled>
+              Chọn quận huyện
+            </option>
+            {district.districts &&
+              district.districts.map((val) => (
+                <option key={val.code} value={val.code}>
+                  {val.name}
+                </option>
+              ))}
           </select>
         </div>
         <div>
           <label>Phường/Xã</label>
-          <input
-            type="text"
-            className="register-ward"
-            placeholder="Phường/Xã"
-          />
+          <select
+            className="register-district"
+            onChange={(event) => setInputWard(event.target.value)}
+            value={inputWard}
+          >
+            <option value="" disabled>
+              Chọn phường xã
+            </option>
+            {ward.wards &&
+              ward.wards.map((val) => (
+                <option key={val.code} value={val.name}>
+                  {val.name}
+                </option>
+              ))}
+          </select>
         </div>
-        <button>Đăng ký</button>
+        <div id="sign-in-button"></div>
+        <button type="submit" onClick={inputSubmithandler}>
+          Đăng ký
+        </button>
       </form>
     </div>
   );
