@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection } from "firebase/firestore"
+import { getFirestore, collection, query, where } from "firebase/firestore"
 import { getAuth } from "firebase/auth";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -31,6 +31,8 @@ auth.languageCode = 'en';
 const colRef = collection(db, "Users")
 const loginRef = collection(db, "login")
 const dataRef = collection(db, "userData")
-    // get collection data
 
-export { app, db, colRef, loginRef, dataRef, auth };
+// get collection data
+const queryGetUserInfoByEmail = (email) => query(dataRef, where("email", "==", email))
+
+export { app, db, colRef, loginRef, dataRef, auth, queryGetUserInfoByEmail };

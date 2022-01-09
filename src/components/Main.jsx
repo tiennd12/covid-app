@@ -6,16 +6,15 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { auth, dataRef } from "../firebase/firebase";
+import { auth, queryGetUserInfoByEmail, dataRef } from "../firebase/firebase";
 import { onSnapshot, doc, setDoc } from "@firebase/firestore";
 import { db } from "../firebase/firebase";
 
 export const Main = () => {
-  const [userInfo, setUserInfo] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
   const [userEmail, setUserEmail] = useState("");
-  const [username, setUsername] = useState("")
-  const [isLoggedIn, setIsLoggedIn] = useState({});
-
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const provider = new GoogleAuthProvider();
   const navigate = useNavigate();
 
   const loginHandler = (e) => {
@@ -24,14 +23,14 @@ export const Main = () => {
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const user = result.user;
-        // ...
+        console.log(userInfo);
         for (let i = 0; i < userInfo.length; i++) {
           if (user.email === userInfo[i].email) {
-            // console.log("I found a matching one")
+            console.log("I found a matching one");
             navigate("/");
           } else {
             navigate("/register");
-            // console.log("there's no match")
+            console.log("there's no match");
           }
           break;
           // console.log(user.email, userInfo[i].email)
@@ -54,32 +53,16 @@ export const Main = () => {
       });
   };
 
-    const getEmail = async () => {
-      if(isLoggedIn){
-        const email = isLoggedIn.email
-        return setUserEmail(email)
-      }
-
-    }
-
   // firebase
   onAuthStateChanged(auth, (currentUser) => {
     if (currentUser) {
       setIsLoggedIn(currentUser);
+      setUserEmail(currentUser.email);
     } else {
       setIsLoggedIn(null);
     }
   });
-  console.log(auth.currentUser);
-
-  const provider = new GoogleAuthProvider();
-
-  if (auth.currentUser) {
-    const { uid, photoURL, displayName, accessToken } = auth.currentUser;
-  //  console.log(accessToken);
-  }
-
-
+  // console.log(isLoggedIn);
 
   useEffect(() => {
     onSnapshot(dataRef, (snapshot) => {
@@ -89,36 +72,30 @@ export const Main = () => {
       });
       setUserInfo(users);
     });
-
-    for (let i = 0; i < userInfo.length; i++) {
-      if (userEmail === userInfo[i].email){
-        setUsername(userInfo[i].name)
-        // console.log(username)
-        setDoc(doc(db, "userData", userInfo[i].id), {
-          ...userInfo[i],
-          accessToken: auth.currentUser.accessToken
-        })
-      }
-      break;
+    
+    if (isLoggedIn) {
+      onSnapshot(queryGetUserInfoByEmail(isLoggedIn.email), (snapshot) => {
+        snapshot.forEach((data) => setUserInfo(data.data()));
+      });
     }
-    getEmail();
 
 
-  }, []);
+    // for (let i = 0; i < userInfo.length; i++) {
+    //   if (userEmail === userInfo[i].email){
+    //     // console.log(username)
+    //     setDoc(doc(db, "userData", userInfo[i].id), {
+    //       ...userInfo[i],
+    //       accessToken: auth.currentUser.accessToken
+    //     })
+    //   }
+    // }
+  }, [isLoggedIn]);
 
   return (
     <div>
       {isLoggedIn ? (
         <div>
-          {/* {userInfo &&
-            userInfo.map((user) => (
-              <div key={user.id}>
-                <h1> Xin chào {user.name}</h1>
-              </div>
-            ))} */}
-          <div >
-            <h1> Xin chào {username}</h1>
-          </div>
+          <div>{userInfo && <h1> Xin chào {userInfo?.name}</h1>}</div>
           <button className="btn-logout" onClick={signoutHandler}>
             Đăng xuất
           </button>
