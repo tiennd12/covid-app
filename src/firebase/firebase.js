@@ -35,4 +35,6 @@ const dataRef = collection(db, "userData")
 // get collection data
 const queryGetUserInfoByEmail = (email) => query(dataRef, where("email", "==", email))
 
-export { app, db, colRef, loginRef, dataRef, auth, queryGetUserInfoByEmail };
+const queryGetUserInfoByPhone = (phone) => query(dataRef, where("phone", "==", phone))
+
+export { app, db, colRef, loginRef, dataRef, auth, queryGetUserInfoByEmail, queryGetUserInfoByPhone };
