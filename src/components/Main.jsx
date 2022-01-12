@@ -8,7 +8,6 @@ import {
 } from "firebase/auth";
 import { auth, queryGetUserInfoByEmail, dataRef } from "../firebase/firebase";
 import { onSnapshot, doc, setDoc } from "@firebase/firestore";
-import { db } from "../firebase/firebase";
 
 export const Main = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -16,6 +15,8 @@ export const Main = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const provider = new GoogleAuthProvider();
   const navigate = useNavigate();
+
+ 
 
   const loginHandler = (e) => {
     e.preventDefault();
@@ -65,6 +66,7 @@ export const Main = () => {
   // console.log(isLoggedIn);
 
   useEffect(() => {
+    console.log(userInfo)
     onSnapshot(dataRef, (snapshot) => {
       let users = [];
       snapshot.docs.forEach((doc) => {
@@ -78,17 +80,6 @@ export const Main = () => {
         snapshot.forEach((data) => setUserInfo(data.data()));
       });
     }
-
-
-    // for (let i = 0; i < userInfo.length; i++) {
-    //   if (userEmail === userInfo[i].email){
-    //     // console.log(username)
-    //     setDoc(doc(db, "userData", userInfo[i].id), {
-    //       ...userInfo[i],
-    //       accessToken: auth.currentUser.accessToken
-    //     })
-    //   }
-    // }
   }, [isLoggedIn]);
 
   return (
