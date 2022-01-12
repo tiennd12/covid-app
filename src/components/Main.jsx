@@ -7,7 +7,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth, queryGetUserInfoByEmail, dataRef } from "../firebase/firebase";
-import { onSnapshot, doc, setDoc } from "@firebase/firestore";
+import { onSnapshot, doc, setDoc, orderBy } from "@firebase/firestore";
 
 export const Main = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -15,8 +15,6 @@ export const Main = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const provider = new GoogleAuthProvider();
   const navigate = useNavigate();
-
- 
 
   const loginHandler = (e) => {
     e.preventDefault();
@@ -66,15 +64,14 @@ export const Main = () => {
   // console.log(isLoggedIn);
 
   useEffect(() => {
-    console.log(userInfo)
-    onSnapshot(dataRef, (snapshot) => {
+    onSnapshot(dataRef, orderBy("name", "desc"), (snapshot) => {
       let users = [];
       snapshot.docs.forEach((doc) => {
         users.push({ ...doc.data(), id: doc.id });
       });
       setUserInfo(users);
     });
-    
+
     if (isLoggedIn) {
       onSnapshot(queryGetUserInfoByEmail(isLoggedIn.email), (snapshot) => {
         snapshot.forEach((data) => setUserInfo(data.data()));

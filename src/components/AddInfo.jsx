@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { onSnapshot } from "@firebase/firestore";
-import { auth, queryGetUserInfoByPhone, dataRef } from "../firebase/firebase";
+import { onSnapshot, setDoc, doc } from "@firebase/firestore";
+import {
+  auth,
+  queryGetUserInfoByPhone,
+  dataRef,
+  db,
+} from "../firebase/firebase";
 
 const AddInfo = () => {
   const [phone, setPhone] = useState("");
@@ -9,7 +14,7 @@ const AddInfo = () => {
   const [times, setTimes] = useState("");
   const [totalUserInfo, setTotalUserInfo] = useState("");
   const [userInfo, setUserInfo] = useState("");
-  console.log(times)
+  const [userId, setUserId] = useState("");
 
   const findInfoByPhoneHandler = (e) => {
     e.preventDefault();
@@ -19,8 +24,28 @@ const AddInfo = () => {
         snapshot.forEach((data) => setUserInfo(data.data()));
       });
     }
+    if (auth.currentUser) {
+      for (let i = 0; i < totalUserInfo.length; i++) {
+        if (auth.currentUser.email === totalUserInfo[i].email) {
+          setUserId(totalUserInfo[i].id);
+        } 
+        break;
+      }
+    }
+  };
 
-    console.log(userInfo);
+  const submitInfoHanlder = (e) => {
+    e.preventDefault();
+
+    setDoc(doc(db, "userData", userId), {
+      ...userInfo,
+      injectDate: date,
+      injectPlace: place,
+      numberOfInjections: times,
+    });
+    setDate("");
+    setPlace("");
+    setTimes("");
   };
 
   useEffect(() => {
@@ -31,8 +56,8 @@ const AddInfo = () => {
       });
       setTotalUserInfo(users);
     });
-    console.log(totalUserInfo);
   }, []);
+
 
   return (
     <div>
@@ -53,7 +78,7 @@ const AddInfo = () => {
             </div>
             <div>
               <input
-                type="text"
+                type="date"
                 placeholder="Ngày tiêm"
                 className="addInfo-date"
                 value={date}
@@ -61,15 +86,23 @@ const AddInfo = () => {
               />
             </div>
             <div>
-                <select className="addInfo-times" onChange={(e)=>setTimes(e.target.value)} value={times} >
-                    <option value="" disabled>Mũi tiêm số</option>
-                    <option value="1st">Mũi 1</option>
-                    <option value="2nd">Mũi 2</option>
-                    <option value="3rd">Mũi 3</option>
-                </select>
+              <select
+                className="addInfo-times"
+                onChange={(e) => setTimes(e.target.value)}
+                value={times}
+              >
+                <option value="" disabled>
+                  Mũi tiêm số
+                </option>
+                <option value="1 mũi">Mũi 1</option>
+                <option value="2 mũi">Mũi 2</option>
+                <option value="3 mũi">Mũi 3</option>
+              </select>
             </div>
             <div>
-                <button></button>
+              <button type="submit" onClick={submitInfoHanlder}>
+                Gửi
+              </button>
             </div>
           </div>
         </div>
