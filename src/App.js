@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import AddInfo from "./components/AddInfo";
+import AddRole from "./components/AddRole";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />}></Route>
           <Route path="/addinfo" element={<AddInfo />}></Route>
+          <Route path="/addrole" element={<AddRole />}></Route>
         </Routes>
       </div>
     </Router>

@@ -48,6 +48,8 @@ const AddInfo = () => {
     setTimes("");
   };
 
+  console.log(userInfo)
+
   useEffect(() => {
     onSnapshot(dataRef, (snapshot) => {
       let users = [];
@@ -57,6 +59,7 @@ const AddInfo = () => {
       setTotalUserInfo(users);
     });
   }, []);
+
 
 
   return (
