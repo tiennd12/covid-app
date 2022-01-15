@@ -28,7 +28,7 @@ const AddInfo = () => {
       for (let i = 0; i < totalUserInfo.length; i++) {
         if (auth.currentUser.email === totalUserInfo[i].email) {
           setUserId(totalUserInfo[i].id);
-        } 
+        }
         break;
       }
     }
@@ -48,7 +48,7 @@ const AddInfo = () => {
     setTimes("");
   };
 
-  console.log(userInfo)
+  console.log(userInfo);
 
   useEffect(() => {
     onSnapshot(dataRef, (snapshot) => {
@@ -60,14 +60,26 @@ const AddInfo = () => {
     });
   }, []);
 
-
-
   return (
     <div>
       {userInfo ? (
         <div>
           <div>
-            <h3>{userInfo.name} </h3>
+            <div>
+              <h3>Họ và tên: {userInfo.name} </h3>
+            </div>
+            <div>
+              <h3>Số điện thoại: {userInfo.phone} </h3>
+            </div>
+            <div>
+              <h3>Địa chỉ email: {userInfo.email} </h3>
+            </div>
+            <div>
+              <h3>Ngày sinh: {userInfo.dob} </h3>
+            </div>
+            <div>
+              <h3>Số mũi đã tiêm: {userInfo.numberOfInjections} </h3>
+            </div>
           </div>
           <div>
             <div>
