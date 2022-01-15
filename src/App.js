@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import AddInfo from "./components/AddInfo";
 import AddRole from "./components/AddRole";
+import RequestChange from "./components/RequestChange";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/register" element={<Register />}></Route>
           <Route path="/addinfo" element={<AddInfo />}></Route>
           <Route path="/addrole" element={<AddRole />}></Route>
+          <Route path="/requestchange" element={<RequestChange />}></Route>
         </Routes>
       </div>
     </Router>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, NavLink } from "react-router-dom";
+
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -84,9 +86,12 @@ export const Main = () => {
       {isLoggedIn ? (
         <div>
           <div>{userInfo && <h1> Xin chào {userInfo?.name}</h1>}</div>
-          <button className="btn-logout" onClick={signoutHandler}>
-            Đăng xuất
-          </button>
+          <div>Để yêu cầu thay đổi thông tin, vui lòng bấm <Link to="/requestchange">vào đây</Link></div>
+          <div>
+            <button className="btn-logout" onClick={signoutHandler}>
+              Đăng xuất
+            </button>
+          </div>
         </div>
       ) : (
         <p>
