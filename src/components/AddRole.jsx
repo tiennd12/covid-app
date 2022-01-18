@@ -3,18 +3,31 @@ import { useNavigate } from "react-router-dom";
 import { onSnapshot, setDoc, doc } from "@firebase/firestore";
 import {
   auth,
+  queryGetUserInfoByEmail,
   queryGetUserInfoByPhone,
   dataRef,
   db,
 } from "../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 const AddRole = () => {
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("");
   const [totalUserInfo, setTotalUserInfo] = useState("");
   const [userInfo, setUserInfo] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [userId, setUserId] = useState("");
   const [userRole, setUserRole] = useState("");
+
+
+  onAuthStateChanged(auth, (currentUser) => {
+    if (currentUser) {
+      setUserEmail(currentUser.email);
+      onSnapshot(queryGetUserInfoByEmail(userEmail), (snapshot) => {
+        snapshot.forEach((data) => setUserRole(data.data().assignedRole));
+      });
+    }
+  });
 
   const navigate = useNavigate();
 
@@ -23,12 +36,15 @@ const AddRole = () => {
 
     if (totalUserInfo) {
       onSnapshot(queryGetUserInfoByPhone(phone), (snapshot) => {
-        snapshot.forEach((data) => setUserInfo(data.data()));
+        snapshot.forEach((data) => {
+          setUserInfo(data.data())
+          setUserId(data.id)
+        });
       });
     }
   };
 
-  const submitInfoHanlder = (e) => {
+  const submitInfoHandler = (e) => {
     e.preventDefault();
 
     setDoc(doc(db, "userData", userId), {
@@ -44,17 +60,6 @@ const AddRole = () => {
   };
 
   useEffect(() => {
-    const fetchUserStatus = () => {
-      if (auth.currentUser) {
-        for (let i = 0; i < totalUserInfo.length; i++) {
-          if (auth.currentUser.email === totalUserInfo[i].email) {
-            setUserId(totalUserInfo[i].id);
-            setUserRole(totalUserInfo[i].assignedRole);
-          }
-          break;
-        }
-      }
-    };
     onSnapshot(dataRef, (snapshot) => {
       let users = [];
       snapshot.docs.forEach((doc) => {
@@ -62,10 +67,12 @@ const AddRole = () => {
       });
       setTotalUserInfo(users);
     });
-    fetchUserStatus();
-    console.log(userRole);
-  }, [userId, userRole]);
+  }, []);
 
+  if(!userRole){
+    return <div>Loading</div>
+  }
+  console.log(userId);
   return (
     <div>
       {userRole === "admin" ? (
@@ -102,7 +109,7 @@ const AddRole = () => {
                 </select>
               </div>
               <div>
-                <button type="submit" onClick={submitInfoHanlder}>
+                <button type="submit" onClick={submitInfoHandler}>
                   Gửi
                 </button>
               </div>

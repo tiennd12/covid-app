@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import axios from "axios";
 import { addDoc } from "@firebase/firestore";
 import { dataRef } from "../firebase/firebase";
+import { auth } from "../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 const Register = () => {
+  const navigate = useNavigate();
+
+  const { register, handleSubmit, formState: {errors} } = useForm();
+
   const [inputEmail, setInputEmail] = useState("");
-  const [inputName, setInputName] = useState("");
-  const [inputPhone, setInputPhone] = useState("");
-  const [inputDate, setInputDate] = useState("");
+  // const [inputName, setInputName] = useState("");
+  // const [inputPhone, setInputPhone] = useState("");
+  // const [inputDate, setInputDate] = useState("");
+  // const [inputAddress, setInputAddress] = useState("");
 
   const [fetchData, setFetchData] = useState([]);
   const [inputCity, setInputCity] = useState("");
@@ -18,36 +27,41 @@ const Register = () => {
   const [ward, setWard] = useState([]);
   const [inputWard, setInputWard] = useState("");
 
+  onAuthStateChanged(auth, (currentUser) => {
+    if (currentUser) {
+      setInputEmail(currentUser.email);
+    }
+
+  });
+
   const inputEmailHandler = (e) => {
     setInputEmail(e.target.value);
   };
-  const inputNameHandler = (e) => {
-    setInputName(e.target.value);
-  };
-  const inputDateHandler = (e) => {
-    setInputDate(e.target.value);
-  };
+  // const inputNameHandler = (e) => {
+  //   setInputName(e.target.value);
+  // };
+  // const inputDateHandler = (e) => {
+  //   setInputDate(e.target.value);
+  // };
 
-  const inputSubmithandler = (e) => {
-    e.preventDefault();
-    if (district && ward) {
-      addDoc(dataRef, {
-        city: district.name,
-        district: ward.name,
-        ward: inputWard,
-        name: inputName,
-        email: inputEmail,
-        phone: inputPhone,
-        dob: inputDate,
-      })
-    }
-    // add data to collection
+  // const inputSubmithandler = async (e) => {
+  //   e.preventDefault();
 
-    setInputEmail("");
-    setInputPhone("");
-    setInputDate("");
-    setInputName("");
-  };
+  //   // add data to collection
+
+  //   setInputEmail("");
+  //   setInputPhone("");
+  //   setInputDate("");
+  //   setInputName("");
+  //   setInputAddress("");
+  // };
+
+  // const phoneHandler = (e) => {
+  //   let reg = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
+  //   if (reg.test(e.target.value)) {
+  //     setInputPhone(e.target.value);
+  //   }
+  // };
 
   const cityHandler = (e) => {
     setInputCity(e.target.value);
@@ -76,7 +90,7 @@ const Register = () => {
     }
   };
 
-  console.log(typeof cityName);
+  // console.log(typeof cityName);
 
   // const fetchExactWard = async
 
@@ -90,11 +104,30 @@ const Register = () => {
     fetchWard();
   }, [inputCity, inputDistrict]);
 
-  console.log(inputCity, inputDistrict, inputWard, ward.name, district.name);
-
   return (
     <div>
-      <form className="register-form">
+      <form
+        className="register-form"
+        onSubmit={handleSubmit((data) => {
+          if (district && ward) {
+            const updateData =  addDoc(dataRef, {
+              city: district.name,
+              district: ward.name,
+              ward: inputWard,
+              name: data.inputName,
+              email: inputEmail,
+              phone: data.inputPhone,
+              dob: data.inputDate,
+              address: data.inputAddress,
+            });
+            if (updateData) {
+              window.alert("Đăng kí thành công");
+              navigate("/");
+            }
+          }
+          console.log(data, district.name);
+        })}
+      >
         <div>
           <label>Email: </label>
           <input
@@ -103,36 +136,35 @@ const Register = () => {
             placeholder="Email"
             onChange={inputEmailHandler}
             value={inputEmail}
+            disabled
           />
         </div>
         <div>
           <label>Họ và tên: </label>
           <input
-            type="text"
-            className="register-name"
+            {...register("inputName", { required: "Điền tên" })}
             placeholder="Họ và tên"
-            onChange={inputNameHandler}
-            value={inputName}
+            className="register-name"
           />
+          <span> {errors.inputName?.message}</span>
         </div>
         <div>
           <label>Số điện thoại: </label>
           <input
-            type="number"
             className="register-phone"
             placeholder="Số điện thoại"
-            onChange={(e) => setInputPhone(e.target.value)}
-            value={inputPhone}
+            {...register("inputPhone", { required: "Điền số điện thoại" })}
           />
+          <span> {errors.inputPhone?.message}</span>
         </div>
         <div>
           <label>Ngày sinh: </label>
           <input
             type="date"
             className="register-dob"
-            onChange={inputDateHandler}
-            value={inputDate}
+            {...register("inputDate", { required: "Điền ngày tháng năm sinh" })}
           />
+          <span> {errors.inputDate?.message}</span>
         </div>
         <div>
           <label>Thành phố</label>
@@ -188,13 +220,20 @@ const Register = () => {
               ))}
           </select>
         </div>
+        <div>
+          <label>Địa chỉ: </label>
+          <input
+            placeholder="Địa chỉ"
+            {...register("inputAddress", { required: "Điền địa chỉ" })}
+          />
+          <span> {errors.inputAddress?.message}</span>
+        </div>
         <div id="sign-in-button"></div>
-        <button type="submit" onClick={inputSubmithandler}>
-          Đăng ký
-        </button>
+        <button type="submit">Đăng ký</button>
       </form>
     </div>
   );
 };
 
 export default Register;
+//onClick={inputSubmithandler}

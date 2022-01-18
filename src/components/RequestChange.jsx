@@ -31,6 +31,9 @@ const RequestChange = () => {
             <input type="date" />
           </div>
           {/* <div>Địa điểm tiêm: </div> */}
+          <div>
+            <button>Gửi</button>
+          </div>
         </form>
       </div>
     </div>

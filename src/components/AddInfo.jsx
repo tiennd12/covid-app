@@ -48,7 +48,7 @@ const AddInfo = () => {
     setTimes("");
   };
 
-  console.log(userInfo);
+  console.log(userId);
 
   useEffect(() => {
     onSnapshot(dataRef, (snapshot) => {
