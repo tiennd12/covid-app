@@ -2,19 +2,22 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { addDoc } from "@firebase/firestore";
-import { dataRef } from "../firebase/firebase";
-import { auth } from "../firebase/firebase";
+import { addDoc, setDoc, onSnapshot, doc } from "@firebase/firestore";
+import { dataRef, injectionRef } from "../firebase/firebase";
+import { auth, queryGetUserInfoByPhone, db } from "../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 const Register = () => {
   const navigate = useNavigate();
 
-  const { register, handleSubmit, formState: {errors} } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const [inputEmail, setInputEmail] = useState("");
   // const [inputName, setInputName] = useState("");
-  // const [inputPhone, setInputPhone] = useState("");
   // const [inputDate, setInputDate] = useState("");
   // const [inputAddress, setInputAddress] = useState("");
 
@@ -31,7 +34,6 @@ const Register = () => {
     if (currentUser) {
       setInputEmail(currentUser.email);
     }
-
   });
 
   const inputEmailHandler = (e) => {
@@ -110,7 +112,7 @@ const Register = () => {
         className="register-form"
         onSubmit={handleSubmit((data) => {
           if (district && ward) {
-            const updateData =  addDoc(dataRef, {
+            const updateData = addDoc(dataRef, {
               city: district.name,
               district: ward.name,
               ward: inputWard,
@@ -119,7 +121,14 @@ const Register = () => {
               phone: data.inputPhone,
               dob: data.inputDate,
               address: data.inputAddress,
+              assignedRole: "user",
             });
+
+            addDoc(injectionRef, {
+              numberOfInjections: "Chưa tiêm",
+              phone: data.inputPhone,
+            });
+
             if (updateData) {
               window.alert("Đăng kí thành công");
               navigate("/");

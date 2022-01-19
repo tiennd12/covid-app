@@ -31,10 +31,11 @@ auth.languageCode = 'en';
 const colRef = collection(db, "Users")
 const loginRef = collection(db, "login")
 const dataRef = collection(db, "userData")
+const injectionRef = collection(db, "injectionData")
 
 // get collection data
 const queryGetUserInfoByEmail = (email) => query(dataRef, where("email", "==", email))
 
-const queryGetUserInfoByPhone = (phone) => query(dataRef, where("phone", "==", phone))
+const queryGetUserInfoByPhone = (collection, phone) => query(collection, where("phone", "==", phone))
 
-export { app, db, colRef, loginRef, dataRef, auth, queryGetUserInfoByEmail, queryGetUserInfoByPhone };
+export { app, db, colRef, loginRef, dataRef, injectionRef, auth, queryGetUserInfoByEmail, queryGetUserInfoByPhone };

@@ -35,7 +35,7 @@ const AddRole = () => {
     e.preventDefault();
 
     if (totalUserInfo) {
-      onSnapshot(queryGetUserInfoByPhone(phone), (snapshot) => {
+      onSnapshot(queryGetUserInfoByPhone(dataRef, phone), (snapshot) => {
         snapshot.forEach((data) => {
           setUserInfo(data.data())
           setUserId(data.id)
