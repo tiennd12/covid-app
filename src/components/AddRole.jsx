@@ -7,18 +7,27 @@ import {
   queryGetUserInfoByPhone,
   dataRef,
   db,
+  injectionRef,
 } from "../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import Typography from "@mui/material/Typography";
 
 const AddRole = () => {
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("");
   const [totalUserInfo, setTotalUserInfo] = useState("");
   const [userInfo, setUserInfo] = useState("");
+  const [injectionInfo, setInjectionInfo] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userId, setUserId] = useState("");
   const [userRole, setUserRole] = useState("");
-
 
   onAuthStateChanged(auth, (currentUser) => {
     if (currentUser) {
@@ -37,8 +46,13 @@ const AddRole = () => {
     if (totalUserInfo) {
       onSnapshot(queryGetUserInfoByPhone(dataRef, phone), (snapshot) => {
         snapshot.forEach((data) => {
-          setUserInfo(data.data())
-          setUserId(data.id)
+          setUserInfo(data.data());
+          setUserId(data.id);
+        });
+      });
+      onSnapshot(queryGetUserInfoByPhone(injectionRef, phone), (snapshot) => {
+        snapshot.forEach((data) => {
+          setInjectionInfo(data.data());
         });
       });
     }
@@ -69,72 +83,95 @@ const AddRole = () => {
     });
   }, []);
 
-  if(!userRole){
-    return <div>Loading</div>
+  if (!userRole) {
+    return <div>Loading</div>;
   }
   console.log(userId);
   return (
-    <div>
+    <div className="container addRole">
       {userRole === "admin" ? (
         userInfo ? (
           <div>
             <div>
-              <h3>Họ và tên: {userInfo.name} </h3>
+              <Typography variant="h4" gutterBottom>
+                Thông tin người dùng
+              </Typography>
             </div>
             <div>
-              <h3>Số điện thoại: {userInfo.phone} </h3>
+              <Typography variant="h5" gutterBottom>
+                Họ và tên: {userInfo.name}{" "}
+              </Typography>
             </div>
             <div>
-              <h3>Địa chỉ email: {userInfo.email} </h3>
-            </div>
-            <div>
-              <h3>Ngày sinh: {userInfo.dob} </h3>
-            </div>
-            <div>
-              <h3>Số mũi đã tiêm: {userInfo.numberOfInjections} </h3>
+              <Typography variant="h5" gutterBottom>
+                Vai trò: {userInfo.assignedRole}{" "}
+              </Typography>
             </div>
 
             <div>
-              <div>
-                <select
-                  className="addRole-role"
-                  onChange={(e) => setRole(e.target.value)}
-                  value={role}
-                >
-                  <option value="" disabled>
+              <div className="addRole-form">
+                {" "}
+                <FormControl variant="standard" sx={{ m: 2, minWidth: 120 }}>
+                  <InputLabel id="demo-simple-select-label">
                     Phân quyền
-                  </option>
-                  <option value="user">User</option>
-                  <option value="moderator">Moderator</option>
-                </select>
+                  </InputLabel>
+                  <Select
+                    className="addRole-role"
+                    onChange={(e) => setRole(e.target.value)}
+                    value={role}
+                    label={"Phân quyền"}
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                  >
+                    <MenuItem value="" disabled>
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value="user">User</MenuItem>
+                    <MenuItem value="moderator">Moderator</MenuItem>
+                  </Select>
+                </FormControl>
               </div>
               <div>
-                <button type="submit" onClick={submitInfoHandler}>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  onClick={submitInfoHandler}
+                >
                   Gửi
-                </button>
+                </Button>
               </div>
             </div>
           </div>
         ) : (
           <div>
             <form className="addRole-form">
-              <input
-                type="text"
-                placeholder="Tìm theo số điện thoại"
-                className="addInfo-findWithPhone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-              <button type="sumbit" onClick={findInfoByPhoneHandler}>
-                Tìm
-              </button>
+              <Stack spacing={2}>
+                <TextField
+                  id="standard-basic"
+                  variant="standard"
+                  type="text"
+                  label="Tìm theo số điện thoại"
+                  className="addInfo-findWithPhone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  type="sumbit"
+                  onClick={findInfoByPhoneHandler}
+                >
+                  Tìm
+                </Button>
+              </Stack>
             </form>
           </div>
         )
       ) : (
         <div>
-          <div>Bạn không đủ quyền hạn để truy cập</div>
-          <button onClick={backToMainPagehandler}>Quay lại trang chủ</button>
+          <div><Typography variant="subtitle1" gutterBottom>Bạn không đủ quyền hạn để truy cập</Typography> </div>
+          <Button variant="contained" onClick={backToMainPagehandler}>
+            Quay lại trang chủ
+          </Button>
         </div>
       )}
     </div>

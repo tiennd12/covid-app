@@ -1,5 +1,5 @@
 import "./App.css";
-import {useState} from "react"
+import { useState } from "react";
 import { NavBar } from "./components/NavBar";
 import { Main } from "./components/Main";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -9,6 +9,8 @@ import AddInfo from "./components/AddInfo";
 import AddRole from "./components/AddRole";
 import RequestChange from "./components/RequestChange";
 import EditInfo from "./components/EditInfo";
+import AdminPanel from "./components/AdminPanel";
+import Profile from "./components/Profile";
 
 function App() {
   const [userId, setUserId] = useState("");
@@ -27,7 +29,12 @@ function App() {
           ></Route>
           <Route path="/addrole" element={<AddRole />}></Route>
           <Route path="/requestchange" element={<RequestChange />}></Route>
-          <Route path="/editinfo" element={<EditInfo userId={userId} setUserId={setUserId} />}></Route>
+          <Route
+            path="/editinfo"
+            element={<EditInfo userId={userId} setUserId={setUserId} />}
+          ></Route>
+          <Route path="adminpanel" element={<AdminPanel />}></Route>
+          <Route path="/profile" element={<Profile />}></Route>
         </Routes>
       </div>
     </Router>
