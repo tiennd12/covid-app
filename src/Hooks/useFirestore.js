@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { onSnapshot, orderBy, collection, query } from "firebase/firestore";
 
+// not yet used, might be usable when the application scale larger
+
 const useFirestore = (collections) => {
     const [database, setDatabase] = useState([]);
 

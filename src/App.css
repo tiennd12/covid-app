@@ -1,11 +1,16 @@
+.container {
+    max-width: 100vw;
+    max-height: 100vh;
+}
+
 nav {
-    background-image: linear-gradient(to right, rgb(209, 18, 18), rgba(0, 0, 255, 0.397));
+    background-image: linear-gradient( to right, rgb(209, 18, 18), rgba(0, 0, 255, 0.397));
     color: white;
     min-height: 10vh;
     justify-content: center;
-    align-items: center;
     display: flex;
     flex-direction: column;
+    padding-top: 25px;
 }
 
 nav a:hover {
@@ -24,4 +29,40 @@ nav a {
 
 .btn-login {
     align-items: center;
+}
+
+.nav-dropdown {
+    margin-bottom: 20px;
+}
+
+.addRole-form {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.addInfo-button {
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.addRole {
+    margin-top: 20px;
+}
+
+.addInfo {
+    margin-top: 20px;
+}
+
+.main {
+    margin-top: 20px;
+}
+
+.register-form {
+    margin-top: 20px;
+}
+
+.main-info {
+    display: flex;
+    justify-content: center;
 }

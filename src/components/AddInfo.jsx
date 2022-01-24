@@ -3,19 +3,27 @@ import {
   onSnapshot,
   setDoc,
   doc,
-  addDoc,
-  getDoc,
   deleteDoc,
-  collection,
+  addDoc,
 } from "@firebase/firestore";
 import {
   auth,
   queryGetUserInfoByPhone,
+  queryGetUserInfoByEmail,
   dataRef,
   db,
   injectionRef,
 } from "../firebase/firebase";
 import { useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import Typography from "@mui/material/Typography";
 
 const AddInfo = ({ userId, setUserId }) => {
   const navigate = useNavigate();
@@ -24,95 +32,109 @@ const AddInfo = ({ userId, setUserId }) => {
   const [place, setPlace] = useState("");
   const [date, setDate] = useState("");
   const [times, setTimes] = useState("");
-  const [vaccineType1, setVaccineType1] = useState("");
-  const [vaccineType2, setVaccineType2] = useState("");
-  const [vaccineType3, setVaccineType3] = useState("");
+
+  const [expand, setExpand] = useState(false);
+
+  const [vaccineType1, setVaccineType1] = useState(null);
+  const [vaccineType2, setVaccineType2] = useState(null);
+  const [vaccineType3, setVaccineType3] = useState(null);
+
+  const [injectDate1, setInjectDate1] = useState(null);
+  const [injectDate2, setInjectDate2] = useState(null);
+  const [injectDate3, setInjectDate3] = useState(null);
+
+  const [injectPerson1, setInjectPerson1] = useState(null);
+  const [injectPerson2, setInjectPerson2] = useState(null);
+  const [injectPerson3, setInjectPerson3] = useState(null);
+
+  const [infectedTimes, setInfectedTimes] = useState("");
+
+  const [infectedDate1, setInfectedDate1] = useState("");
+  const [infectedDate2, setInfectedDate2] = useState("");
+  const [infectedDate3, setInfectedDate3] = useState("");
+
+  const [infectedNote1, setInfectedNote1] = useState("");
+  const [infectedNote2, setInfectedNote2] = useState("");
+  const [infectedNote3, setInfectedNote3] = useState("");
 
   const [totalUserInfo, setTotalUserInfo] = useState("");
   const [totalInjectionInfo, setTotalInjectionInfo] = useState([]);
 
   const [userInfo, setUserInfo] = useState("");
+  const [userRole, setUserRole] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userIdNumber, setUserIdNumber] = useState("");
   const [injectionInfo, setInjectionInfo] = useState({});
   const [injectionId, setInjectionId] = useState("");
 
+  onAuthStateChanged(auth, (currentUser) => {
+    if (currentUser) {
+      setUserEmail(currentUser.email);
+      onSnapshot(queryGetUserInfoByEmail(userEmail), (snapshot) => {
+        snapshot.forEach((data) => setUserRole(data.data().assignedRole));
+      });
+    }
+  });
+
   const findInfoByPhoneHandler = (e) => {
     e.preventDefault();
-
-   // for (let i = 0; i < totalInjectionInfo.length; i++) {
-      // if (phone !== totalInjectionInfo[i].phone) {
-      //   navigate("/editinfo");
-      //   console.log("object");
-      //   break;
-      // } else {
-      //   addDoc(injectionRef, {
-      //     phone: phone,
-      //   });
-      // }
-    //}
-
     if (totalUserInfo) {
-      onSnapshot(queryGetUserInfoByPhone(dataRef, phone), (snapshot) => {
+      onSnapshot(queryGetUserInfoByPhone(injectionRef, phone), (snapshot) => {
+        console.log(snapshot._snapshot.docChanges.length);
+        if (snapshot._snapshot.docChanges.length === 0) {
+          if (
+            window.confirm(
+              "Không tìm thấy dữ liệu người dùng. \n Nhấn OK để tạo dữ liệu"
+            )
+          ) {
+            addDoc(injectionRef, {
+              phone: phone,
+              firstDose: null,
+              secondDose: null,
+              thirdDose: null,
+              numberOfInjections: null,
+            })
+              .then(window.alert("Tạo dữ liệu thành công"))
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        }
         {
           snapshot.forEach((data) => {
-            // console.log(data.data().phone);
-            setUserInfo(data.data());
-            setUserId(data.id);
+            setInjectionInfo(data.data());
+            setInjectionId(data.id);
           });
         }
       });
-      onSnapshot(
-        queryGetUserInfoByPhone(injectionRef, phone),
-        async (snapshot) => {
-          if (injectionId) {
-            const docRef = doc(db, "injectionData", injectionId);
-            const docSnap = await getDoc(docRef);
-            console.log(docSnap);
-            if (docSnap.exists()) {
-              console.log("Document data:", docSnap.data());
-            } else {
-              // doc.data() will be undefined in this case
-              console.log("No such document!");
-            }
-          }
-
-          {
-            snapshot.forEach((data) => {
-              // console.log(data.data().phone);
-              setInjectionInfo(data.data());
-              setInjectionId(data.id);
-            });
-          }
+      onSnapshot(queryGetUserInfoByPhone(dataRef, phone), (snapshot) => {
+        {
+          snapshot.forEach((data) => {
+            setUserInfo(data.data());
+            setUserId(data.id);
+            setUserIdNumber(data.data().idNumber);
+          });
         }
-      );
+      });
     }
   };
 
   const submitInfoHanlder = (e) => {
     e.preventDefault();
-    // onSnapshot(queryGetUserInfoByPhone(injectionRef, phone), (snapshot) => {
-    //   {
-    //     snapshot.forEach((data) => {
-    //       // console.log(data.data().phone);
-    //       setInjectionInfo(data.data());
-    //       setInjectionId(data.id);
-    //     });
-    //   }
-    // });
-
-    // addDoc(injectionRef, {
-    //   injectDate: date,
-    //   injectPlace: place,
-    //   numberOfInjections: times,
-    //   phone: phone,
-    // });
     setDoc(doc(db, "injectionData", injectionId), {
       ...injectionInfo,
-      injectDate: date,
-      injectPlace: place,
       numberOfInjections: times,
+      idNumber: userIdNumber,
       firstDose: vaccineType1,
       secondDose: vaccineType2,
       thirdDose: vaccineType3,
+      injectDate1: injectDate1,
+      injectDate2: injectDate2,
+      injectDate3: injectDate3,
+      injectPerson1: injectPerson1,
+      injectPerson2: injectPerson2,
+      injectPerson3: injectPerson3,
+      infectedTimes: "",
     });
     setDate("");
     setPlace("");
@@ -126,6 +148,25 @@ const AddInfo = ({ userId, setUserId }) => {
       window.location.reload(true);
     }
   };
+
+  const expandHandler = (e) => {
+    e.preventDefault();
+    setExpand(!expand);
+  };
+
+  const submitInfectedInfoHandler = (e) => {
+    e.preventDefault();
+    setDoc(doc(db, "injectionData", injectionId), {
+      ...injectionInfo,
+      infectedDate1: infectedDate1,
+      infectedDate2: infectedDate2,
+      infectedDate3: infectedDate3,
+      infectedNote1: infectedNote1,
+      infectedNote2: infectedNote2,
+      infectedNote3: infectedNote3,
+      infectedTimes: infectedTimes,
+    });
+  }
 
   useEffect(() => {
     onSnapshot(injectionRef, (snapshot) => {
@@ -144,31 +185,51 @@ const AddInfo = ({ userId, setUserId }) => {
     });
   }, []);
 
-  // console.log(injectionInfo)
-
   return (
-    <div>
-      {userInfo ? (
+    <div className="container addInfo">
+      {userRole === "admin" || userRole === "moderator" ? (
         <div>
-          <div>
+          {userInfo ? (
             <div>
-              <h3>Họ và tên: {userInfo.name} </h3>
-            </div>
-            <div>
-              <h3>Số điện thoại: {userInfo.phone} </h3>
-            </div>
-            <div>
-              <h3>Địa chỉ email: {userInfo.email} </h3>
-            </div>
-            <div>
-              <h3>Ngày sinh: {userInfo.dob} </h3>
-            </div>
-            <div>
-              <h3>Số mũi đã tiêm: {injectionInfo.numberOfInjections} </h3>
-            </div>
-          </div>
-          <div>
-            <div>
+              <div>
+                <div>
+                  <Typography variant="h4" gutterBottom>
+                    Thông tin người dùng
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Họ và tên: {userInfo.name}{" "}
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Ngày sinh: {userInfo.dob}{" "}
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Số mũi đã tiêm: {injectionInfo.numberOfInjections}{" "}
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Mũi số 1: {injectionInfo.firstDose}{" "}
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Mũi số 2: {injectionInfo.secondDose}{" "}
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Mũi số 3: {injectionInfo.thirdDose}{" "}
+                  </Typography>
+                </div>
+              </div>
+              <div>
+                {/* <div>
               <input
                 type="text"
                 placeholder="Địa điểm tiêm"
@@ -185,84 +246,482 @@ const AddInfo = ({ userId, setUserId }) => {
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
               />
+            </div> */}
+                <div>
+                  {" "}
+                  <FormControl variant="outlined" sx={{ m: 1, minWidth: 210 }}>
+                    <InputLabel id="demo-simple-select-label">
+                      Số lần đã tiêm:{" "}
+                    </InputLabel>
+                    <Select
+                      label={"Số lần đã tiêm"}
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      className="addInfo-times"
+                      onChange={(e) => setTimes(e.target.value)}
+                      value={times}
+                    >
+                      {" "}
+                      <MenuItem value="" disabled>
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value="1 mũi">1 lần</MenuItem>
+                      <MenuItem value="2 mũi">2 lần</MenuItem>
+                      <MenuItem value="3 mũi">3 lần</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                <Stack spacing={2} direction="row" className="addInfo-button">
+                  <div>
+                    <FormControl
+                      variant="outlined"
+                      sx={{ m: 1, minWidth: 200 }}
+                    >
+                      <InputLabel id="demo-simple-select-label">
+                        Mũi 1
+                      </InputLabel>
+                      <Select
+                        label={"Mũi 1"}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        onChange={(e) => setVaccineType1(e.target.value)}
+                        value={vaccineType1}
+                      >
+                        <MenuItem value="" disabled>
+                          Chọn loại vaccine
+                        </MenuItem>
+                        <MenuItem value="Chưa tiêm">Chưa tiêm</MenuItem>
+                        <MenuItem value="Nanocovax">Nanocovax</MenuItem>
+                        <MenuItem value="Pfizer-BioNTech">
+                          Pfizer-BioNTech
+                        </MenuItem>
+                        <MenuItem value="AstraZeneca">AstraZeneca</MenuItem>
+                        <MenuItem value="Moderna">Moderna</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+
+                  <div>
+                    <FormControl
+                      variant="outlined"
+                      sx={{ m: 1, minWidth: 200 }}
+                    >
+                      <InputLabel id="demo-simple-select-label">
+                        Mũi 2
+                      </InputLabel>
+                      <Select
+                        label={"Mũi 2"}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        onChange={(e) => setVaccineType2(e.target.value)}
+                        value={vaccineType2}
+                      >
+                        <MenuItem value="Chưa tiêm" disabled>
+                          Chọn loại vaccine
+                        </MenuItem>
+                        <MenuItem value="Chưa tiêm">Chưa tiêm</MenuItem>
+                        <MenuItem value="Nanocovax">Nanocovax</MenuItem>
+                        <MenuItem value="Pfizer-BioNTech">
+                          Pfizer-BioNTech
+                        </MenuItem>
+                        <MenuItem value="AstraZeneca">AstraZeneca</MenuItem>
+                        <MenuItem value="Moderna">Moderna</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                  <div>
+                    <FormControl
+                      variant="outlined"
+                      sx={{ m: 1, minWidth: 200 }}
+                    >
+                      <InputLabel id="demo-simple-select-label">
+                        Mũi 3
+                      </InputLabel>
+                      <Select
+                        label={"Mũi 3"}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        onChange={(e) => setVaccineType3(e.target.value)}
+                        value={vaccineType3}
+                      >
+                        <MenuItem value="Chưa tiêm" disabled>
+                          Chọn loại vaccine
+                        </MenuItem>
+                        <MenuItem value="Chưa tiêm">Chưa tiêm</MenuItem>
+                        <MenuItem value="Nanocovax">Nanocovax</MenuItem>
+                        <MenuItem value="Pfizer-BioNTech">
+                          Pfizer-BioNTech
+                        </MenuItem>
+                        <MenuItem value="AstraZeneca">AstraZeneca</MenuItem>
+                        <MenuItem value="Moderna">Moderna</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                </Stack>
+                <Stack
+                  spacing={2}
+                  direction="row"
+                  className="addInfo-button"
+                  sx={{ alignItems: "baseline" }}
+                >
+                  <TextField
+                    sx={{ margin: 1, minWidth: 210 }}
+                    id="standard-basic"
+                    helperText="Ngày tiêm mũi 1"
+                    variant="outlined"
+                    type="date"
+                    className="register-dob"
+                    value={injectDate1}
+                    onChange={(e) => setInjectDate1(e.target.value)}
+                  />
+                  <TextField
+                    sx={{ margin: 1, minWidth: 210 }}
+                    id="standard-basic"
+                    helperText="Ngày tiêm mũi 2"
+                    variant="outlined"
+                    type="date"
+                    className="register-dob"
+                    value={injectDate2}
+                    onChange={(e) => setInjectDate2(e.target.value)}
+                  />
+                  <TextField
+                    sx={{ margin: 1, minWidth: 210 }}
+                    id="standard-basic"
+                    helperText="Ngày tiêm mũi 3"
+                    variant="outlined"
+                    type="date"
+                    className="register-dob"
+                    value={injectDate3}
+                    onChange={(e) => setInjectDate3(e.target.value)}
+                  />
+                </Stack>
+                <Stack
+                  spacing={2}
+                  direction="row"
+                  className="addInfo-button"
+                  sx={{ alignItems: "baseline" }}
+                >
+                  <TextField
+                    sx={{ margin: 1, minWidth: 210 }}
+                    id="standard-basic"
+                    variant="outlined"
+                    type="text"
+                    label="Đơn vị tiêm mũi 1"
+                    className="addInfo-findWithPhone"
+                    value={injectPerson1}
+                    onChange={(e) => setInjectPerson1(e.target.value)}
+                  />
+                  <TextField
+                    id="standard-basic"
+                    variant="outlined"
+                    type="text"
+                    label="Đơn vị tiêm mũi 2"
+                    className="addInfo-findWithPhone"
+                    value={injectPerson2}
+                    onChange={(e) => setInjectPerson2(e.target.value)}
+                  />
+                  <TextField
+                    id="standard-basic"
+                    variant="outlined"
+                    type="text"
+                    label="Đơn vị tiêm mũi 3"
+                    className="addInfo-findWithPhone"
+                    value={injectPerson3}
+                    onChange={(e) => setInjectPerson3(e.target.value)}
+                  />
+                </Stack>
+                <Stack spacing={2} direction="row" className="addInfo-button">
+                  <div>
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      onClick={submitInfoHanlder}
+                    >
+                      Gửi
+                    </Button>
+                  </div>
+                  <div>
+                    <Button variant="contained" onClick={deleteInfoHandler}>
+                      Xóa dữ liệu
+                    </Button>
+                  </div>
+                </Stack>
+                <Button
+                  sx={{ margin: 5 }}
+                  variant="contained"
+                  type="sumbit"
+                  onClick={expandHandler}
+                >
+                  Thêm thông tin lây nhiễm
+                </Button>
+                {expand ? (
+                  <div>
+                    <FormControl
+                      variant="outlined"
+                      sx={{ m: 1, minWidth: 200 }}
+                    >
+                      <InputLabel id="demo-simple-select-label">
+                        Số lần nhiễm bệnh
+                      </InputLabel>
+                      <Select
+                        label={"Số lần nhiễm bệnh"}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        onChange={(e) => setInfectedTimes(e.target.value)}
+                        value={infectedTimes}
+                      >
+                        <MenuItem value="" disabled>
+                          Số lần nhiễm bệnh
+                        </MenuItem>
+                        <MenuItem value="1 lần">1 lần</MenuItem>
+                        <MenuItem value="2 lần">2 lần</MenuItem>
+                        <MenuItem value="3 lần">3 lần</MenuItem>
+                      </Select>
+                    </FormControl>
+                    {infectedTimes === "1 lần" ? (
+                      <div>
+                        <Stack
+                          spacing={2}
+                          direction="row"
+                          className="addInfo-button"
+                          sx={{ alignItems: "baseline" }}
+                        >
+                          <TextField
+                            sx={{ margin: 1, minWidth: 210 }}
+                            id="standard-basic"
+                            helperText="Lần nhiễm số 1"
+                            variant="outlined"
+                            type="date"
+                            className="register-dob"
+                            value={infectedDate1}
+                            onChange={(e) => setInfectedDate1(e.target.value)}
+                          />
+                        </Stack>
+                        <Stack
+                          spacing={2}
+                          direction="row"
+                          className="addInfo-button"
+                          sx={{ alignItems: "baseline" }}
+                        >
+                          <TextField
+                            sx={{ margin: 1, minWidth: 210 }}
+                            id="standard-basic"
+                            variant="outlined"
+                            type="text"
+                            label="Ghi chú lần 1"
+                            className="addInfo-findWithPhone"
+                            value={infectedNote1}
+                            onChange={(e) => setInfectedNote1(e.target.value)}
+                          />
+                        </Stack>
+                      </div>
+                    ) : (
+                      <div>
+                        {infectedTimes === "2 lần" ? (
+                          <div>
+                            <Stack
+                              spacing={2}
+                              direction="row"
+                              className="addInfo-button"
+                              sx={{ alignItems: "baseline" }}
+                            >
+                              <TextField
+                                sx={{ margin: 1, minWidth: 210 }}
+                                id="standard-basic"
+                                helperText="Lần nhiễm số 1"
+                                variant="outlined"
+                                type="date"
+                                className="register-dob"
+                                value={infectedDate1}
+                                onChange={(e) =>
+                                  setInfectedDate1(e.target.value)
+                                }
+                              />
+                              <TextField
+                                sx={{ margin: 1, minWidth: 210 }}
+                                id="standard-basic"
+                                helperText="Lần nhiễm số 2"
+                                variant="outlined"
+                                type="date"
+                                className="register-dob"
+                                value={infectedDate2}
+                                onChange={(e) =>
+                                  setInfectedDate2(e.target.value)
+                                }
+                              />
+                            </Stack>
+                            <Stack
+                              spacing={2}
+                              direction="row"
+                              className="addInfo-button"
+                              sx={{ alignItems: "baseline" }}
+                            >
+                              <TextField
+                                sx={{ margin: 1, minWidth: 210 }}
+                                id="standard-basic"
+                                variant="outlined"
+                                type="text"
+                                label="Ghi chú lần 1"
+                                className="addInfo-findWithPhone"
+                                value={infectedNote1}
+                                onChange={(e) =>
+                                  setInfectedNote1(e.target.value)
+                                }
+                              />
+                              <TextField
+                                id="standard-basic"
+                                variant="outlined"
+                                type="text"
+                                label="Ghi chú lần 2"
+                                className="addInfo-findWithPhone"
+                                value={infectedNote2}
+                                onChange={(e) =>
+                                  setInfectedNote2(e.target.value)
+                                }
+                              />
+                            </Stack>
+                          </div>
+                        ) : (
+                          <div>
+                            {infectedTimes === "3 lần" ? (
+                              <div>
+                                <Stack
+                                  spacing={2}
+                                  direction="row"
+                                  className="addInfo-button"
+                                  sx={{ alignItems: "baseline" }}
+                                >
+                                  <TextField
+                                    sx={{ margin: 1, minWidth: 210 }}
+                                    id="standard-basic"
+                                    helperText="Lần nhiễm số 1"
+                                    variant="outlined"
+                                    type="date"
+                                    className="register-dob"
+                                    value={infectedDate1}
+                                    onChange={(e) =>
+                                      setInfectedDate1(e.target.value)
+                                    }
+                                  />
+                                  <TextField
+                                    sx={{ margin: 1, minWidth: 210 }}
+                                    id="standard-basic"
+                                    helperText="Lần nhiễm số 2"
+                                    variant="outlined"
+                                    type="date"
+                                    className="register-dob"
+                                    value={infectedDate2}
+                                    onChange={(e) =>
+                                      setInfectedDate2(e.target.value)
+                                    }
+                                  />
+                                  <TextField
+                                    sx={{ margin: 1, minWidth: 210 }}
+                                    id="standard-basic"
+                                    helperText="Lần nhiễm số 3"
+                                    variant="outlined"
+                                    type="date"
+                                    className="register-dob"
+                                    value={infectedDate3}
+                                    onChange={(e) =>
+                                      setInfectedDate3(e.target.value)
+                                    }
+                                  />
+                                </Stack>
+                                <Stack
+                                  spacing={2}
+                                  direction="row"
+                                  className="addInfo-button"
+                                  sx={{ alignItems: "baseline" }}
+                                >
+                                  <TextField
+                                    sx={{ margin: 1, minWidth: 210 }}
+                                    id="standard-basic"
+                                    variant="outlined"
+                                    type="text"
+                                    label="Ghi chú lần 1"
+                                    className="addInfo-findWithPhone"
+                                    value={infectedNote1}
+                                    onChange={(e) =>
+                                      setInfectedNote1(e.target.value)
+                                    }
+                                  />
+                                  <TextField
+                                    id="standard-basic"
+                                    variant="outlined"
+                                    type="text"
+                                    label="Ghi chú lần 2"
+                                    className="addInfo-findWithPhone"
+                                    value={infectedNote2}
+                                    onChange={(e) =>
+                                      setInfectedNote2(e.target.value)
+                                    }
+                                  />
+                                  <TextField
+                                    id="standard-basic"
+                                    variant="outlined"
+                                    type="text"
+                                    label="Ghi chú lần 3"
+                                    className="addInfo-findWithPhone"
+                                    value={infectedNote3}
+                                    onChange={(e) =>
+                                      setInfectedNote3(e.target.value)
+                                    }
+                                  />
+                                </Stack>
+                              </div>
+                            ) : (
+                              <div></div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    <Button
+                      variant="contained"
+                      type="sumbit"
+                      sx={{marginBottom: 5, marginTop: 2}}
+                      onClick={submitInfectedInfoHandler}
+                    >
+                      Gửi
+                    </Button>
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+              </div>
             </div>
-            <div>
-              <select
-                className="addInfo-times"
-                onChange={(e) => setTimes(e.target.value)}
-                value={times}
-              >
-                <option value="" disabled>
-                  Mũi tiêm số
-                </option>
-                <option value="1 mũi">Mũi 1</option>
-                <option value="2 mũi">Mũi 2</option>
-                <option value="3 mũi">Mũi 3</option>
-              </select>
+          ) : (
+            <div className="addRole-form">
+              <Stack spacing={2}>
+                <TextField
+                  id="standard-basic"
+                  variant="standard"
+                  type="text"
+                  label="Tìm theo số điện thoại"
+                  className="addInfo-findWithPhone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  type="sumbit"
+                  onClick={findInfoByPhoneHandler}
+                >
+                  Tìm
+                </Button>
+              </Stack>
             </div>
-            <div>
-              <label htmlFor="">Mũi 1: </label>
-              <select
-                onChange={(e) => setVaccineType1(e.target.value)}
-                value={vaccineType1}
-              >
-                <option value="Chưa tiêm">Chưa tiêm</option>
-                <option value="Nanocovax">Nanocovax</option>
-                <option value="Pfizer-BioNTech">Pfizer-BioNTech</option>
-                <option value="AstraZeneca">AstraZeneca</option>
-                <option value="Moderna">Moderna</option>
-              </select>
-            </div>
-            <div>
-              <label htmlFor="">Mũi 2: </label>
-              <select
-                onChange={(e) => setVaccineType2(e.target.value)}
-                value={vaccineType2}
-              >
-                <option value="Chưa tiêm">Chưa tiêm</option>
-                <option value="Nanocovax">Nanocovax</option>
-                <option value="Pfizer-BioNTech">Pfizer-BioNTech</option>
-                <option value="AstraZeneca">AstraZeneca</option>
-                <option value="Moderna">Moderna</option>
-              </select>
-            </div>
-            <div>
-              <label htmlFor="">Mũi 3: </label>
-              <select
-                onChange={(e) => setVaccineType3(e.target.value)}
-                value={vaccineType3}
-              >
-                <option value="Chưa tiêm">Chưa tiêm</option>
-                <option value="Nanocovax">Nanocovax</option>
-                <option value="Pfizer-BioNTech">Pfizer-BioNTech</option>
-                <option value="AstraZeneca">AstraZeneca</option>
-                <option value="Moderna">Moderna</option>
-              </select>
-            </div>
-            <div>
-              <button type="submit" onClick={submitInfoHanlder}>
-                Gửi
-              </button>
-            </div>
-            <div>
-              <button onClick={deleteInfoHandler}>Xóa dữ liệu</button>
-            </div>
-          </div>
+          )}
         </div>
       ) : (
         <div>
-          <form className="addInfo-form">
-            <input
-              type="text"
-              placeholder="Tìm theo số điện thoại"
-              className="addInfo-findWithPhone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-            <button type="sumbit" onClick={findInfoByPhoneHandler}>
-              Tìm
-            </button>
-          </form>
+          <Typography variant="h5" gutterBottom>
+            Bạn không đủ quyền hạn để truy cập
+          </Typography>
+          <div>
+            <Button variant="contained">Quay lại trang chủ</Button>
+          </div>
         </div>
       )}
     </div>

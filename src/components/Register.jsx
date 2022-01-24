@@ -1,17 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import { addDoc, setDoc, onSnapshot, doc } from "@firebase/firestore";
 import { dataRef, injectionRef } from "../firebase/firebase";
 import { auth, queryGetUserInfoByPhone, db } from "../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import Typography from "@mui/material/Typography";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import FormHelperText from "@mui/material/FormHelperText";
 
 const Register = () => {
   const navigate = useNavigate();
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm();
@@ -107,7 +122,7 @@ const Register = () => {
   }, [inputCity, inputDistrict]);
 
   return (
-    <div>
+    <div className="container register">
       <form
         className="register-form"
         onSubmit={handleSubmit((data) => {
@@ -117,128 +132,221 @@ const Register = () => {
               district: ward.name,
               ward: inputWard,
               name: data.inputName,
+              idNumber: data.inputId,
               email: inputEmail,
               phone: data.inputPhone,
               dob: data.inputDate,
               address: data.inputAddress,
               assignedRole: "user",
+              infected: false,
             });
 
-            addDoc(injectionRef, {
-              numberOfInjections: "Chưa tiêm",
-              phone: data.inputPhone,
-            });
+            // addDoc(injectionRef, {
+            //   numberOfInjections: "Chưa tiêm",
+            //   phone: data.inputPhone,
+            // });
 
             if (updateData) {
               window.alert("Đăng kí thành công");
               navigate("/");
             }
           }
-          console.log(data, district.name);
+          // console.log(data, inputWard);
         })}
       >
+        <Typography variant="h5" gutterBottom>
+          Đăng ký thông tin cá nhân
+        </Typography>
         <div>
-          <label>Email: </label>
-          <input
+          <TextField
+            sx={{ margin: 1 }}
+            id="standard-basic"
+            variant="standard"
+            label="Email"
             type="text"
-            className="register-id"
-            placeholder="Email"
+            helperText=""
+            className="register-email"
             onChange={inputEmailHandler}
             value={inputEmail}
             disabled
           />
         </div>
         <div>
-          <label>Họ và tên: </label>
-          <input
+          <TextField
+            sx={{ margin: 1 }}
+            id="component-error"
+            variant="standard"
+            label="Họ và tên"
+            autoComplete="off"
+            // error={inputName === ""}
+            id="outlined-error-helper-text"
+            // helperText={inputName === "" ? errors.inputName?.message : ""}
             {...register("inputName", { required: "Điền tên" })}
-            placeholder="Họ và tên"
             className="register-name"
           />
-          <span> {errors.inputName?.message}</span>
+          <Typography
+            variant="caption"
+            display="block"
+            gutterBottom
+            style={{ color: "red" }}
+          >
+            {errors.inputName?.message}
+          </Typography>
         </div>
         <div>
-          <label>Số điện thoại: </label>
-          <input
+          <TextField
+            sx={{ margin: 1 }}
+            id="standard-basic"
+            variant="standard"
             className="register-phone"
-            placeholder="Số điện thoại"
-            {...register("inputPhone", { required: "Điền số điện thoại" })}
+            label="Số điện thoại"
+            autoComplete="off"
+            helperText=""
+            {...register("inputPhone", {
+              pattern: {
+                value: /(84|0[3|5|7|8|9])+([0-9]{8})\b/,
+                message: "Nhập đúng định dạng số điện thoại",
+              },
+            })}
           />
-          <span> {errors.inputPhone?.message}</span>
+
+          <Typography
+            variant="caption"
+            display="block"
+            gutterBottom
+            style={{ color: "red" }}
+          >
+            {errors.inputPhone?.message}
+          </Typography>
         </div>
         <div>
-          <label>Ngày sinh: </label>
-          <input
+          <TextField
+            variant="standard"
+            className="register-id"
+            id="standard=basic"
+            label="CMND/CCCD"
+            autoComplete="off"
+            helperText=""
+            sx={{ margin: 1 }}
+            {...register("inputId", { required: "Nhập số CMND hoặc số CCCD" })}
+          />
+        </div>
+        <div>
+          <TextField
+            sx={{ margin: 2, minWidth: 184 }}
+            id="standard-basic"
+            helperText="Tháng/Ngày/Năm"
+            variant="standard"
             type="date"
             className="register-dob"
-            {...register("inputDate", { required: "Điền ngày tháng năm sinh" })}
-          />
-          <span> {errors.inputDate?.message}</span>
-        </div>
-        <div>
-          <label>Thành phố</label>
-          <select
-            className="register-city"
-            onChange={cityHandler}
-            value={inputCity}
+            {...register("inputDate", { required: "Nhập ngày tháng năm sinh" })}
+          />{" "}
+          <Typography
+            variant="caption"
+            display="block"
+            gutterBottom
+            style={{ color: "red" }}
           >
-            <option value="" disabled>
-              Chọn thành phố
-            </option>
-            {fetchData &&
-              fetchData.map((val) => (
-                <option key={val.code} value={val.code}>
-                  {val.name}
-                </option>
-              ))}
-          </select>
+            {errors.inputDate?.message}
+          </Typography>
         </div>
         <div>
-          <label>Quận/Huyện</label>
-          <select
-            className="register-district"
-            onChange={districtHandler}
-            value={inputDistrict}
-          >
-            <option value="" disabled>
-              Chọn quận huyện
-            </option>
-            {district.districts &&
-              district.districts.map((val) => (
-                <option key={val.code} value={val.code}>
-                  {val.name}
-                </option>
-              ))}
-          </select>
+          <FormControl variant="standard" sx={{ m: 2, minWidth: 120 }}>
+            <div>
+              <InputLabel id="demo-simple-select-label">Thành phố</InputLabel>
+              <Select
+                sx={{ minWidth: 120 }}
+                label={"Thành phố"}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                className="register-city"
+                onChange={cityHandler}
+                value={inputCity}
+              >
+                <MenuItem value="" disabled>
+                  Chọn thành phố
+                </MenuItem>
+                {fetchData &&
+                  fetchData.map((val) => (
+                    <MenuItem key={val.code} value={val.code}>
+                      {val.name}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </div>
+          </FormControl>
+          <FormControl variant="standard" sx={{ m: 2, minWidth: 120 }}>
+            <div>
+              <InputLabel id="demo-simple-select-label">Quận/Huyện</InputLabel>
+              <Select
+                sx={{ minWidth: 120 }}
+                label={"Quận/Huyện"}
+                labelId="demo-simple-select-label1"
+                id="demo-simple-select"
+                className="register-district"
+                onChange={districtHandler}
+                value={inputDistrict}
+              >
+                <MenuItem value="" disabled>
+                  Chọn quận huyện
+                </MenuItem>
+                {district.districts &&
+                  district.districts.map((val) => (
+                    <MenuItem key={val.code} value={val.code}>
+                      {val.name}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </div>
+          </FormControl>
+          <FormControl variant="standard" sx={{ m: 2, minWidth: 120 }}>
+            <div>
+              <InputLabel id="demo-simple-select-label">Phường/Xã</InputLabel>
+              <Select
+                sx={{ minWidth: 120 }}
+                label={"Phường/Xã"}
+                labelId="demo-simple-select-label2"
+                id="demo-simple-select"
+                className="register-district"
+                onChange={(event) => setInputWard(event.target.value)}
+                value={inputWard}
+              >
+                <MenuItem value="" disabled>
+                  Chọn phường xã
+                </MenuItem>
+                {ward.wards &&
+                  ward.wards.map((val) => (
+                    <MenuItem key={val.code} value={val.name}>
+                      {val.name}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </div>
+          </FormControl>
         </div>
         <div>
-          <label>Phường/Xã</label>
-          <select
-            className="register-district"
-            onChange={(event) => setInputWard(event.target.value)}
-            value={inputWard}
-          >
-            <option value="" disabled>
-              Chọn phường xã
-            </option>
-            {ward.wards &&
-              ward.wards.map((val) => (
-                <option key={val.code} value={val.name}>
-                  {val.name}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div>
-          <label>Địa chỉ: </label>
-          <input
-            placeholder="Địa chỉ"
+          <TextField
+            label="Địa chỉ"
+            sx={{ margin: 1, marginBottom: 2 }}
+            id="standard-basic"
+            variant="standard"
+            autoComplete="off"
             {...register("inputAddress", { required: "Điền địa chỉ" })}
           />
-          <span> {errors.inputAddress?.message}</span>
+
+          <Typography
+            variant="caption"
+            display="block"
+            gutterBottom
+            style={{ color: "red" }}
+          >
+            {errors.inputAddress?.message}
+          </Typography>
         </div>
         <div id="sign-in-button"></div>
-        <button type="submit">Đăng ký</button>
+        <Button variant="contained" type="submit">
+          Đăng ký
+        </Button>
       </form>
     </div>
   );

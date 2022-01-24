@@ -32,10 +32,13 @@ const colRef = collection(db, "Users")
 const loginRef = collection(db, "login")
 const dataRef = collection(db, "userData")
 const injectionRef = collection(db, "injectionData")
+const requestRef = collection(db, "requestData")
 
 // get collection data
 const queryGetUserInfoByEmail = (email) => query(dataRef, where("email", "==", email))
 
 const queryGetUserInfoByPhone = (collection, phone) => query(collection, where("phone", "==", phone))
 
-export { app, db, colRef, loginRef, dataRef, injectionRef, auth, queryGetUserInfoByEmail, queryGetUserInfoByPhone };
+const queryGetUserInfoById = (collection, id) => query(collection, where("idNumber", "==", id))
+
+export { app, db, colRef, loginRef, dataRef, injectionRef, auth, requestRef, queryGetUserInfoByEmail, queryGetUserInfoByPhone, queryGetUserInfoById };
