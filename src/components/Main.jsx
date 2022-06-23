@@ -31,6 +31,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import { typography } from "@mui/system";
+import axios from "axios";
 
 export const Main = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -48,6 +49,9 @@ export const Main = () => {
   const [userIdQuery, setUserIdQuery] = useState("");
   const [queryPhone, setQueryPhone] = useState("");
   const [queryId, setQueryId] = useState("");
+
+  const [cases, setCases] = useState([]);
+  const [todayCases, setTodayCases] = useState("")
 
   // firebase
   onAuthStateChanged(auth, (currentUser) => {
@@ -114,9 +118,21 @@ export const Main = () => {
     setUserInfoQuery("");
   };
 
-  //-----------------
+  //axios
+  const fetchCases = async () => {
+    const { data } = await axios.post(
+      `https://static.pipezero.com/covid/data.json`
+    );
+    setCases(data.locations);
+  };
+
+  // const getLocalCases = () => {
+  //   setTodayCases(cases[userInfo.districtId].casesToday)
+  // }
+
 
   useEffect(() => {
+    fetchCases();
     onSnapshot(dataRef, orderBy("name", "desc"), (snapshot) => {
       let users = [];
       snapshot.docs.forEach((doc) => {
@@ -141,6 +157,8 @@ export const Main = () => {
         });
       });
     }
+    // getLocalCases();
+    // console.log(todayCases)
   }, [isLoggedIn, phone, queryId]);
 
   return (
@@ -324,6 +342,16 @@ export const Main = () => {
                   >
                     Tìm
                   </Button>
+                </Stack>
+              </div>
+              <div>
+                <Stack>
+                  <Typography>
+                    Tình trạng dịch tại địa phương
+                  </Typography>
+                  <Typography>
+
+                  </Typography>
                 </Stack>
               </div>
             </div>

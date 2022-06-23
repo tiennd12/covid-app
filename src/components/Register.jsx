@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
+import useDistrict from "../Hooks/useDistrict"
 import axios from "axios";
 import { addDoc, setDoc, onSnapshot, doc } from "@firebase/firestore";
 import { dataRef, injectionRef } from "../firebase/firebase";
@@ -45,6 +46,12 @@ const Register = () => {
   const [ward, setWard] = useState([]);
   const [inputWard, setInputWard] = useState("");
 
+  const [cityName, setCityName] = useState("");
+  const [position, setPosition] = useState(0)
+
+  //useDistrict
+    const {districtName} = useDistrict(district.name)
+
   onAuthStateChanged(auth, (currentUser) => {
     if (currentUser) {
       setInputEmail(currentUser.email);
@@ -80,6 +87,21 @@ const Register = () => {
   //   }
   // };
 
+  const districtNameHandler = () => {
+    if (district !== null) {
+      if (district.name.includes("Tỉnh")) {
+        setCityName(district.name.replace("Tỉnh", ""));
+      }
+    }
+  };
+  const cityNameHandler = () => {
+    if (district !== null) {
+      if (district.name.includes("Thành phố")) {
+        setCityName(district.name.replace("Thành phố", ""));
+      }
+    }
+  };
+
   const cityHandler = (e) => {
     setInputCity(e.target.value);
     setInputDistrict("");
@@ -89,13 +111,19 @@ const Register = () => {
   const districtHandler = (e) => {
     setInputDistrict(e.target.value);
     setInputWard("");
+    districtNameHandler();
+    cityNameHandler();
   };
 
   const fetchDistrict = async () => {
-    const { data } = await axios.get(
-      `https://provinces.open-api.vn/api/p/${inputCity}?depth=2`
-    );
-    return setDistrict(data);
+    if(inputCity){
+      const { data } = await axios.get(
+        `https://provinces.open-api.vn/api/p/${inputCity}?depth=2`
+      );
+      return setDistrict(data);
+    } else {
+      return setDistrict("")
+    }
   };
 
   const fetchWard = async () => {
@@ -119,36 +147,43 @@ const Register = () => {
     });
     fetchDistrict();
     fetchWard();
-  }, [inputCity, inputDistrict]);
+  }, [inputCity, inputDistrict, cityName]);
 
   return (
     <div className="container register">
       <form
         className="register-form"
         onSubmit={handleSubmit((data) => {
-          if (district && ward) {
-            const updateData = addDoc(dataRef, {
-              city: district.name,
-              district: ward.name,
-              ward: inputWard,
-              name: data.inputName,
-              idNumber: data.inputId,
-              email: inputEmail,
-              phone: data.inputPhone,
-              dob: data.inputDate,
-              address: data.inputAddress,
-              assignedRole: "user",
-              infected: false,
-            });
 
-            // addDoc(injectionRef, {
-            //   numberOfInjections: "Chưa tiêm",
-            //   phone: data.inputPhone,
-            // });
+          if (
+            window.confirm("Hãy chắc chắn những thông tin đã nhập là chính xác")
+          ) 
+          {
+            if (district && ward) {
+              const updateData = addDoc(dataRef, {
+                city: cityName,
+                district: ward.name,
+                ward: inputWard,
+                name: data.inputName,
+                idNumber: data.inputId,
+                email: inputEmail,
+                phone: data.inputPhone,
+                dob: data.inputDate,
+                address: data.inputAddress,
+                assignedRole: "user",
+                infected: false,
+                districtId: districtName,
+              });
 
-            if (updateData) {
-              window.alert("Đăng kí thành công");
-              navigate("/");
+              // addDoc(injectionRef, {
+              //   numberOfInjections: "Chưa tiêm",
+              //   phone: data.inputPhone,
+              // });
+
+              if (updateData) {
+                window.alert("Đăng ký thành công");
+                // navigate("/");
+              }
             }
           }
           // console.log(data, inputWard);
@@ -179,7 +214,6 @@ const Register = () => {
             label="Họ và tên"
             autoComplete="off"
             // error={inputName === ""}
-            id="outlined-error-helper-text"
             // helperText={inputName === "" ? errors.inputName?.message : ""}
             {...register("inputName", { required: "Điền tên" })}
             className="register-name"
