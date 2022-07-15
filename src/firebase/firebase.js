@@ -34,7 +34,7 @@ const dataRef = collection(db, "userData")
 const injectionRef = collection(db, "injectionData")
 const requestRef = collection(db, "requestData")
 
-// get collection data
+q // get collection data
 const queryGetUserInfoByEmail = (email) => query(dataRef, where("email", "==", email))
 
 const queryGetUserInfoByPhone = (collection, phone) => query(collection, where("phone", "==", phone))
