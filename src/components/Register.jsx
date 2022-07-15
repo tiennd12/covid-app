@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import useDistrict from "../Hooks/useDistrict"
+import useDistrict from "../Hooks/useDistrict";
 import axios from "axios";
 import { addDoc, setDoc, onSnapshot, doc } from "@firebase/firestore";
 import { dataRef, injectionRef } from "../firebase/firebase";
@@ -34,7 +34,7 @@ const Register = () => {
 
   const [inputEmail, setInputEmail] = useState("");
   // const [inputName, setInputName] = useState("");
-  // const [inputDate, setInputDate] = useState("");
+  const [inputDate1, setInputDate1] = useState("");
   // const [inputAddress, setInputAddress] = useState("");
 
   const [fetchData, setFetchData] = useState([]);
@@ -47,10 +47,10 @@ const Register = () => {
   const [inputWard, setInputWard] = useState("");
 
   const [cityName, setCityName] = useState("");
-  const [position, setPosition] = useState(0)
+  const [position, setPosition] = useState(0);
 
   //useDistrict
-    const {districtName} = useDistrict(district.name)
+  const { districtName } = useDistrict(district.name);
 
   onAuthStateChanged(auth, (currentUser) => {
     if (currentUser) {
@@ -116,13 +116,13 @@ const Register = () => {
   };
 
   const fetchDistrict = async () => {
-    if(inputCity){
+    if (inputCity) {
       const { data } = await axios.get(
         `https://provinces.open-api.vn/api/p/${inputCity}?depth=2`
       );
       return setDistrict(data);
     } else {
-      return setDistrict("")
+      return setDistrict("");
     }
   };
 
@@ -139,6 +139,7 @@ const Register = () => {
 
   // const fetchExactWard = async
 
+
   useEffect(() => {
     axios.get("https://provinces.open-api.vn/api/?depth=1").then((result) => {
       const { data } = result;
@@ -154,11 +155,9 @@ const Register = () => {
       <form
         className="register-form"
         onSubmit={handleSubmit((data) => {
-
           if (
             window.confirm("Hãy chắc chắn những thông tin đã nhập là chính xác")
-          ) 
-          {
+          ) {
             if (district && ward) {
               const updateData = addDoc(dataRef, {
                 city: cityName,

@@ -21,7 +21,8 @@ import {
   injectionRef,
   dataRef,
 } from "../firebase/firebase";
-import { onSnapshot, doc, setDoc, orderBy } from "@firebase/firestore";
+
+import { onSnapshot, doc, setDoc, orderBy, getDocs } from "@firebase/firestore";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -35,6 +36,7 @@ import axios from "axios";
 
 export const Main = () => {
   const [userInfo, setUserInfo] = useState(null);
+  const [authInfo, setAuthInfo] = useState(null);
   const [userEmail, setUserEmail] = useState("");
   const [injectionInfo, setInjectionInfo] = useState({});
   const [injectionId, setInjectionId] = useState("");
@@ -42,6 +44,8 @@ export const Main = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const provider = new GoogleAuthProvider();
   const navigate = useNavigate();
+
+  const [test, setTest] = useState(null);
 
   const [injectionInfoQuery, setInjectionInfoQuery] = useState("");
   const [injectionIdQuery, setInjectionIdQuery] = useState("");
@@ -51,7 +55,7 @@ export const Main = () => {
   const [queryId, setQueryId] = useState("");
 
   const [cases, setCases] = useState([]);
-  const [todayCases, setTodayCases] = useState("")
+  const [todayCases, setTodayCases] = useState("");
 
   // firebase
   onAuthStateChanged(auth, (currentUser) => {
@@ -63,7 +67,7 @@ export const Main = () => {
     }
   });
 
-  // query data
+  // query dataa
   const findInfoByPhoneHandler = (e) => {
     e.preventDefault();
     if (queryPhone) {
@@ -126,13 +130,33 @@ export const Main = () => {
     setCases(data.locations);
   };
 
-  // const getLocalCases = () => {
-  //   setTodayCases(cases[userInfo.districtId].casesToday)
-  // }
+  const getLocalCases = () => {
+    setTodayCases(cases[authInfo.districtId].casesToday);
+  };
+
+  // `date` is a `Date` object
+const formatYmd = date => date.toISOString().slice(0, 10);
+const d = new Date()
+d.setDate(d.getDate() + 2)
+// Example
 
 
   useEffect(() => {
+    console.log(formatYmd(new Date()))
+    console.log(new Date().toString())
+    console.log(d.toISOString().slice(0, 10))
+    console.log(new Date().toDateString())
+
     fetchCases();
+
+    onSnapshot(dataRef, (doc) => {
+      let array = [];
+      doc.docs.forEach((doc) => {
+        array.push({ ...doc.data() });
+      });
+      setTest(array);
+    });
+
     onSnapshot(dataRef, orderBy("name", "desc"), (snapshot) => {
       let users = [];
       snapshot.docs.forEach((doc) => {
@@ -144,7 +168,7 @@ export const Main = () => {
     if (isLoggedIn) {
       onSnapshot(queryGetUserInfoByEmail(isLoggedIn.email), (snapshot) => {
         snapshot.forEach((data) => {
-          setUserInfo(data.data());
+          setAuthInfo(data.data());
           setPhone(data.data().phone);
         });
       });
@@ -157,9 +181,14 @@ export const Main = () => {
         });
       });
     }
-    // getLocalCases();
-    // console.log(todayCases)
+    console.log(todayCases);
   }, [isLoggedIn, phone, queryId]);
+
+  useEffect(() => {
+    if (cases.length && authInfo) {
+      getLocalCases();
+    }
+  }, [cases, authInfo]);
 
   return (
     <div className="container main">
@@ -346,12 +375,8 @@ export const Main = () => {
               </div>
               <div>
                 <Stack>
-                  <Typography>
-                    Tình trạng dịch tại địa phương
-                  </Typography>
-                  <Typography>
-
-                  </Typography>
+                  <Typography>Tình trạng dịch bệnh tại {cases[authInfo.districtId].name}</Typography>
+                  <Typography>Số người nhiễm bệnh hôm nay: {todayCases}</Typography>
                 </Stack>
               </div>
             </div>
