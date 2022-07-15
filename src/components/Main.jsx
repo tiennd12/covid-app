@@ -55,6 +55,7 @@ export const Main = () => {
   const [queryId, setQueryId] = useState("");
 
   const [cases, setCases] = useState([]);
+  const [location, setLocation] = useState("")
   const [todayCases, setTodayCases] = useState("");
 
   // firebase
@@ -130,9 +131,10 @@ export const Main = () => {
     setCases(data.locations);
   };
 
-  const getLocalCases = () => {
-    setTodayCases(cases[authInfo.districtId].casesToday);
-  };
+  // const getLocalCases = () => {
+  //   setTodayCases(cases[authInfo.districtId].casesToday);
+  //   setLocation(cases[authInfo.districtId].name)
+  // };
 
   // `date` is a `Date` object
 const formatYmd = date => date.toISOString().slice(0, 10);
@@ -186,7 +188,7 @@ d.setDate(d.getDate() + 2)
 
   useEffect(() => {
     if (cases.length && authInfo) {
-      getLocalCases();
+      // getLocalCases();
     }
   }, [cases, authInfo]);
 
@@ -375,7 +377,7 @@ d.setDate(d.getDate() + 2)
               </div>
               <div>
                 <Stack>
-                  <Typography>Tình trạng dịch bệnh tại {cases[authInfo.districtId].name}</Typography>
+                  <Typography>Tình trạng dịch bệnh tại {location}</Typography>
                   <Typography>Số người nhiễm bệnh hôm nay: {todayCases}</Typography>
                 </Stack>
               </div>
