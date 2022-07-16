@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, query, where } from "firebase/firestore"
 import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -20,6 +21,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+export const storage = getStorage(app);
 
 // init services
 
@@ -33,12 +35,13 @@ const loginRef = collection(db, "login")
 const dataRef = collection(db, "userData")
 const injectionRef = collection(db, "injectionData")
 const requestRef = collection(db, "requestData")
+const injectionRequestRef = collection(db, "injectionRequestData")
 
-q // get collection data
+// get collection data
 const queryGetUserInfoByEmail = (email) => query(dataRef, where("email", "==", email))
 
 const queryGetUserInfoByPhone = (collection, phone) => query(collection, where("phone", "==", phone))
 
 const queryGetUserInfoById = (collection, id) => query(collection, where("idNumber", "==", id))
 
-export { app, db, colRef, loginRef, dataRef, injectionRef, auth, requestRef, queryGetUserInfoByEmail, queryGetUserInfoByPhone, queryGetUserInfoById };
+export { app, db, colRef, loginRef, dataRef, injectionRef, auth, requestRef, injectionRequestRef, queryGetUserInfoByEmail, queryGetUserInfoByPhone, queryGetUserInfoById };

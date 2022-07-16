@@ -11,6 +11,9 @@ import RequestChange from "./components/RequestChange";
 import EditInfo from "./components/EditInfo";
 import AdminPanel from "./components/AdminPanel";
 import Profile from "./components/Profile";
+import { AddInjectionInfo } from "./components/AddInjectionInfo";
+import {InjectionInfoRequest} from "./components/InjectionInfoRequest"
+import { ConfirmChange } from "./components/ConfirmChange";
 
 function App() {
   const [userId, setUserId] = useState("");
@@ -20,23 +23,42 @@ function App() {
       <div className="App">
         <NavBar />
         <Routes>
-          <Route path="/" element={<Main />}></Route>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />}></Route>
+          <Route path="/" element={<Main />}>
+            {" "}
+          </Route>{" "}
+          <Route path="/login" element={<Login />} />{" "}
+          <Route path="/register" element={<Register />}>
+            {" "}
+          </Route>{" "}
           <Route
             path="/addinfo"
             element={<AddInfo userId={userId} setUserId={setUserId} />}
-          ></Route>
-          <Route path="/addrole" element={<AddRole />}></Route>
-          <Route path="/requestchange" element={<RequestChange />}></Route>
+          ></Route>{" "}
+          <Route path="/addrole" element={<AddRole />}>
+            {" "}
+          </Route>{" "}
+          <Route path="/requestchange" element={<RequestChange />}>
+            {" "}
+          </Route>{" "}
+          <Route path="/confirmchange" element={<ConfirmChange />}>
+            {" "}
+          </Route>{" "}
           <Route
-            path="/editinfo"
-            element={<EditInfo userId={userId} setUserId={setUserId} />}
-          ></Route>
-          <Route path="adminpanel" element={<AdminPanel />}></Route>
-          <Route path="/profile" element={<Profile />}></Route>
-        </Routes>
-      </div>
+            path="/addinjectioninfo"
+            element={<AddInjectionInfo userId={userId} setUserId={setUserId} />}
+          ></Route>{" "}
+          <Route
+            path="/injectioninforequest"
+            element={<InjectionInfoRequest userId={userId} setUserId={setUserId} />}
+          ></Route>{" "}
+          <Route path="adminpanel" element={<AdminPanel />}>
+            {" "}
+          </Route>{" "}
+          <Route path="/profile" element={<Profile />}>
+            {" "}
+          </Route>{" "}
+        </Routes>{" "}
+      </div>{" "}
     </Router>
   );
 }

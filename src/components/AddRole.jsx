@@ -81,12 +81,13 @@ const AddRole = () => {
       });
       setTotalUserInfo(users);
     });
-  }, []);
+    console.log(userId);
+  }, [userId]);
 
   if (!userRole) {
     return <div>Loading</div>;
   }
-  console.log(userId);
+
   return (
     <div className="container addRole">
       {userRole === "admin" ? (
@@ -168,7 +169,11 @@ const AddRole = () => {
         )
       ) : (
         <div>
-          <div><Typography variant="subtitle1" gutterBottom>Bạn không đủ quyền hạn để truy cập</Typography> </div>
+          <div>
+            <Typography variant="subtitle1" gutterBottom>
+              Bạn không đủ quyền hạn để truy cập
+            </Typography>{" "}
+          </div>
           <Button variant="contained" onClick={backToMainPagehandler}>
             Quay lại trang chủ
           </Button>

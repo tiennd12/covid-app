@@ -76,6 +76,19 @@ const AdminPanel = () => {
               </Button>
             </div>
           </Stack>
+          <Stack spacing={2} direction="row" className="addInfo-button">
+          <Button variant="contained">
+                {" "}
+                <MUILink
+                  to="/addinjectioninfo"
+                  underline="none"
+                  color="inherit"
+                  component={RouterLink}
+                >
+                  Chỉnh sửa thông tin lây nhiễm
+                </MUILink>{" "}
+              </Button>
+          </Stack>
         </div>
       ) : (
         <div>

@@ -106,10 +106,10 @@ const useDistrict = (city) => {
           setDistrictName(32);
           break;
         case "Tỉnh Ninh Bình":
-          setDistrictName(33);
-          break;
-        case "Tỉnh Đà Nẵng":
           setDistrictName(34);
+          break;
+        case "Thành phố Đà Nẵng":
+          setDistrictName(33);
           break;
         case "Tỉnh Bến Tre":
           setDistrictName(35);

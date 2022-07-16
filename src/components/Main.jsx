@@ -115,7 +115,7 @@ export const Main = () => {
         });
       });
     }
-    console.log(userInfoQuery);
+    console.log(todayCases);
   };
 
   const goBackHandler = (e) => {
@@ -131,10 +131,10 @@ export const Main = () => {
     setCases(data.locations);
   };
 
-  // const getLocalCases = () => {
-  //   setTodayCases(cases[authInfo.districtId].casesToday);
-  //   setLocation(cases[authInfo.districtId].name)
-  // };
+  const getLocalCases = () => {
+    setTodayCases(cases[authInfo.districtId].casesToday);
+    setLocation(cases[authInfo.districtId].name)
+  };
 
   // `date` is a `Date` object
 const formatYmd = date => date.toISOString().slice(0, 10);
@@ -144,20 +144,21 @@ d.setDate(d.getDate() + 2)
 
 
   useEffect(() => {
-    console.log(formatYmd(new Date()))
-    console.log(new Date().toString())
-    console.log(d.toISOString().slice(0, 10))
-    console.log(new Date().toDateString())
+    //time formatting, will be useful later
+    // console.log(formatYmd(new Date()))
+    // console.log(new Date().toString())
+    // console.log(d.toISOString().slice(0, 10))
+    // console.log(new Date().toDateString())
 
     fetchCases();
 
-    onSnapshot(dataRef, (doc) => {
-      let array = [];
-      doc.docs.forEach((doc) => {
-        array.push({ ...doc.data() });
-      });
-      setTest(array);
-    });
+    // onSnapshot(dataRef, (doc) => {
+    //   let array = [];
+    //   doc.docs.forEach((doc) => {
+    //     array.push({ ...doc.data() });
+    //   });
+    //   setTest(array);
+    // });
 
     onSnapshot(dataRef, orderBy("name", "desc"), (snapshot) => {
       let users = [];
@@ -183,12 +184,12 @@ d.setDate(d.getDate() + 2)
         });
       });
     }
-    console.log(todayCases);
+    console.log(cases)
   }, [isLoggedIn, phone, queryId]);
 
   useEffect(() => {
     if (cases.length && authInfo) {
-      // getLocalCases();
+      getLocalCases();
     }
   }, [cases, authInfo]);
 
@@ -201,7 +202,7 @@ d.setDate(d.getDate() + 2)
               <div>
                 {injectionInfo && (
                   <div>
-                    {injectionInfo.numberOfInjections === null ? (
+                    {injectionInfo.numberOfInjections === "" ? (
                       <Typography variant="h4" gutterBottom>
                         {" "}
                         Chưa có dữ liệu tiêm chủng của bạn
@@ -223,7 +224,7 @@ d.setDate(d.getDate() + 2)
                           {injectionInfo?.injectDate1} - Đơn vị tiêm:{" "}
                           {injectionInfo?.injectPerson1}
                         </Typography>
-                        {injectionInfo.secondDose === null ||
+                        {injectionInfo.secondDose === "" ||
                         injectionInfo.secondDose === "Chưa tiêm" ? (
                           ""
                         ) : (
@@ -233,7 +234,7 @@ d.setDate(d.getDate() + 2)
                             {injectionInfo?.injectPerson2}
                           </Typography>
                         )}
-                        {injectionInfo.thirdDose === null ||
+                        {injectionInfo.thirdDose === "" ||
                         injectionInfo.thirdDose === "Chưa tiêm" ? (
                           ""
                         ) : (
@@ -259,13 +260,13 @@ d.setDate(d.getDate() + 2)
                       ) : (
                         <div>
                           <div>
-                            {injectionInfo.infectedNote1 === "" ? (
+                            {injectionInfo.infectedDate1 === "" ? (
                               ""
                             ) : (
                               <Stack spacing={2}>
                                 <Typography variant="subtitle1" gutterBottom>
                                   Ngày nhiễm bệnh lần 1:{" "}
-                                  {injectionInfo.injectDate1} {""}
+                                  {injectionInfo.infectedDate1} {""}
                                 </Typography>
                                 <Typography variant="subtitle1" gutterBottom>
                                   Ghi chú: {injectionInfo.infectedNote1}
@@ -274,13 +275,13 @@ d.setDate(d.getDate() + 2)
                             )}
                           </div>
                           <div>
-                            {injectionInfo.infectedNote2 === "" ? (
+                            {injectionInfo.infectedDate2 === "" ? (
                               ""
                             ) : (
                               <Stack spacing={2}>
                                 <Typography variant="subtitle1" gutterBottom>
                                   Ngày nhiễm bệnh lần 2:{" "}
-                                  {injectionInfo.injectDate2} {""}
+                                  {injectionInfo.infectedDate2} {""}
                                 </Typography>
                                 <Typography variant="subtitle1" gutterBottom>
                                   Ghi chú: {injectionInfo.infectedNote2}
@@ -289,13 +290,13 @@ d.setDate(d.getDate() + 2)
                             )}
                           </div>
                           <div>
-                            {injectionInfo.infectedNote3 === "" ? (
+                            {injectionInfo.infectedDate3 === "" ? (
                               ""
                             ) : (
                               <Stack spacing={2}>
                                 <Typography variant="subtitle1" gutterBottom>
                                   Ngày nhiễm bệnh lần 3:{" "}
-                                  {injectionInfo.injectDate3} {""}
+                                  {injectionInfo.infectedDate3} {""}
                                 </Typography>
                                 <Typography variant="subtitle1" gutterBottom>
                                   Ghi chú: {injectionInfo.infectedNote3}

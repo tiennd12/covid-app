@@ -35,17 +35,17 @@ const AddInfo = ({ userId, setUserId }) => {
 
   const [expand, setExpand] = useState(false);
 
-  const [vaccineType1, setVaccineType1] = useState(null);
-  const [vaccineType2, setVaccineType2] = useState(null);
-  const [vaccineType3, setVaccineType3] = useState(null);
+  const [vaccineType1, setVaccineType1] = useState("");
+  const [vaccineType2, setVaccineType2] = useState("");
+  const [vaccineType3, setVaccineType3] = useState("");
 
-  const [injectDate1, setInjectDate1] = useState(null);
-  const [injectDate2, setInjectDate2] = useState(null);
-  const [injectDate3, setInjectDate3] = useState(null);
+  const [injectDate1, setInjectDate1] = useState("");
+  const [injectDate2, setInjectDate2] = useState("");
+  const [injectDate3, setInjectDate3] = useState("");
 
-  const [injectPerson1, setInjectPerson1] = useState(null);
-  const [injectPerson2, setInjectPerson2] = useState(null);
-  const [injectPerson3, setInjectPerson3] = useState(null);
+  const [injectPerson1, setInjectPerson1] = useState("");
+  const [injectPerson2, setInjectPerson2] = useState("");
+  const [injectPerson3, setInjectPerson3] = useState("");
 
   const [infectedTimes, setInfectedTimes] = useState("");
 
@@ -63,7 +63,7 @@ const AddInfo = ({ userId, setUserId }) => {
   const [userInfo, setUserInfo] = useState("");
   const [userRole, setUserRole] = useState("");
   const [userEmail, setUserEmail] = useState("");
-  const [userIdNumber, setUserIdNumber] = useState("");
+  // const [userIdNumber, setUserIdNumber] = useState("");
   const [injectionInfo, setInjectionInfo] = useState({});
   const [injectionId, setInjectionId] = useState("");
 
@@ -112,7 +112,7 @@ const AddInfo = ({ userId, setUserId }) => {
           snapshot.forEach((data) => {
             setUserInfo(data.data());
             setUserId(data.id);
-            setUserIdNumber(data.data().idNumber);
+            // setUserIdNumber(data.data().idNumber);
           });
         }
       });
@@ -124,7 +124,7 @@ const AddInfo = ({ userId, setUserId }) => {
     setDoc(doc(db, "injectionData", injectionId), {
       ...injectionInfo,
       numberOfInjections: times,
-      idNumber: userIdNumber,
+      // idNumber: userIdNumber,
       firstDose: vaccineType1,
       secondDose: vaccineType2,
       thirdDose: vaccineType3,
@@ -183,7 +183,9 @@ const AddInfo = ({ userId, setUserId }) => {
       });
       setTotalUserInfo(users);
     });
-  }, []);
+    console.log(userId)
+    console.log(totalUserInfo)
+  }, [userId, userInfo]);
 
   return (
     <div className="container addInfo">
@@ -446,14 +448,14 @@ const AddInfo = ({ userId, setUserId }) => {
                     </Button>
                   </div>
                 </Stack>
-                <Button
+                {/* <Button
                   sx={{ margin: 5 }}
                   variant="contained"
                   type="sumbit"
                   onClick={expandHandler}
                 >
                   Thêm thông tin lây nhiễm
-                </Button>
+                </Button> */}
                 {expand ? (
                   <div>
                     <FormControl

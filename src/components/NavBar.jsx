@@ -65,6 +65,12 @@ export const NavBar = () => {
     setAnchorEl(null);
   };
 
+  const injectionRequestToChange = (e) => {
+    e.preventDefault();
+    navigate("/injectioninforequest");
+    setAnchorEl(null);
+  }
+
   const signoutHandler = (e) => {
     e.preventDefault();
     setAnchorEl(null);
@@ -122,6 +128,7 @@ export const NavBar = () => {
         snapshot.forEach((data) => setUserInfo(data.data()));
       });
     }
+    console.log(userInfo)
   }, [isLoggedIn]);
 
   return (
@@ -193,6 +200,7 @@ export const NavBar = () => {
                       Thông tin cá nhân
                     </MUILink>{" "}
                   </MenuItem>
+                  <MenuItem onClick={injectionRequestToChange}>Sửa TTTC</MenuItem>
                   {userRole === "admin" || userRole === "moderator" ? (
                     <MenuItem onClick={adminNavigator}>Admin Panel</MenuItem>
                   ) : (

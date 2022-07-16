@@ -111,8 +111,8 @@ const Register = () => {
   const districtHandler = (e) => {
     setInputDistrict(e.target.value);
     setInputWard("");
-    districtNameHandler();
-    cityNameHandler();
+    // districtNameHandler();
+    // cityNameHandler();
   };
 
   const fetchDistrict = async () => {
@@ -148,6 +148,7 @@ const Register = () => {
     });
     fetchDistrict();
     fetchWard();
+    console.log(district.name)
   }, [inputCity, inputDistrict, cityName]);
 
   return (
@@ -160,7 +161,7 @@ const Register = () => {
           ) {
             if (district && ward) {
               const updateData = addDoc(dataRef, {
-                city: cityName,
+                city: district.name,
                 district: ward.name,
                 ward: inputWard,
                 name: data.inputName,
@@ -181,7 +182,7 @@ const Register = () => {
 
               if (updateData) {
                 window.alert("Đăng ký thành công");
-                // navigate("/");
+                navigate("/");
               }
             }
           }
