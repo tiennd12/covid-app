@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from "react";
-import {
-  onSnapshot,
-  setDoc,
-  doc,
-  deleteDoc,
-  addDoc,
-} from "@firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   auth,
-  queryGetUserInfoByPhone,
-  queryGetUserInfoByEmail,
-  dataRef,
   db,
+  queryGetUserInfoByEmail,
+  queryGetUserInfoByPhone,
+  dataRef,
+  injectionRequestRef,
+  storage,
+  selfDeclareRef,
   injectionRef,
 } from "../firebase/firebase";
-import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
+import { onSnapshot, doc, setDoc, orderBy, addDoc } from "@firebase/firestore";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
@@ -25,9 +21,7 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
 
-export const AddInjectionInfo = ({ userId, setUserId }) => {
-  const [phone, setPhone] = useState("");
-
+export const SelfDeclare = () => {
   const [totalUserInfo, setTotalUserInfo] = useState("");
   const [totalInjectionInfo, setTotalInjectionInfo] = useState([]);
 
@@ -47,74 +41,38 @@ export const AddInjectionInfo = ({ userId, setUserId }) => {
 
   const [userInfo, setUserInfo] = useState("");
   const [userRole, setUserRole] = useState("");
+
+  const [declareRefInfo, setDeclareRefInfo] = useState(null)
+  const [declareRefId, setDeclareRefId] = useState("")
+
+  const [injectRefInfo, setInjectRefInfo] = useState(null);
+  const [injectRefId, setInjectRefId] = useState("");
+
+
   const [userEmail, setUserEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
+
+  const [userId, setUserId] = useState(null);
   // const [userIdNumber, setUserIdNumber] = useState("");
   const [injectionInfo, setInjectionInfo] = useState({});
   const [injectionId, setInjectionId] = useState("");
+  const [authInfo, setAuthInfo] = useState(null);
 
   onAuthStateChanged(auth, (currentUser) => {
     if (currentUser) {
+      setIsLoggedIn(currentUser);
       setUserEmail(currentUser.email);
-      onSnapshot(queryGetUserInfoByEmail(userEmail), (snapshot) => {
-        snapshot.forEach((data) => setUserRole(data.data().assignedRole));
-      });
+    } else {
+      setIsLoggedIn(null);
     }
   });
 
-  const findInfoByPhoneHandler = (e) => {
+
+  const submitSelfDeclareHandler = (e) => {
     e.preventDefault();
-    if (totalUserInfo) {
-      onSnapshot(queryGetUserInfoByPhone(injectionRef, phone), (snapshot) => {
-        console.log(snapshot._snapshot.docChanges.length);
-        if (snapshot._snapshot.docChanges.length === 0) {
-          //due to changes in Register, this may no longer useful
-          if (
-            window.confirm(
-              "Không tìm thấy dữ liệu người dùng. \n Nhấn OK để tạo dữ liệu"
-            )
-          ) {
-            addDoc(injectionRef, {
-              phone: phone,
-              firstDose: "",
-              secondDose: "",
-              thirdDose: "",
-              numberOfInjections: "",
-              infectedTimes: "",
-              injectDate1: "",
-              injectDate2: "",
-              injectDate3: "",
-              injectPerson1: "",
-              injectPerson2: "",
-              injectPerson3: "",
-            })
-              .then(window.alert("Tạo dữ liệu thành công"))
-              .catch((err) => {
-                console.log(err);
-              });
-          }
-        }
-        {
-          snapshot.forEach((data) => {
-            setInjectionInfo(data.data());
-            setInjectionId(data.id);
-          });
-        }
-      });
-      onSnapshot(queryGetUserInfoByPhone(dataRef, phone), (snapshot) => {
-        {
-          snapshot.forEach((data) => {
-            setUserInfo(data.data());
-            setUserId(data.id);
-            // setUserIdNumber(data.data().idNumber);
-          });
-        }
-      });
-    }
-  };
-  const submitInfectedInfoHandler = (e) => {
-    e.preventDefault();
-    setDoc(doc(db, "injectionData", injectionId), {
-      ...injectionInfo,
+    setDoc(doc(db, "selfDeclareData", declareRefId), {
+      ...declareRefInfo,
       infectedDate1: infectedDate1,
       infectedDate2: infectedDate2,
       infectedDate3: infectedDate3,
@@ -124,33 +82,77 @@ export const AddInjectionInfo = ({ userId, setUserId }) => {
       curedDate1,
       curedDate2,
       curedDate3,
-      infectedTimes: infectedTimes,
+
     });
+    setDoc(doc(db, "injectionData", injectRefId), {
+        ...declareRefInfo,
+        infectedTimes: infectedTimes,
+      });
   };
 
   useEffect(() => {
-    onSnapshot(injectionRef, (snapshot) => {
+    onSnapshot(dataRef, orderBy("name", "desc"), (snapshot) => {
       let users = [];
       snapshot.docs.forEach((doc) => {
         users.push({ ...doc.data(), id: doc.id });
       });
-      setTotalInjectionInfo(users);
+      setUserInfo(users);
     });
-    onSnapshot(dataRef, (snapshot) => {
-      let users = [];
-      snapshot.docs.forEach((doc) => {
-        users.push({ ...doc.data(), id: doc.id });
+    if (isLoggedIn) {
+      onSnapshot(queryGetUserInfoByEmail(isLoggedIn.email), (snapshot) => {
+        snapshot.forEach((data) => {
+          setAuthInfo(data.data());
+          setPhone(data.data().phone);
+          setUserId(data.id);
+          setUserRole(data.data().assignedRole);
+        });
       });
-      setTotalUserInfo(users);
-    });
-    console.log(totalInjectionInfo);
-  }, [userId, userEmail]);
+      if (authInfo.name) {
+        onSnapshot(queryGetUserInfoByPhone(selfDeclareRef, phone), (snapshot) => {
+            console.log(snapshot._snapshot.docChanges.length);
+            if (snapshot._snapshot.docChanges.length === 0) {
+              addDoc(selfDeclareRef, {
+                  phone: phone,
+                firstDose: "",
+                secondDose: "",
+                thirdDose: "",
+                numberOfInjections: "",
+                infectedTimes: "",
+                injectDate1: "",
+                injectDate2: "",
+                injectDate3: "",
+                injectPerson1: "",
+                injectPerson2: "",
+                injectPerson3: "",
+                  name: authInfo.name,
+              });
+            }
+            snapshot.forEach((data) => {
+              setDeclareRefInfo(data.data());
+              setDeclareRefId(data.id);
+            });
+          }
+        );
+        onSnapshot(queryGetUserInfoByPhone(injectionRef, phone), (snapshot) => {
+            console.log(snapshot._snapshot.docChanges.length);
+            snapshot.forEach((data) => {
+                setInjectRefInfo(data.data());
+                setInjectRefId(data.id);
+            });
+          })
+      }
+    }
+    
+    console.log(declareRefInfo);
+  }, [isLoggedIn, userRole]);
 
   return (
     <Stack className="container addInfo">
-      {userRole === "admin" || userRole === "moderator" ? (
+      {userRole === "admin" ||
+      userRole === "moderator" ||
+      userRole === "user" ? (
         <Stack>
-          {userInfo ? (
+          {declareRefInfo ? (
             <Stack>
               <Stack>
                 <Stack>
@@ -160,39 +162,39 @@ export const AddInjectionInfo = ({ userId, setUserId }) => {
                 </Stack>
                 <Stack>
                   <Typography variant="subtitle1" gutterBottom>
-                    Họ và tên: {userInfo.name}{" "}
+                    Họ và tên: {authInfo.name}{" "}
                   </Typography>
                 </Stack>
                 <Stack>
                   <Typography variant="subtitle1" gutterBottom>
-                    Ngày sinh: {userInfo.dob}{" "}
+                    Ngày sinh: {authInfo.dob}{" "}
                   </Typography>
                 </Stack>
                 <Stack>
                   <Typography variant="subtitle1" gutterBottom>
-                    Số mũi đã tiêm: {injectionInfo.numberOfInjections}{" "}
+                    Số mũi đã tiêm: {declareRefInfo.numberOfInjections}{" "}
                   </Typography>
                 </Stack>
                 <Stack>
                   <Typography variant="subtitle1" gutterBottom>
-                    Mũi số 1: {injectionInfo.firstDose}{" "}
+                    Mũi số 1: {declareRefInfo.firstDose}{" "}
                   </Typography>
                 </Stack>
                 <Stack>
                   <Typography variant="subtitle1" gutterBottom>
-                    Mũi số 2: {injectionInfo.secondDose}{" "}
+                    Mũi số 2: {declareRefInfo.secondDose}{" "}
                   </Typography>
                 </Stack>
                 <Stack>
                   <Typography variant="subtitle1" gutterBottom>
-                    Mũi số 3: {injectionInfo.thirdDose}{" "}
+                    Mũi số 3: {declareRefInfo.thirdDose}{" "}
                   </Typography>
                 </Stack>
                 <Stack>
                   <Typography variant="h6" gutterBottom>
                     Lịch sử lây nhiễm
                   </Typography>
-                  {injectionInfo.infectedTimes === "" ? (
+                  {declareRefInfo.infectedTimes === "" ? (
                     <Stack>
                       <Typography variant="subtitle1" gutterBottom>
                         <em>Bạn chưa từng nhiễm bệnh</em>
@@ -201,8 +203,8 @@ export const AddInjectionInfo = ({ userId, setUserId }) => {
                   ) : (
                     <Stack>
                       <Stack>
-                        {injectionInfo.infectedDate1 === "" ? (
-                          ""
+                        {declareRefInfo.infectedDate1 === "" ? (
+                          <></>
                         ) : (
                           <Stack className=".addInfo-info">
                             <Stack
@@ -212,21 +214,21 @@ export const AddInjectionInfo = ({ userId, setUserId }) => {
                             >
                               <Typography variant="subtitle1" gutterBottom>
                                 Ngày nhiễm bệnh lần 1:{" "}
-                                {injectionInfo.infectedDate1} - {""}
+                                {declareRefInfo.infectedDate1} - {""}
                               </Typography>
                               <Typography variant="subtitle1" gutterBottom>
-                                Ngày khỏi bệnh: {injectionInfo.curedDate1} {""}
+                                Ngày khỏi bệnh: {declareRefInfo.curedDate1} {""}
                               </Typography>
                             </Stack>
                             <Stack>
                               <Typography variant="subtitle1" gutterBottom>
-                                {injectionInfo.infectedNote1 === "" ? (
+                                {declareRefInfo.infectedNote1 === "" ? (
                                   <Typography variant="subtitle1" gutterBottom>
                                     Ghi chú: Không có
                                   </Typography>
                                 ) : (
                                   <Typography variant="subtitle1" gutterBottom>
-                                    Ghi chú: {injectionInfo.infectedNote1}
+                                    Ghi chú: {declareRefInfo.infectedNote1}
                                   </Typography>
                                 )}
                               </Typography>
@@ -235,7 +237,7 @@ export const AddInjectionInfo = ({ userId, setUserId }) => {
                         )}
                       </Stack>
                       <Stack>
-                        {injectionInfo.infectedDate2 === "" ? (
+                        {declareRefInfo.infectedDate2 === "" ? (
                           ""
                         ) : (
                           <Stack className=".addInfo-info">
@@ -246,21 +248,21 @@ export const AddInjectionInfo = ({ userId, setUserId }) => {
                             >
                               <Typography variant="subtitle1" gutterBottom>
                                 Ngày nhiễm bệnh lần 2:{" "}
-                                {injectionInfo.infectedDate2} - {""}
+                                {declareRefInfo.infectedDate2} - {""}
                               </Typography>
                               <Typography variant="subtitle1" gutterBottom>
-                                Ngày khỏi bệnh: {injectionInfo.curedDate2} {""}
+                                Ngày khỏi bệnh: {declareRefInfo.curedDate2} {""}
                               </Typography>
                             </Stack>
                             <Stack>
                               <Typography variant="subtitle1" gutterBottom>
-                                {injectionInfo.infectedNote2 === "" ? (
+                                {declareRefInfo.infectedNote2 === "" ? (
                                   <Typography variant="subtitle1" gutterBottom>
                                     Ghi chú: Không có
                                   </Typography>
                                 ) : (
                                   <Typography variant="subtitle1" gutterBottom>
-                                    Ghi chú: {injectionInfo.infectedNote2}
+                                    Ghi chú: {declareRefInfo.infectedNote2}
                                   </Typography>
                                 )}
                               </Typography>
@@ -269,7 +271,7 @@ export const AddInjectionInfo = ({ userId, setUserId }) => {
                         )}
                       </Stack>
                       <Stack>
-                        {injectionInfo.infectedDate3 === "" ? (
+                        {declareRefInfo.infectedDate3 === "" ? (
                           ""
                         ) : (
                           <Stack className=".addInfo-info">
@@ -280,21 +282,21 @@ export const AddInjectionInfo = ({ userId, setUserId }) => {
                             >
                               <Typography variant="subtitle1" gutterBottom>
                                 Ngày nhiễm bệnh lần 3:{" "}
-                                {injectionInfo.infectedDate3} - {""}
+                                {declareRefInfo.infectedDate3} - {""}
                               </Typography>
                               <Typography variant="subtitle1" gutterBottom>
-                                Ngày khỏi bệnh: {injectionInfo.curedDate3} {""}
+                                Ngày khỏi bệnh: {declareRefInfo.curedDate3} {""}
                               </Typography>
                             </Stack>
                             <Stack>
                               <Typography variant="subtitle1" gutterBottom>
-                                {injectionInfo.infectedNote3 === "" ? (
+                                {declareRefInfo.infectedNote3 === "" ? (
                                   <Typography variant="subtitle1" gutterBottom>
                                     Ghi chú: Không có
                                   </Typography>
                                 ) : (
                                   <Typography variant="subtitle1" gutterBottom>
-                                    Ghi chú: {injectionInfo.infectedNote3}
+                                    Ghi chú: {declareRefInfo.infectedNote3}
                                   </Typography>
                                 )}
                               </Typography>
@@ -616,7 +618,7 @@ export const AddInjectionInfo = ({ userId, setUserId }) => {
                     variant="contained"
                     type="sumbit"
                     sx={{ marginBottom: 5, marginTop: 2 }}
-                    onClick={submitInfectedInfoHandler}
+                    onClick={submitSelfDeclareHandler}
                   >
                     Gửi
                   </Button>
@@ -625,33 +627,17 @@ export const AddInjectionInfo = ({ userId, setUserId }) => {
             </Stack>
           ) : (
             <Stack className="addRole-form">
-              <Stack spacing={2} alignItems="center" >
-                <TextField
-                  id="standard-basic"
-                  variant="standard"
-                  type="text"
-                  label="Tìm theo số điện thoại"
-                  className="addInfo-findWithPhone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-                <Button
-                  variant="contained"
-                  type="sumbit"
-                  onClick={findInfoByPhoneHandler}
-                >
-                  Tìm
-                </Button>
-              </Stack>
             </Stack>
           )}
         </Stack>
       ) : (
         <Stack>
-          <Typography variant="h5" gutterBottom>
-            Bạn không đủ quyền hạn để truy cập
-          </Typography>
           <Stack>
+            <Typography variant="h5" gutterBottom>
+              Vui lòng đăng nhập để tiếp tục
+            </Typography>
+          </Stack>
+          <Stack alignItems="center">
             <Button variant="contained">Quay lại trang chủ</Button>
           </Stack>
         </Stack>

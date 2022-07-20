@@ -175,10 +175,34 @@ const Register = () => {
                 districtId: districtName,
               });
 
-              // addDoc(injectionRef, {
-              //   numberOfInjections: "Chưa tiêm",
-              //   phone: data.inputPhone,
-              // });
+              addDoc(injectionRef, {
+                numberOfInjections: "Chưa tiêm",
+                phone: data.inputPhone,
+                firstDose: "",
+                secondDose: "",
+                thirdDose: "",
+                infectedTimes: "",
+                injectDate1: "",
+                injectDate2: "",
+                injectDate3: "",
+                injectPerson1: "",
+                injectPerson2: "",
+                injectPerson3: "",
+                dataSubmitted: false,
+                vaccinated: false,
+                isCurrentlyInfected: false,
+                verifiedByAdmin: false,
+                infectedDate1: "",
+                infectedDate2: "",
+                infectedDate3: "",
+                infectedNote1: "",
+                infectedNote2: "",
+                infectedNote3: "",
+                curedDate1: "",
+                curedDate2: "",
+                curedDate3: "",
+                infectedTimes: "",
+              });
 
               if (updateData) {
                 window.alert("Đăng ký thành công");
@@ -203,7 +227,7 @@ const Register = () => {
             className="register-email"
             onChange={inputEmailHandler}
             value={inputEmail}
-            disabled
+            // disabled
           />
         </div>
         <div>

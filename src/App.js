@@ -12,8 +12,9 @@ import EditInfo from "./components/EditInfo";
 import AdminPanel from "./components/AdminPanel";
 import Profile from "./components/Profile";
 import { AddInjectionInfo } from "./components/AddInjectionInfo";
-import {InjectionInfoRequest} from "./components/InjectionInfoRequest"
+import { InjectionInfoRequest } from "./components/InjectionInfoRequest";
 import { ConfirmChange } from "./components/ConfirmChange";
+import { SelfDeclare } from "./components/SelfDeclare";
 
 function App() {
   const [userId, setUserId] = useState("");
@@ -49,7 +50,13 @@ function App() {
           ></Route>{" "}
           <Route
             path="/injectioninforequest"
-            element={<InjectionInfoRequest userId={userId} setUserId={setUserId} />}
+            element={
+              <InjectionInfoRequest userId={userId} setUserId={setUserId} />
+            }
+          ></Route>{" "}
+          <Route
+            path="/selfdeclare"
+            element={<SelfDeclare />}
           ></Route>{" "}
           <Route path="adminpanel" element={<AdminPanel />}>
             {" "}

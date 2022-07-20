@@ -9,14 +9,8 @@ import {
   injectionRequestRef,
   storage,
 } from "../firebase/firebase";
-import {
-  onSnapshot,
-  doc,
-  setDoc,
-  orderBy,
-  addDoc,
-} from "@firebase/firestore";
-import {getDownloadURL, ref, uploadBytes} from "firebase/storage"
+import { onSnapshot, doc, setDoc, orderBy, addDoc } from "@firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
@@ -58,7 +52,6 @@ export const InjectionInfoRequest = () => {
   // upload img
   const [imageUpload, setImageUpload] = useState(null);
 
-
   // firebase
   onAuthStateChanged(auth, (currentUser) => {
     if (currentUser) {
@@ -71,11 +64,11 @@ export const InjectionInfoRequest = () => {
 
   const submitInfoHanlder = (e) => {
     e.preventDefault();
-    if(imageUpload === null) return;
+    if (imageUpload === null) return;
     const imageRef = ref(storage, `${phone}/verifyImg`);
-    uploadBytes(imageRef, imageUpload).then(()=> {
-      alert("Gửi lên thành công")
-    })
+    uploadBytes(imageRef, imageUpload).then(() => {
+      alert("Gửi lên thành công");
+    });
     const imageListRef = ref(storage, `${phone}/verifyImg`);
     getDownloadURL(imageListRef).then((url) => {
       setDoc(doc(db, "injectionRequestData", requestId), {
@@ -98,7 +91,7 @@ export const InjectionInfoRequest = () => {
       setDate("");
       setPlace("");
       setTimes("");
-    })
+    });
   };
 
   useEffect(() => {
@@ -168,14 +161,20 @@ export const InjectionInfoRequest = () => {
               <Stack>
                 {requestInfo?.status === "pending" ? (
                   <Typography>Yêu cầu của bạn đang được xử lí</Typography>
-                ):(
+                ) : (
                   <Stack>
                     {requestInfo?.status === "approved" ? (
-                      <Typography>Yêu cầu của bạn đã được chấp thuận, vui lòng kiểm tra thông tin được thay đổi</Typography>
+                      <Typography>
+                        Yêu cầu của bạn đã được chấp thuận, vui lòng kiểm tra
+                        thông tin được thay đổi
+                      </Typography>
                     ) : (
                       <Stack>
                         {requestInfo?.status === "rejected" ? (
-                          <Typography>Yêu cầu của bạn đã bị từ chối với lí do: {requestInfo?.reason}</Typography>
+                          <Typography>
+                            Yêu cầu của bạn đã bị từ chối với lí do:{" "}
+                            {requestInfo?.reason}
+                          </Typography>
                         ) : (
                           <></>
                         )}
@@ -204,9 +203,7 @@ export const InjectionInfoRequest = () => {
                 value={times}
               >
                 {" "}
-                <MenuItem value="" disabled>
-                  <em>None</em>
-                </MenuItem>
+                <MenuItem value="Chưa tiêm">Chưa tiêm </MenuItem>
                 <MenuItem value="1 mũi">1 lần</MenuItem>
                 <MenuItem value="2 mũi">2 lần</MenuItem>
                 <MenuItem value="3 mũi">3 lần</MenuItem>
@@ -230,7 +227,6 @@ export const InjectionInfoRequest = () => {
                   <MenuItem value="" disabled>
                     Chọn loại vaccine
                   </MenuItem>
-                  <MenuItem value="Chưa tiêm">Chưa tiêm</MenuItem>
                   <MenuItem value="Nanocovax">Nanocovax</MenuItem>
                   <MenuItem value="Pfizer-BioNTech">Pfizer-BioNTech</MenuItem>
                   <MenuItem value="AstraZeneca">AstraZeneca</MenuItem>
@@ -367,9 +363,9 @@ export const InjectionInfoRequest = () => {
               variant="contained"
               component="label"
               className="addInfo-button"
-              sx={{ width: 120, marginTop: 4}}
+              sx={{ width: 120, marginTop: 4 }}
             >
-              Upload
+              Tải ảnh lên
               <input
                 hidden
                 accept="image/*"
@@ -378,7 +374,7 @@ export const InjectionInfoRequest = () => {
                 onChange={(e) => setImageUpload(e.target.files[0])}
               />
             </Button>
-            <Typography sx={{marginTop:1}}>{imageUpload?.name}</Typography>
+            <Typography sx={{ marginTop: 1 }}>{imageUpload?.name}</Typography>
           </Stack>
           <Stack sx={{ marginTop: 5 }}>
             {" "}
@@ -393,8 +389,8 @@ export const InjectionInfoRequest = () => {
         </Stack>
       ) : (
         <Typography variant="h5" gutterBottom>
-        Vui lòng đăng nhập để tiếp tục
-      </Typography>
+          Vui lòng đăng nhập để tiếp tục
+        </Typography>
       )}
     </div>
   );

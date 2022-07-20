@@ -20,6 +20,7 @@ import {
   queryGetUserInfoById,
   injectionRef,
   dataRef,
+  selfDeclareRef,
 } from "../firebase/firebase";
 
 import { onSnapshot, doc, setDoc, orderBy, getDocs } from "@firebase/firestore";
@@ -38,8 +39,13 @@ export const Main = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [authInfo, setAuthInfo] = useState(null);
   const [userEmail, setUserEmail] = useState("");
+  //injectionRef
   const [injectionInfo, setInjectionInfo] = useState({});
   const [injectionId, setInjectionId] = useState("");
+  //selfDeclareRef
+  const [declareRefInfo, setDeclareRefInfo] = useState(null);
+  const [declareRefId, setDeclareRefId] = useState("");
+  //================
   const [phone, setPhone] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const provider = new GoogleAuthProvider();
@@ -55,7 +61,7 @@ export const Main = () => {
   const [queryId, setQueryId] = useState("");
 
   const [cases, setCases] = useState([]);
-  const [location, setLocation] = useState("")
+  const [location, setLocation] = useState("");
   const [todayCases, setTodayCases] = useState("");
 
   // firebase
@@ -133,15 +139,14 @@ export const Main = () => {
 
   const getLocalCases = () => {
     setTodayCases(cases[authInfo.districtId].casesToday);
-    setLocation(cases[authInfo.districtId].name)
+    setLocation(cases[authInfo.districtId].name);
   };
 
   // `date` is a `Date` object
-const formatYmd = date => date.toISOString().slice(0, 10);
-const d = new Date()
-d.setDate(d.getDate() + 2)
-// Example
-
+  const formatYmd = (date) => date.toISOString().slice(0, 10);
+  const d = new Date();
+  d.setDate(d.getDate() + 2);
+  // Example
 
   useEffect(() => {
     //time formatting, will be useful later
@@ -183,8 +188,14 @@ d.setDate(d.getDate() + 2)
           setInjectionId(data.id);
         });
       });
+      onSnapshot(queryGetUserInfoByPhone(selfDeclareRef, phone), (snapshot) => {
+        snapshot.forEach((data) => {
+          setDeclareRefInfo(data.data());
+          setDeclareRefId(data.id);
+        });
+      });
     }
-    console.log(cases)
+    console.log(declareRefInfo);
   }, [isLoggedIn, phone, queryId]);
 
   useEffect(() => {
@@ -202,11 +213,17 @@ d.setDate(d.getDate() + 2)
               <div>
                 {injectionInfo && (
                   <div>
-                    {injectionInfo.numberOfInjections === "" ? (
-                      <Typography variant="h4" gutterBottom>
-                        {" "}
-                        Chưa có dữ liệu tiêm chủng của bạn
-                      </Typography>
+                    {!injectionInfo.dataSubmitted ? (
+                      <Stack>
+                        <Typography variant="h4" gutterBottom>
+                          {" "}
+                          Chưa có dữ liệu tiêm chủng của bạn
+                        </Typography>
+                        <Typography>
+                          Vui lòng bấm vào đây để gửi yêu cầu xác nhận thông tin
+                          tiêm chủng
+                        </Typography>
+                      </Stack>
                     ) : (
                       <Typography variant="h4" gutterBottom>
                         {" "}
@@ -219,11 +236,16 @@ d.setDate(d.getDate() + 2)
                         direction="column"
                         sx={{ maxWidth: 400, alignItems: "center" }}
                       >
-                        <Typography variant="subtitle1" gutterBottom>
-                          Mũi số 1: {injectionInfo?.firstDose} -{" "}
-                          {injectionInfo?.injectDate1} - Đơn vị tiêm:{" "}
-                          {injectionInfo?.injectPerson1}
-                        </Typography>
+                        {injectionInfo?.firstDose === "" ? (
+                          <></>
+                        ) : (
+                          <Typography variant="subtitle1" gutterBottom>
+                            Mũi số 1: {injectionInfo?.firstDose} -{" "}
+                            {injectionInfo?.injectDate1} - Đơn vị tiêm:{" "}
+                            {injectionInfo?.injectPerson1}
+                          </Typography>
+                        )}
+
                         {injectionInfo.secondDose === "" ||
                         injectionInfo.secondDose === "Chưa tiêm" ? (
                           ""
@@ -256,55 +278,151 @@ d.setDate(d.getDate() + 2)
                           <Typography variant="subtitle1" gutterBottom>
                             <em>Bạn chưa từng nhiễm bệnh</em>
                           </Typography>
+                          <Typography variant="subtitle1" gutterBottom>
+                            Bấm vào đây để tự khai lịch sử lây nhiễm của bạn
+                          </Typography>
                         </div>
                       ) : (
-                        <div>
-                          <div>
-                            {injectionInfo.infectedDate1 === "" ? (
-                              ""
-                            ) : (
-                              <Stack spacing={2}>
-                                <Typography variant="subtitle1" gutterBottom>
-                                  Ngày nhiễm bệnh lần 1:{" "}
-                                  {injectionInfo.infectedDate1} {""}
-                                </Typography>
-                                <Typography variant="subtitle1" gutterBottom>
-                                  Ghi chú: {injectionInfo.infectedNote1}
-                                </Typography>
-                              </Stack>
-                            )}
-                          </div>
-                          <div>
-                            {injectionInfo.infectedDate2 === "" ? (
-                              ""
-                            ) : (
-                              <Stack spacing={2}>
-                                <Typography variant="subtitle1" gutterBottom>
-                                  Ngày nhiễm bệnh lần 2:{" "}
-                                  {injectionInfo.infectedDate2} {""}
-                                </Typography>
-                                <Typography variant="subtitle1" gutterBottom>
-                                  Ghi chú: {injectionInfo.infectedNote2}
-                                </Typography>
-                              </Stack>
-                            )}
-                          </div>
-                          <div>
-                            {injectionInfo.infectedDate3 === "" ? (
-                              ""
-                            ) : (
-                              <Stack spacing={2}>
-                                <Typography variant="subtitle1" gutterBottom>
-                                  Ngày nhiễm bệnh lần 3:{" "}
-                                  {injectionInfo.infectedDate3} {""}
-                                </Typography>
-                                <Typography variant="subtitle1" gutterBottom>
-                                  Ghi chú: {injectionInfo.infectedNote3}
-                                </Typography>
-                              </Stack>
-                            )}
-                          </div>
-                        </div>
+                        <Stack>
+                          {injectionInfo?.verifiedByAdmin ? (
+                            <Stack>
+                              <div>
+                                <div>
+                                  {injectionInfo?.infectedDate1 === "" ? (
+                                    ""
+                                  ) : (
+                                    <Stack spacing={2}>
+                                      <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                      >
+                                        Ngày nhiễm bệnh lần 1:{" "}
+                                        {injectionInfo?.infectedDate1} {""}
+                                      </Typography>
+                                      <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                      >
+                                        Ghi chú: {injectionInfo?.infectedNote1}
+                                      </Typography>
+                                    </Stack>
+                                  )}
+                                </div>
+                                <div>
+                                  {injectionInfo?.infectedDate2 === "" ? (
+                                    ""
+                                  ) : (
+                                    <Stack spacing={2}>
+                                      <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                      >
+                                        Ngày nhiễm bệnh lần 2:{" "}
+                                        {injectionInfo?.infectedDate2} {""}
+                                      </Typography>
+                                      <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                      >
+                                        Ghi chú: {injectionInfo?.infectedNote2}
+                                      </Typography>
+                                    </Stack>
+                                  )}
+                                </div>
+                                <div>
+                                  {injectionInfo?.infectedDate3 === "" ? (
+                                    ""
+                                  ) : (
+                                    <Stack spacing={2}>
+                                      <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                      >
+                                        Ngày nhiễm bệnh lần 3:{" "}
+                                        {injectionInfo?.infectedDate3} {""}
+                                      </Typography>
+                                      <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                      >
+                                        Ghi chú: {injectionInfo?.infectedNote3}
+                                      </Typography>
+                                    </Stack>
+                                  )}
+                                </div>
+                              </div>
+                            </Stack>
+                          ) : (
+                            <Stack>
+                              <div>
+                                <div>Người dùng tự khai bá<optgroup></optgroup></div>
+                                <div>
+                                  {declareRefInfo?.infectedDate1 === "" ? (
+                                    ""
+                                  ) : (
+                                    <Stack spacing={2}>
+                                      <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                      >
+                                        Ngày nhiễm bệnh lần 1:{" "}
+                                        {declareRefInfo?.infectedDate1} {""}
+                                      </Typography>
+                                      <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                      >
+                                        Ghi chú: {declareRefInfo?.infectedNote1}
+                                      </Typography>
+                                    </Stack>
+                                  )}
+                                </div>
+                                <div>
+                                  {declareRefInfo?.infectedDate2 === "" ? (
+                                    ""
+                                  ) : (
+                                    <Stack spacing={2}>
+                                      <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                      >
+                                        Ngày nhiễm bệnh lần 2:{" "}
+                                        {declareRefInfo?.infectedDate2} {""}
+                                      </Typography>
+                                      <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                      >
+                                        Ghi chú: {declareRefInfo?.infectedNote2}
+                                      </Typography>
+                                    </Stack>
+                                  )}
+                                </div>
+                                <div>
+                                  {declareRefInfo?.infectedDate3 === "" ? (
+                                    ""
+                                  ) : (
+                                    <Stack spacing={2}>
+                                      <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                      >
+                                        Ngày nhiễm bệnh lần 3:{" "}
+                                        {declareRefInfo?.infectedDate3} {""}
+                                      </Typography>
+                                      <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                      >
+                                        Ghi chú: {declareRefInfo?.infectedNote3}
+                                      </Typography>
+                                    </Stack>
+                                  )}
+                                </div>
+                              </div>
+                            </Stack>
+                          )}
+                        </Stack>
                       )}
                     </div>
                     <div>---------------------------------</div>
@@ -379,7 +497,9 @@ d.setDate(d.getDate() + 2)
               <div>
                 <Stack>
                   <Typography>Tình trạng dịch bệnh tại {location}</Typography>
-                  <Typography>Số người nhiễm bệnh hôm nay: {todayCases}</Typography>
+                  <Typography>
+                    Số người nhiễm bệnh hôm nay: {todayCases}
+                  </Typography>
                 </Stack>
               </div>
             </div>

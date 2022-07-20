@@ -20,12 +20,12 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Link from '@mui/material/Link';
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Link from "@mui/material/Link";
 
 export const ConfirmChange = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -35,29 +35,17 @@ export const ConfirmChange = () => {
   const [requestInfo, setRequestInfo] = useState(null);
   const [requestId, setRequestId] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(null);
-  const [requestUsers, setRequestUsers] = useState("");
+
   const [userId, setUserId] = useState(null);
+
+  const [alertmsg, setAlertmsg] = useState("");
 
   const [injectInfo, setInjectInfo] = useState("");
   const [injectId, setInjectId] = useState("");
 
   //inject info
   const [phone, setPhone] = useState("");
-  const [place, setPlace] = useState("");
-  const [date, setDate] = useState("");
-  const [times, setTimes] = useState("");
 
-  const [vaccineType1, setVaccineType1] = useState("");
-  const [vaccineType2, setVaccineType2] = useState("");
-  const [vaccineType3, setVaccineType3] = useState("");
-
-  const [injectDate1, setInjectDate1] = useState("");
-  const [injectDate2, setInjectDate2] = useState("");
-  const [injectDate3, setInjectDate3] = useState("");
-
-  const [injectPerson1, setInjectPerson1] = useState("");
-  const [injectPerson2, setInjectPerson2] = useState("");
-  const [injectPerson3, setInjectPerson3] = useState("");
 
   // upload img
   const [imageUpload, setImageUpload] = useState(null);
@@ -65,7 +53,7 @@ export const ConfirmChange = () => {
   // open dialogue
 
   const [open, setOpen] = useState(false);
-  const [reason, setReason] = useState("")
+  const [reason, setReason] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -74,35 +62,57 @@ export const ConfirmChange = () => {
   const handleConfirm = (e) => {
     e.preventDefault();
     setDoc(doc(db, "injectionData", injectId), {
-        ...injectInfo,
-        numberOfInjections :requestInfo?.numberOfInjections,
-        firstDose: requestInfo?.firstDose,
-        secondDose: requestInfo?.secondDose,
-        thirdDose: requestInfo?.thirdDose,
-        injectDate1: requestInfo?.injectDate1,
-        injectDate2: requestInfo?.injectDate2,
-        injectDate3: requestInfo?.injectDate3,
-        injectPerson1:requestInfo?.injectPerson1,
-        injectPerson2:requestInfo?.injectPerson2,
-        injectPerson3:requestInfo?.injectPerson3,
-      });
-      setDoc(doc(db, "injectionRequestData", requestId), {
-        ...requestInfo,
-        status: "approved",
-    })
+      ...injectInfo,
+      numberOfInjections: requestInfo?.numberOfInjections,
+      firstDose: requestInfo?.firstDose,
+      secondDose: requestInfo?.secondDose,
+      thirdDose: requestInfo?.thirdDose,
+      injectDate1: requestInfo?.injectDate1,
+      injectDate2: requestInfo?.injectDate2,
+      injectDate3: requestInfo?.injectDate3,
+      injectPerson1: requestInfo?.injectPerson1,
+      injectPerson2: requestInfo?.injectPerson2,
+      injectPerson3: requestInfo?.injectPerson3,
+    });
+    setDoc(doc(db, "injectionRequestData", requestId), {
+      ...requestInfo,
+      numberOfInjections: "",
+      firstDose: "",
+      secondDose: "",
+      thirdDose: "",
+      injectDate1: "",
+      injectDate2: "",
+      injectDate3: "",
+      injectPerson1: "",
+      injectPerson2: "",
+      injectPerson3: "",
+      infectedTimes: "",
+
+      status: "approved",
+    });
     setOpen(false);
   };
   const handleCloseReject = (e) => {
     e.preventDefault();
     setDoc(doc(db, "injectionRequestData", requestId), {
-        ...requestInfo,
-        status: "rejected",
-        reason,
-    })
+      ...requestInfo,
+      numberOfInjections: "",
+      firstDose: "",
+      secondDose: "",
+      thirdDose: "",
+      injectDate1: "",
+      injectDate2: "",
+      injectDate3: "",
+      injectPerson1: "",
+      injectPerson2: "",
+      injectPerson3: "",
+      infectedTimes: "",
+      status: "rejected",
+      reason,
+    });
     setOpen(false);
   };
   const handleClose = (e) => {
-    
     setOpen(false);
   };
 
@@ -115,15 +125,14 @@ export const ConfirmChange = () => {
         queryGetUserInfoByPhone(injectionRequestRef, phone),
         (snapshot) => {
           console.log(snapshot._snapshot.docChanges.length);
-          //   if (snapshot._snapshot.docChanges.length === 0) {
-          //     window.alert("Không có thông tin cho người dùng này");
-          //   } else
-          {
-            snapshot.forEach((data) => {
-              setRequestInfo(data.data());
-              setRequestId(data.id);
-            });
+          if (snapshot._snapshot.docChanges.length === 0) {
+            setAlertmsg("Không có thông tin cho người dùng này");
           }
+
+          snapshot.forEach((data) => {
+            setRequestInfo(data.data());
+            setRequestId(data.id);
+          });
         }
       );
       onSnapshot(queryGetUserInfoByPhone(injectionRef, phone), (snapshot) => {
@@ -163,7 +172,7 @@ export const ConfirmChange = () => {
         });
       });
     }
-    console.log(reason);
+    console.log(requestInfo);
   }, [isLoggedIn, requestInfo, injectInfo]);
 
   return (
@@ -401,18 +410,23 @@ export const ConfirmChange = () => {
                   </Typography>
                   {/* <img src={requestInfo?.imageProof}></img> */}
                 </Stack>
-
               </Stack>
-              <Stack sx={{marginTop: 3}}>
-                <Link href={requestInfo?.imageProof} target="blank">Hình ảnh minh chứng</Link>
-                </Stack>
+              <Stack sx={{ marginTop: 3 }}>
+                <Link href={requestInfo?.imageProof} target="blank">
+                  Hình ảnh minh chứng
+                </Link>
+              </Stack>
               <Stack
                 direction="row"
                 spacing={10}
                 sx={{ justifyContent: "center", marginTop: 5 }}
               >
                 <Stack>
-                  <Button variant="contained" type="sumbit" onClick={handleConfirm}>
+                  <Button
+                    variant="contained"
+                    type="sumbit"
+                    onClick={handleConfirm}
+                  >
                     Chấp thuận
                   </Button>
                 </Stack>
@@ -438,7 +452,7 @@ export const ConfirmChange = () => {
                         type="text"
                         fullWidth
                         variant="standard"
-                        onChange={e => setReason(e.target.value)}
+                        onChange={(e) => setReason(e.target.value)}
                         value={reason}
                       />
                     </DialogContent>
@@ -470,6 +484,7 @@ export const ConfirmChange = () => {
                   >
                     Tìm
                   </Button>
+                  <Stack>{alertmsg}</Stack>
                 </Stack>
               </Stack>
             </Stack>

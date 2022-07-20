@@ -82,6 +82,7 @@ const AddInfo = ({ userId, setUserId }) => {
       onSnapshot(queryGetUserInfoByPhone(injectionRef, phone), (snapshot) => {
         console.log(snapshot._snapshot.docChanges.length);
         if (snapshot._snapshot.docChanges.length === 0) {
+          //due to changes in Register, this may no longer useful
           if (
             window.confirm(
               "Không tìm thấy dữ liệu người dùng. \n Nhấn OK để tạo dữ liệu"
@@ -89,10 +90,10 @@ const AddInfo = ({ userId, setUserId }) => {
           ) {
             addDoc(injectionRef, {
               phone: phone,
-              firstDose: null,
-              secondDose: null,
-              thirdDose: null,
-              numberOfInjections: null,
+              firstDose: "",
+              secondDose: "",
+              thirdDose: "",
+              numberOfInjections: "",
             })
               .then(window.alert("Tạo dữ liệu thành công"))
               .catch((err) => {
@@ -166,7 +167,7 @@ const AddInfo = ({ userId, setUserId }) => {
       infectedNote3: infectedNote3,
       infectedTimes: infectedTimes,
     });
-  }
+  };
 
   useEffect(() => {
     onSnapshot(injectionRef, (snapshot) => {
@@ -183,8 +184,8 @@ const AddInfo = ({ userId, setUserId }) => {
       });
       setTotalUserInfo(users);
     });
-    console.log(userId)
-    console.log(totalUserInfo)
+    console.log(userId);
+    console.log(totalUserInfo);
   }, [userId, userInfo]);
 
   return (
@@ -264,9 +265,7 @@ const AddInfo = ({ userId, setUserId }) => {
                       value={times}
                     >
                       {" "}
-                      <MenuItem value="" disabled>
-                        <em>None</em>
-                      </MenuItem>
+                      <MenuItem value="Chưa tiêm">Chưa tiêm</MenuItem>
                       <MenuItem value="1 mũi">1 lần</MenuItem>
                       <MenuItem value="2 mũi">2 lần</MenuItem>
                       <MenuItem value="3 mũi">3 lần</MenuItem>
@@ -292,7 +291,6 @@ const AddInfo = ({ userId, setUserId }) => {
                         <MenuItem value="" disabled>
                           Chọn loại vaccine
                         </MenuItem>
-                        <MenuItem value="Chưa tiêm">Chưa tiêm</MenuItem>
                         <MenuItem value="Nanocovax">Nanocovax</MenuItem>
                         <MenuItem value="Pfizer-BioNTech">
                           Pfizer-BioNTech
@@ -318,10 +316,9 @@ const AddInfo = ({ userId, setUserId }) => {
                         onChange={(e) => setVaccineType2(e.target.value)}
                         value={vaccineType2}
                       >
-                        <MenuItem value="Chưa tiêm" disabled>
+                        <MenuItem value="" disabled>
                           Chọn loại vaccine
                         </MenuItem>
-                        <MenuItem value="Chưa tiêm">Chưa tiêm</MenuItem>
                         <MenuItem value="Nanocovax">Nanocovax</MenuItem>
                         <MenuItem value="Pfizer-BioNTech">
                           Pfizer-BioNTech
@@ -346,10 +343,9 @@ const AddInfo = ({ userId, setUserId }) => {
                         onChange={(e) => setVaccineType3(e.target.value)}
                         value={vaccineType3}
                       >
-                        <MenuItem value="Chưa tiêm" disabled>
+                        <MenuItem value="" disabled>
                           Chọn loại vaccine
                         </MenuItem>
-                        <MenuItem value="Chưa tiêm">Chưa tiêm</MenuItem>
                         <MenuItem value="Nanocovax">Nanocovax</MenuItem>
                         <MenuItem value="Pfizer-BioNTech">
                           Pfizer-BioNTech
@@ -682,7 +678,7 @@ const AddInfo = ({ userId, setUserId }) => {
                     <Button
                       variant="contained"
                       type="sumbit"
-                      sx={{marginBottom: 5, marginTop: 2}}
+                      sx={{ marginBottom: 5, marginTop: 2 }}
                       onClick={submitInfectedInfoHandler}
                     >
                       Gửi

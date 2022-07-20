@@ -36,6 +36,7 @@ const dataRef = collection(db, "userData")
 const injectionRef = collection(db, "injectionData")
 const requestRef = collection(db, "requestData")
 const injectionRequestRef = collection(db, "injectionRequestData")
+const selfDeclareRef = collection(db, "selfDeclareData");
 
 // get collection data
 const queryGetUserInfoByEmail = (email) => query(dataRef, where("email", "==", email))
@@ -44,4 +45,4 @@ const queryGetUserInfoByPhone = (collection, phone) => query(collection, where("
 
 const queryGetUserInfoById = (collection, id) => query(collection, where("idNumber", "==", id))
 
-export { app, db, colRef, loginRef, dataRef, injectionRef, auth, requestRef, injectionRequestRef, queryGetUserInfoByEmail, queryGetUserInfoByPhone, queryGetUserInfoById };
+export { app, db, colRef, loginRef, dataRef, injectionRef, auth, requestRef, injectionRequestRef, selfDeclareRef, queryGetUserInfoByEmail, queryGetUserInfoByPhone, queryGetUserInfoById };
