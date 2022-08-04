@@ -37,22 +37,6 @@ export const NavBar = () => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const user = result.user;
         console.log(userInfo);
-        // for (let i = 0; i < userInfo.length; i++) {
-        //   if (user.email === userInfo[i].email) {
-        //     console.log("I found a matching one");
-        //     navigate("/");
-        //   } else {
-        //     navigate("/register");
-        //     console.log("there's no match");
-        //   }
-        //   break;
-        //   // console.log(user.email, userInfo[i].email)
-        // }
-      //   if (isLoggedIn){
-      //   onSnapshot(queryGetUserInfoByEmail(userEmail), (snapshot) => {
-
-      //   });
-      // }
       })
       .catch((error) => {
         console.log(error);
@@ -128,7 +112,7 @@ export const NavBar = () => {
         snapshot.forEach((data) => setUserInfo(data.data()));
       });
     }
-    console.log(userInfo)
+
   }, [isLoggedIn]);
 
   return (
@@ -198,6 +182,17 @@ export const NavBar = () => {
                     >
                       {" "}
                       Thông tin cá nhân
+                    </MUILink>{" "}
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <MUILink
+                      to="/selfdeclare"
+                      underline="none"
+                      color="inherit"
+                      component={RouterLink}
+                    >
+                      {" "}
+                      Tự khai báo
                     </MUILink>{" "}
                   </MenuItem>
                   <MenuItem onClick={injectionRequestToChange}>Sửa TTTC</MenuItem>

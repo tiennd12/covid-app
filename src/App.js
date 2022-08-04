@@ -54,10 +54,7 @@ function App() {
               <InjectionInfoRequest userId={userId} setUserId={setUserId} />
             }
           ></Route>{" "}
-          <Route
-            path="/selfdeclare"
-            element={<SelfDeclare />}
-          ></Route>{" "}
+          <Route path="/selfdeclare" element={<SelfDeclare />}></Route>{" "}
           <Route path="adminpanel" element={<AdminPanel />}>
             {" "}
           </Route>{" "}

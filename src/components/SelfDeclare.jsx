@@ -107,7 +107,7 @@ export const SelfDeclare = () => {
           setUserRole(data.data().assignedRole);
         });
       });
-      if (authInfo.name) {
+      if (isLoggedIn) {
         onSnapshot(queryGetUserInfoByPhone(selfDeclareRef, phone), (snapshot) => {
             console.log(snapshot._snapshot.docChanges.length);
             if (snapshot._snapshot.docChanges.length === 0) {
@@ -143,7 +143,7 @@ export const SelfDeclare = () => {
       }
     }
     
-    console.log(declareRefInfo);
+    console.log(authInfo);
   }, [isLoggedIn, userRole]);
 
   return (

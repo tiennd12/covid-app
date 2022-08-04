@@ -148,7 +148,7 @@ const Register = () => {
     });
     fetchDistrict();
     fetchWard();
-    console.log(district.name)
+    console.log(fetchData)
   }, [inputCity, inputDistrict, cityName]);
 
   return (

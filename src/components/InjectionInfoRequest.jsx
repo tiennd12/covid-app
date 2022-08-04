@@ -123,7 +123,6 @@ export const InjectionInfoRequest = () => {
       onSnapshot(
         queryGetUserInfoByPhone(injectionRequestRef, phone),
         (snapshot) => {
-          console.log(snapshot._snapshot.docChanges.length);
           snapshot.forEach((data) => {
             setRequestInfo(data.data());
             setRequestId(data.id);
@@ -142,8 +141,8 @@ export const InjectionInfoRequest = () => {
         }
       );
     }
-    console.log(authInfo);
-  }, [isLoggedIn, userId, requestId]);
+    console.log(requestId)
+  }, [isLoggedIn, phone, requestId]);
 
   return (
     <div className="container addInfo">
