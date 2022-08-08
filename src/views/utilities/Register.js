@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import useDistrict from "../../hooks/useDistrict";
+import useDistrict from "../../Hooks/useDistrict";
 import axios from "axios";
 import { addDoc, setDoc, onSnapshot, doc } from "@firebase/firestore";
 import { dataRef, injectionRef } from "../../firebase/firebase";
