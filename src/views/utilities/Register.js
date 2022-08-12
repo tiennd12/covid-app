@@ -23,6 +23,9 @@ const Register = () => {
   const [inputEmail, setInputEmail] = useState("");
   // const [inputName, setInputName] = useState("");
   const [inputDate1, setInputDate1] = useState("");
+
+  
+  const [gender, setGender] = useState("");
   // const [inputAddress, setInputAddress] = useState("");
 
   const [fetchData, setFetchData] = useState([]);
@@ -158,6 +161,7 @@ const Register = () => {
                     assignedRole: "user",
                     infected: false,
                     districtId: districtName,
+                    gender,
                   });
 
                   addDoc(injectionRef, {
@@ -319,6 +323,23 @@ const Register = () => {
                     </Typography>
                   </>
                   <Stack>
+                    <FormControl variant="standard" sx={{ m: 2, minWidth: 120 }}>
+                    <InputLabel id="demo-simple-select-label">Giới tính</InputLabel>
+                    <Select
+                        fullWidth
+                        sx={{ minWidth: 120 }}
+                        label={"Giới tính"}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        onChange={e => setGender(e.target.value)}
+                        value={gender}
+                        className={classes.textField}
+                      >
+                        <MenuItem value="" disabled>Giới tính</MenuItem>
+                        <MenuItem value="Nam">Nam</MenuItem>
+                        <MenuItem value="Nữ">Nữ</MenuItem>
+                      </Select>
+                    </FormControl>
                     <FormControl variant="standard" sx={{ m: 2, minWidth: 120 }}>
                       <InputLabel id="demo-simple-select-label">Thành phố</InputLabel>
                       <Select

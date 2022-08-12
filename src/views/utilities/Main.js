@@ -220,9 +220,17 @@ const Main = () => {
                       <Typography variant="h4" >
                         Chưa có dữ liệu tiêm chủng của bạn
                       </Typography>
-                      <Typography>
-                        Vui lòng bấm vào đây để gửi yêu cầu xác nhận thông tin
-                        tiêm chủng
+                      <Typography variant="subtitle1" gutterBottom>
+                        Để yêu cầu thay đổi thông tin, vui lòng bấm
+                        <MUILink
+                          to="/utils/injection-info-request"
+                          underline="none"
+                          color="inherit"
+                          component={RouterLink}
+                          sx={{ fontWeight: 'bold', m: 1 }}
+                        >
+                          <Button variant="outlined" color="error">vào đây</Button>
+                        </MUILink>
                       </Typography>
                     </Stack>
                   ) : (

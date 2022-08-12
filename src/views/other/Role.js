@@ -12,13 +12,29 @@ import {
 } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
-import { Card, CardContent, Container, Menu, Box, Button, TextField, Stack, MenuItem, FormControl, Select, InputLabel, Typography, Autocomplete, Grid } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Container,
+  Menu,
+  Box,
+  Button,
+  TextField,
+  Stack,
+  MenuItem,
+  FormControl,
+  Select,
+  InputLabel,
+  Typography,
+  Autocomplete,
+  Grid,
+} from "@mui/material";
 
-import { AdminContext } from '../../context/adminContext';
+import { AdminContext } from "../../context/adminContext";
 
 import { makeStyles } from "@mui/styles";
 
-import { IconSquareX } from '@tabler/icons'
+import { IconSquareX } from "@tabler/icons";
 
 const AddRole = () => {
   const { isAdmin } = useContext(AdminContext);
@@ -33,7 +49,7 @@ const AddRole = () => {
   const [userRole, setUserRole] = useState("");
 
   const [autoCompleteVal, setAutocompleteVal] = useState("");
-
+  const [autoCompleteVal1, setAutocompleteVal1] = useState("");
   const [currentRole, setCurrentRole] = useState("");
   const [roleList, setRoleList] = useState([]);
   const [roleName, setRoleName] = useState("");
@@ -52,19 +68,19 @@ const AddRole = () => {
       margin: "20px 0",
     },
     box: {
-      border: '2px solid black',
-      borderRadius: '10px',
-      boxShadow: '1px 2px 4px rgba(0, 0, 0, 0.4)',
-      padding: '20px',
-      width: '300px',
-      margin: '20px auto'
+      border: "2px solid black",
+      borderRadius: "10px",
+      boxShadow: "1px 2px 4px rgba(0, 0, 0, 0.4)",
+      padding: "20px",
+      width: "300px",
+      margin: "20px auto",
     },
     icons: {
-      cursor: 'pointer'
+      cursor: "pointer",
     },
     button: {
-      margin: '10px 30px'
-    }
+      margin: "10px 30px",
+    },
   }));
 
   const classes = useStyles();
@@ -97,14 +113,14 @@ const AddRole = () => {
     }
   };
 
-  const submitInfoHandler = (e) => {
+  const submitInfoHandler = async (e) => {
     e.preventDefault();
 
-    setDoc(doc(db, "userData", userId), {
+    await setDoc(doc(db, "userData", userId), {
       ...userInfo,
       assignedRole: role,
-      //   role: roleSpecify,
-    });
+      department: roleSpecify,
+    }).then(window.alert("Cập nhật thông tin thành công"));
     setRole("");
     setRoleSpecify("");
   };
@@ -121,27 +137,29 @@ const AddRole = () => {
     }
   };
 
-  const addRole = (e) => {
+  const addRole = async (e) => {
     e.preventDefault();
     if (roleList.indexOf(roleName) === -1) {
-      roleList.push(roleName)
-      setDoc(doc(db, "roleData", "taQPWqV16yQr1NZOkEXM"), {
+      roleList.push(roleName);
+      await setDoc(doc(db, "roleData", "taQPWqV16yQr1NZOkEXM"), {
         roles: roleList,
-      });
+      })
+      .then(window.alert("Tạo thành công"));
     } else {
-      window.alert("Đã có role này trên hệ thống")
+      window.alert("Đã có role này trên hệ thống");
     }
-    setRoleName("")
+    setRoleName("");
   };
 
-  const removeRole = (e) => {
+  const removeRole =  async (e) => {
     e.preventDefault();
     removeItemAtOnce(roleList, autoCompleteVal);
 
     setDoc(doc(db, "roleData", "taQPWqV16yQr1NZOkEXM"), {
       roles: roleList,
-    });
-    setAutocompleteVal("")
+    })
+    .then(window.alert("Xóa vai trò thành công"));
+    setAutocompleteVal("");
   };
 
   useEffect(() => {
@@ -167,42 +185,69 @@ const AddRole = () => {
 
   return (
     <Container>
-      {isAdmin &&
-        <Card sx={{ marginBottom: '50px', textAlign: 'center' }}>
-          {/* Giao diện chỉ admin nhìn thấy */}
+      {" "}
+      {isAdmin && (
+        <Card sx={{ marginBottom: "50px", textAlign: "center" }}>
+          {" "}
+          {/* Giao diện chỉ admin nhìn thấy */}{" "}
           <CardContent>
             <Grid container>
               <Grid item sm={6}>
-                {isAddRole ?
+                {" "}
+                {isAddRole ? (
                   <Box className={classes.box}>
-                    <Stack sx={{ alignItems: 'flex-end' }}>
-                      <IconSquareX className={classes.icons} onClick={() => setIsAddRole(false)} />
-                    </Stack>
-                    <Typography variant="h3">Tạo vai trò</Typography>
+                    <Stack sx={{ alignItems: "flex-end" }}>
+                      <IconSquareX
+                        className={classes.icons}
+                        onClick={() => setIsAddRole(false)}
+                      />{" "}
+                    </Stack>{" "}
+                    <Typography variant="h3"> Tạo vai trò </Typography>{" "}
                     <FormControl>
                       <TextField
                         className={classes.textField}
                         label="tạo role"
-                        onChange={e => setRoleName(e.target.value)}
+                        onChange={(e) => setRoleName(e.target.value)}
                         value={roleName}
-                      />
-                      <Button variant="contained" color="secondary" onClick={addRole}>Tạo</Button>
-                    </FormControl>
+                      />{" "}
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={addRole}
+                      >
+                        {" "}
+                        Tạo{" "}
+                      </Button>{" "}
+                    </FormControl>{" "}
                   </Box>
-                  :
-                  <Button variant="contained" color="secondary" className={classes.button} onClick={() => setIsAddRole(true)}>Tạo vai trò</Button>
-                }
-              </Grid>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.button}
+                    onClick={() => setIsAddRole(true)}
+                  >
+                    {" "}
+                    Tạo vai trò{" "}
+                  </Button>
+                )}{" "}
+              </Grid>{" "}
               <Grid item sm={6}>
-                {isDeleteRole ?
+                {" "}
+                {isDeleteRole ? (
                   <Box className={classes.box}>
-                    <Stack sx={{ alignItems: 'flex-end' }}>
-                      <IconSquareX className={classes.icons} onClick={() => setIsDeleteRole(false)} />
-                    </Stack>
-                    <Typography variant="h3">Xóa vai trò</Typography>
+                    <Stack sx={{ alignItems: "flex-end" }}>
+                      <IconSquareX
+                        className={classes.icons}
+                        onClick={() => setIsDeleteRole(false)}
+                      />{" "}
+                    </Stack>{" "}
+                    <Typography variant="h3"> Xóa vai trò </Typography>{" "}
                     <Autocomplete
                       className={classes.textField}
-                      isOptionEqualToValue={(option, value) => option.id === value.id}
+                      isOptionEqualToValue={(option, value) =>
+                        option.id === value.id
+                      }
                       disablePortal
                       onChange={(event, value) => setAutocompleteVal(value)}
                       value={autoCompleteVal}
@@ -211,27 +256,39 @@ const AddRole = () => {
                       renderInput={(params) => (
                         <TextField {...params} label="Chọn vai trò" />
                       )}
-                    />
-                    <Button variant="contained" color="error" onClick={removeRole}>
-                      Xóa
-                    </Button>
+                    />{" "}
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={removeRole}
+                    >
+                      Xóa{" "}
+                    </Button>{" "}
                   </Box>
-                  :
-                  <Button variant="contained" color="error" className={classes.button} onClick={() => setIsDeleteRole(true)}>Xóa vai trò</Button>
-                }
-              </Grid>
-            </Grid>
-          </CardContent>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="error"
+                    className={classes.button}
+                    onClick={() => setIsDeleteRole(true)}
+                  >
+                    {" "}
+                    Xóa vai trò{" "}
+                  </Button>
+                )}{" "}
+              </Grid>{" "}
+            </Grid>{" "}
+          </CardContent>{" "}
         </Card>
-      }
-
+      )}
       <Card>
+        {" "}
         {userRole === "admin" ? (
           userInfo ? (
             <CardContent sx={{ textAlign: "center" }}>
               <Typography variant="h2" className={classes.header} gutterBottom>
-                Thông tin người dùng
-              </Typography>
+                Thông tin người dùng{" "}
+              </Typography>{" "}
               <TextField
                 className={classes.textField}
                 label="Họ và tên:"
@@ -244,8 +301,18 @@ const AddRole = () => {
               />
               <TextField
                 className={classes.textField}
-                label="Vai trò:"
+                label="Phân quyền:"
                 value={userInfo.assignedRole}
+                InputProps={{
+                  readOnly: true,
+                }}
+                fullWidth
+                variant="outlined"
+              />
+              <TextField
+                className={classes.textField}
+                label="Vai trò:"
+                value={userInfo.department}
                 InputProps={{
                   readOnly: true,
                 }}
@@ -264,39 +331,43 @@ const AddRole = () => {
                       value={role}
                       label={"Phân quyền"}
                       labelId="demo-simple-select-label"
-                      id="demo-simple-select"
+                      id="combo-box-demo"
                     >
-                      <MenuItem value="user"> User </MenuItem>
+                      <MenuItem value="user"> User </MenuItem>{" "}
                       <MenuItem value="moderator"> Moderator </MenuItem>{" "}
-                    </Select>
-                  </FormControl>
-                </Stack>
+                      <MenuItem value="admin"> Admin </MenuItem>{" "}
+                    </Select>{" "}
+                  </FormControl>{" "}
+                </Stack>{" "}
                 <Stack className="addRole-form">
                   <FormControl variant="standard" sx={{ m: 2, minWidth: 120 }}>
                     <InputLabel id="demo-simple-select-label">
                       Vai trò{" "}
                     </InputLabel>{" "}
-                    <Select
-                      className="addRole-role"
-                      onChange={(e) => setRoleSpecify(e.target.value)}
+                    <Autocomplete
+                      className={classes.textField}
+                      isOptionEqualToValue={(option, value) =>
+                        option.id === value.id
+                      }
+                      disablePortal
+                      onChange={(event, value) => setRoleSpecify(value)}
                       value={roleSpecify}
-                      label={"Vai trò "}
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                    >
-                      <MenuItem value="1A"> 1A </MenuItem>
-                      <MenuItem value="1B"> 1B </MenuItem>
-                    </Select>
-                  </FormControl>
-                </Stack>
+                      id="combo-box-demo"
+                      options={roleList}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Chọn vai trò" />
+                      )}
+                    />{" "}
+                  </FormControl>{" "}
+                </Stack>{" "}
                 <Button
                   variant="contained"
                   type="submit"
                   onClick={submitInfoHandler}
                 >
-                  Gửi
-                </Button>
-              </div>
+                  Gửi{" "}
+                </Button>{" "}
+              </div>{" "}
             </CardContent>
           ) : (
             <CardContent>
@@ -310,16 +381,16 @@ const AddRole = () => {
                     className="addInfo-findWithPhone"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                  />
+                  />{" "}
                   <Button
                     variant="contained"
                     type="sumbit"
                     onClick={findInfoByPhoneHandler}
                   >
-                    Tìm
-                  </Button>
-                </Stack>
-              </form>
+                    Tìm{" "}
+                  </Button>{" "}
+                </Stack>{" "}
+              </form>{" "}
             </CardContent>
           )
         ) : (
@@ -338,8 +409,8 @@ const AddRole = () => {
             </Button>{" "}
           </CardContent>
         )}{" "}
-      </Card>
-    </Container >
+      </Card>{" "}
+    </Container>
   );
 };
 

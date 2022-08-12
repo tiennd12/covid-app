@@ -110,6 +110,16 @@ const Info = () => {
                     fullWidth
                     variant="outlined"
                   />
+                  <TextField
+                    className={classes.textField}
+                    label="Giới tính:"
+                    defaultValue={userInfo.gender}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    fullWidth
+                    variant="outlined"
+                  />
                 </Grid>
                 <Grid item sm={6}>
                   <TextField
@@ -167,7 +177,7 @@ const Info = () => {
               <Grid container>
                 <Grid item>
                   <Typography variant="subtitle1" gutterBottom>
-                    Để yêu cầu thay đổi thông tin, vui lòng bấm
+                    Để thay đổi thông tin, vui lòng bấm
                     <MUILink
                       to="/utils/request-change"
                       underline="none"
