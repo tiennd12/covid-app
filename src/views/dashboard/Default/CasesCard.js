@@ -84,7 +84,7 @@ const CasesCard = ({ isLoading, cases }) => {
                                             variant="h2"
                                             color="white"
                                         >
-                                            SỐ CA COVID
+                                            SỐ CA COVID TRONG NƯỚC
                                         </Typography>
                                     </Grid>
                                 </Grid>

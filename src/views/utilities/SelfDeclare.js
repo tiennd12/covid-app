@@ -111,11 +111,22 @@ const SelfDeclare = () => {
       isCurrentlyInfected,
       infectedTimes,
       verifiedByAdmin: false,
-    });
+    }).then(
+      window.alert("Gửi lên thành công")
+    );
     // setDoc(doc(db, "injectionData", injectRefId), {
     //   ...declareRefInfo,
     //   infectedTimes: infectedTimes,
     // });
+    setCuredDate1("")
+    setCuredDate2("")
+    setCuredDate3("")
+    setInfectedDate1("")
+    setInfectedDate2("")
+    setInfectedDate3("")
+    setInfectedNote1("")
+    setInfectedNote2("")
+    setInfectedNote3("")
   };
 
   useEffect(() => {
@@ -372,8 +383,8 @@ const SelfDeclare = () => {
                         onChange={(e) => setIsCurrentlyInfected(e.target.value)}
                         value={isCurrentlyInfected}
                       >
-                        <MenuItem value="true">Có</MenuItem>
-                        <MenuItem value="false">Không</MenuItem>
+                        <MenuItem value={true}>Có</MenuItem>
+                        <MenuItem value={false}>Không</MenuItem>
                       </Select>
                     </FormControl>
                     <Typography variant="h4" className={classes.header} gutterBottom>

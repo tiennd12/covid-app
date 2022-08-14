@@ -95,23 +95,7 @@ const AddInfo = () => {
         console.log(snapshot._snapshot.docChanges.length);
         if (snapshot._snapshot.docChanges.length === 0) {
           //due to changes in Register, this may no longer useful
-          if (
-            window.confirm(
-              "Không tìm thấy dữ liệu người dùng. \n Nhấn OK để tạo dữ liệu"
-            )
-          ) {
-            addDoc(injectionRef, {
-              phone: phone,
-              firstDose: "",
-              secondDose: "",
-              thirdDose: "",
-              numberOfInjections: "",
-            })
-              .then(window.alert("Tạo dữ liệu thành công"))
-              .catch((err) => {
-                console.log(err);
-              });
-          }
+          window.alert("Không tìm thấy dữ liệu người dùng")
         }
         {
           snapshot.forEach((data) => {

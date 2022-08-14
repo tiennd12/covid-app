@@ -204,7 +204,7 @@ const PopularCard = ({ isLoading, injectionState, infectionState }) => {
                 color: '#d63031'
             },
             {
-                name: 'Số người chưa nhiễm bệnh',
+                name: 'Số người không nhiễm bệnh',
                 data: userNotInfected,
                 color: '#2ecc71'
             }

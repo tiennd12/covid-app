@@ -93,31 +93,7 @@ const AddInjectionInfo = () => {
         if (totalUserInfo) {
             onSnapshot(queryGetUserInfoByPhone(injectionRef, phone), (snapshot) => {
                 if (snapshot._snapshot.docChanges.length === 0) {
-                    //due to changes in Register, this may no longer useful
-                    if (
-                        window.confirm(
-                            "Không tìm thấy dữ liệu người dùng. \n Nhấn OK để tạo dữ liệu"
-                        )
-                    ) {
-                        addDoc(injectionRef, {
-                            phone: phone,
-                            firstDose: "",
-                            secondDose: "",
-                            thirdDose: "",
-                            numberOfInjections: "",
-                            infectedTimes: "",
-                            injectDate1: "",
-                            injectDate2: "",
-                            injectDate3: "",
-                            injectPerson1: "",
-                            injectPerson2: "",
-                            injectPerson3: "",
-                        })
-                            .then(window.alert("Tạo dữ liệu thành công"))
-                            .catch((err) => {
-                                console.log(err);
-                            });
-                    }
+                   window.alert("Không tìm thấy dữ liệu")
                 }
                 {
                     snapshot.forEach((data) => {
@@ -153,7 +129,18 @@ const AddInjectionInfo = () => {
             infectedTimes: infectedTimes,
             verifiedByAdmin: true,
             isCurrentlyInfected,
-        });
+        }).then(
+            window.alert("Gửi lên thành công")
+        );
+        setCuredDate1("")
+        setCuredDate2("")
+        setCuredDate3("")
+        setInfectedDate1("")
+        setInfectedDate2("")
+        setInfectedDate3("")
+        setInfectedNote1("")
+        setInfectedNote2("")
+        setInfectedNote3("")
     };
 
     useEffect(() => {
@@ -422,8 +409,8 @@ const AddInjectionInfo = () => {
                                                 onChange={(e) => setIsCurrentlyInfected(e.target.value)}
                                                 value={isCurrentlyInfected}
                                             >
-                                                <MenuItem value="true">Có</MenuItem>
-                                                <MenuItem value="false">Không</MenuItem>
+                                                <MenuItem value={true}>Có</MenuItem>
+                                                <MenuItem value={false}>Không</MenuItem>
                                             </Select>
                                         </FormControl>
                                         <Typography variant="h4" className={classes.header} gutterBottom>

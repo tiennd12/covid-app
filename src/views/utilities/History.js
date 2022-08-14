@@ -185,7 +185,7 @@ const History = () => {
           {injectionInfo.numberOfInjections ? (
             <CardContent>
               {injectionInfo && (
-                <div>
+                <Stack>
                   <Typography variant="h2" sx={{ textAlign: 'center', textTransform: 'uppercase' }} gutterBottom>
                     Lịch sử lây nhiễm
                   </Typography>
@@ -215,7 +215,8 @@ const History = () => {
                     <Stack>
                       {injectionInfo?.verifiedByAdmin ? (
                         <Stack>
-                          <div>
+                          <Stack marginBottom={3}><Typography variant="h3" sx={{ color: 'green' }}>*Người dùng tự khai báo</Typography></Stack>
+                          <Stack>
                             {injectionInfo?.infectedDate1 === "" ? (
                               ""
                             ) : (
@@ -227,6 +228,13 @@ const History = () => {
                                   Ngày nhiễm bệnh lần 1: {injectionInfo?.infectedDate1}
                                 </Typography>
                                 <Typography
+                                    variant="subtitle1"
+                                    gutterBottom
+                                  >
+                                    Ngày khỏi bệnh:{" "}
+                                    {injectionInfo?.curedDate1} {""}
+                                  </Typography>
+                                <Typography
                                   variant="subtitle1"
                                   gutterBottom
                                 >
@@ -234,8 +242,8 @@ const History = () => {
                                 </Typography>
                               </Box>
                             )}
-                          </div>
-                          <div>
+                          </Stack>
+                          <Stack>
                             {injectionInfo?.infectedDate2 === "" ? (
                               ""
                             ) : (
@@ -247,6 +255,13 @@ const History = () => {
                                   Ngày nhiễm bệnh lần 2: {injectionInfo?.infectedDate2}
                                 </Typography>
                                 <Typography
+                                    variant="subtitle1"
+                                    gutterBottom
+                                  >
+                                    Ngày khỏi bệnh:{" "}
+                                    {injectionInfo?.curedDate2} {""}
+                                  </Typography>
+                                <Typography
                                   variant="subtitle1"
                                   gutterBottom
                                 >
@@ -254,8 +269,8 @@ const History = () => {
                                 </Typography>
                               </Stack>
                             )}
-                          </div>
-                          <div>
+                          </Stack>
+                          <Stack>
                             {injectionInfo?.infectedDate3 === "" ? (
                               ""
                             ) : (
@@ -267,6 +282,13 @@ const History = () => {
                                   Ngày nhiễm bệnh lần 3: {injectionInfo?.infectedDate3}
                                 </Typography>
                                 <Typography
+                                    variant="subtitle1"
+                                    gutterBottom
+                                  >
+                                    Ngày khỏi bệnh:{" "}
+                                    {injectionInfo?.curedDate3} {""}
+                                  </Typography>
+                                <Typography
                                   variant="subtitle1"
                                   gutterBottom
                                 >
@@ -274,13 +296,13 @@ const History = () => {
                                 </Typography>
                               </Stack>
                             )}
-                          </div>
+                          </Stack>
                         </Stack>
                       ) : (
                         <Stack>
-                          <div>
-                            <Typography variant="h6" sx={{ color: 'red' }}>*Người dùng tự khai báo</Typography>
-                            <div>
+                          <Stack marginBottom={3}>
+                            <Typography variant="h3" sx={{ color: 'red' }}>*Người dùng tự khai báo</Typography>
+                            <Stack>
                               {injectionInfo?.infectedDate1 === "" ? (
                                 ""
                               ) : (
@@ -296,12 +318,19 @@ const History = () => {
                                     variant="subtitle1"
                                     gutterBottom
                                   >
+                                    Ngày khỏi bệ:{" "}
+                                    {injectionInfo?.curedDate1} {""}
+                                  </Typography>
+                                  <Typography
+                                    variant="subtitle1"
+                                    gutterBottom
+                                  >
                                     Ghi chú: {injectionInfo?.infectedNote1}
                                   </Typography>
                                 </Stack>
                               )}
-                            </div>
-                            <div>
+                            </Stack>
+                            <Stack>
                               {injectionInfo?.infectedDate2 === "" ? (
                                 ""
                               ) : (
@@ -317,12 +346,19 @@ const History = () => {
                                     variant="subtitle1"
                                     gutterBottom
                                   >
+                                    Ngày khỏi bệnh:{" "}
+                                    {injectionInfo?.curedDate2} {""}
+                                  </Typography>
+                                  <Typography
+                                    variant="subtitle1"
+                                    gutterBottom
+                                  >
                                     Ghi chú: {injectionInfo?.infectedNote2}
                                   </Typography>
                                 </Stack>
                               )}
-                            </div>
-                            <div>
+                            </Stack>
+                            <Stack>
                               {injectionInfo?.infectedDate3 === "" ? (
                                 ""
                               ) : (
@@ -338,12 +374,19 @@ const History = () => {
                                     variant="subtitle1"
                                     gutterBottom
                                   >
+                                    Ngày khỏi bệnh:{" "}
+                                    {injectionInfo?.curedDate3} {""}
+                                  </Typography>
+                                  <Typography
+                                    variant="subtitle1"
+                                    gutterBottom
+                                  >
                                     Ghi chú: {injectionInfo?.infectedNote3}
                                   </Typography>
                                 </Stack>
                               )}
-                            </div>
-                          </div>
+                            </Stack>
+                          </Stack>
                         </Stack>
                       )}
                       <Grid container>
@@ -364,7 +407,7 @@ const History = () => {
                       </Grid>
                     </Stack>
                   )}
-                </div>
+                </Stack>
               )}
             </CardContent>
           ) : (
