@@ -201,42 +201,6 @@ const SelfDeclare = () => {
                     }}
                     fullWidth
                   />
-                  <TextField
-                    className={classes.textField}
-                    label="Số mũi đã tiêm:"
-                    value={declareRefInfo.numberOfInjections}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    fullWidth
-                  />
-                  <TextField
-                    className={classes.textField}
-                    label="Mũi số 1:"
-                    value={declareRefInfo.firstDose}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    fullWidth
-                  />
-                  <TextField
-                    className={classes.textField}
-                    label="Mũi số 2:"
-                    value={declareRefInfo.secondDose}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    fullWidth
-                  />
-                  <TextField
-                    className={classes.textField}
-                    label="Mũi số 3:"
-                    value={declareRefInfo.thirdDose}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    fullWidth
-                  />
                   <Stack>
                     <Typography variant="h6" gutterBottom>
                       Lịch sử lây nhiễm

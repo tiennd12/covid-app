@@ -23,7 +23,7 @@ const RequestChange = () => {
   const [inputEmail, setInputEmail] = useState("");
   // const [inputName, setInputName] = useState("");
   const [inputDate1, setInputDate1] = useState("");
-  
+
   const [gender, setGender] = useState("");
   const [userId, setUserId] = useState("")
   const [userData, setUserData] = useState({})
@@ -103,10 +103,10 @@ const RequestChange = () => {
     fetchWard();
 
     onAuthStateChanged(auth, (currentUser) => {
-        if (currentUser) {
-          setInputEmail(currentUser.email);
-        }
-      });
+      if (currentUser) {
+        setInputEmail(currentUser.email);
+      }
+    });
 
 
 
@@ -115,15 +115,14 @@ const RequestChange = () => {
 
       setFetchData(data);
     });
-    if(inputEmail){
-        onSnapshot(queryGetUserInfoByEmail(inputEmail), (snapshot) => {
-            snapshot.forEach((data) => {
-                setUserId(data.id)
-                setUserData(data.data())
-            })
+    if (inputEmail) {
+      onSnapshot(queryGetUserInfoByEmail(inputEmail), (snapshot) => {
+        snapshot.forEach((data) => {
+          setUserId(data.id)
+          setUserData(data.data())
         })
+      })
     }
-console.log(userId)
   }, [inputCity, inputDistrict, cityName, inputEmail]);
 
   const [userInfo, setUserInfo] = useState("");
@@ -140,10 +139,14 @@ console.log(userId)
       marginBottom: '38px'
     },
     form: {
-      border: '1px solid black',
-      boxShadow: '1px 2px 4px rgba(0,0,0,0.4)',
+      border: '2px solid black',
       borderRadius: '10px',
-      padding: '20px',
+      boxShadow: '1px 1px 2px rgba(0, 0, 0, 0.4)',
+      padding: '10px 0',
+      margin: '10px 0',
+    },
+    select: {
+      margin: '0'
     }
   }));
 
@@ -160,17 +163,17 @@ console.log(userId)
               ) {
                 if (district && ward) {
                   const updateData = setDoc(doc(db, "userData", userId),
-                  {
-                    ...userData,
-                    city: district.name,
-                    district: ward.name,
-                    ward: inputWard,
-                    name: data.inputName,
-                    dob: data.inputDate,
-                    address: data.inputAddress,
-                    districtId: districtName,
-                    gender,
-                  });
+                    {
+                      ...userData,
+                      city: district.name,
+                      district: ward.name,
+                      ward: inputWard,
+                      name: data.inputName,
+                      dob: data.inputDate,
+                      address: data.inputAddress,
+                      districtId: districtName,
+                      gender,
+                    });
 
                   if (updateData) {
                     window.alert("Cập nhật thành công");
@@ -188,6 +191,14 @@ console.log(userId)
               <Grid container spacing={2}>
                 <Grid item sm={6}>
                   <>
+                    <Typography
+                      variant="caption"
+                      display="block"
+                      gutterBottom
+                      style={{ color: "red" }}
+                    >
+                      {errors.inputName?.message}
+                    </Typography>
                     <TextField
                       fullWidth
                       sx={{ margin: 1 }}
@@ -197,14 +208,7 @@ console.log(userId)
                       className={classes.textField}
                       {...register("inputName", { required: "Điền tên" })}
                     />
-                    <Typography
-                      variant="caption"
-                      display="block"
-                      gutterBottom
-                      style={{ color: "red" }}
-                    >
-                      {errors.inputName?.message}
-                    </Typography>
+
                   </>
 
                   <TextField
@@ -220,6 +224,14 @@ console.log(userId)
                   />
 
                   <>
+                    <Typography
+                      variant="caption"
+                      display="block"
+                      gutterBottom
+                      style={{ color: "red" }}
+                    >
+                      {errors.inputDate?.message}
+                    </Typography>
                     <TextField
                       fullWidth
                       sx={{ margin: 1, minWidth: 184 }}
@@ -230,16 +242,17 @@ console.log(userId)
                       className={classes.textField}
                       {...register("inputDate", { required: "Nhập ngày tháng năm sinh" })}
                     />
+
+                  </>
+                  <>
                     <Typography
                       variant="caption"
                       display="block"
                       gutterBottom
                       style={{ color: "red" }}
                     >
-                      {errors.inputDate?.message}
+                      {errors.inputAddress?.message}
                     </Typography>
-                  </>
-                  <>
                     <TextField
                       fullWidth
                       className={classes.textField}
@@ -251,22 +264,15 @@ console.log(userId)
                       {...register("inputAddress", { required: "Điền địa chỉ" })}
                     />
 
-                    <Typography
-                      variant="caption"
-                      display="block"
-                      gutterBottom
-                      style={{ color: "red" }}
-                    >
-                      {errors.inputAddress?.message}
-                    </Typography>
+
                   </>
                 </Grid>
                 <Grid item sm={6}>
-                 
+
                   <Stack>
                     <FormControl variant="standard" sx={{ m: 2, minWidth: 120 }}>
-                    <InputLabel id="demo-simple-select-label">Giới tính</InputLabel>
-                    <Select
+                      <InputLabel id="demo-simple-select-label">Giới tính</InputLabel>
+                      <Select
                         fullWidth
                         sx={{ minWidth: 120 }}
                         label={"Giới tính"}
@@ -274,7 +280,7 @@ console.log(userId)
                         id="demo-simple-select"
                         onChange={e => setGender(e.target.value)}
                         value={gender}
-                        className={classes.textField}
+                        className={classes.select}
                       >
                         <MenuItem value="" disabled>Giới tính</MenuItem>
                         <MenuItem value="Nam">Nam</MenuItem>
@@ -356,7 +362,7 @@ console.log(userId)
 
 
 
-              <CardActions sx={{ justifyContent: 'flex-end' }}>
+              <CardActions sx={{ justifyContent: 'center' }}>
                 <Button variant="contained" type="submit">
                   Gửi
                 </Button>

@@ -133,6 +133,9 @@ const Register = () => {
       boxShadow: '1px 2px 4px rgba(0,0,0,0.4)',
       borderRadius: '10px',
       padding: '20px',
+    },
+    select: {
+      marginBottom: '20px'
     }
   }));
 
@@ -333,7 +336,7 @@ const Register = () => {
                         id="demo-simple-select"
                         onChange={e => setGender(e.target.value)}
                         value={gender}
-                        className={classes.textField}
+                        className={classes.select}
                       >
                         <MenuItem value="" disabled>Giới tính</MenuItem>
                         <MenuItem value="Nam">Nam</MenuItem>
@@ -350,7 +353,7 @@ const Register = () => {
                         id="demo-simple-select"
                         onChange={cityHandler}
                         value={inputCity}
-                        className={classes.textField}
+                        className={classes.select}
                       >
                         <MenuItem value="" disabled>
                           Chọn thành phố
@@ -373,7 +376,7 @@ const Register = () => {
                         id="demo-simple-select"
                         onChange={districtHandler}
                         value={inputDistrict}
-                        className={classes.textField}
+                        className={classes.select}
                       >
                         <MenuItem value="" disabled>
                           Chọn quận huyện
@@ -396,7 +399,7 @@ const Register = () => {
                         id="demo-simple-select"
                         onChange={(event) => setInputWard(event.target.value)}
                         value={inputWard}
-                        className={classes.textField}
+                        className={classes.select}
                       >
                         <MenuItem value="" disabled>
                           Chọn phường xã
@@ -415,7 +418,7 @@ const Register = () => {
 
 
 
-              <CardActions sx={{ justifyContent: 'flex-end' }}>
+              <CardActions sx={{ justifyContent: 'center' }}>
                 <Button variant="contained" type="submit">
                   Đăng ký
                 </Button>

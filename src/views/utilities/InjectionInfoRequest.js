@@ -12,7 +12,20 @@ import {
 import { onSnapshot, doc, setDoc, orderBy, addDoc } from "@firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
-import { Container, Button, TextField, Stack, MenuItem, FormControl, Select, InputLabel, Typography, Card, CardContent, Grid } from "@mui/material";
+import {
+  Container,
+  Button,
+  TextField,
+  Stack,
+  MenuItem,
+  FormControl,
+  Select,
+  InputLabel,
+  Typography,
+  Card,
+  CardContent,
+  Grid,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 const InjectionInfoRequest = () => {
@@ -30,7 +43,7 @@ const InjectionInfoRequest = () => {
   const [phone, setPhone] = useState("");
   const [place, setPlace] = useState("");
   const [date, setDate] = useState("");
-  const [times, setTimes] = useState("");
+  const [times, setTimes] = useState("Chưa tiêm");
 
   const [vaccineType1, setVaccineType1] = useState("");
   const [vaccineType2, setVaccineType2] = useState("");
@@ -44,14 +57,18 @@ const InjectionInfoRequest = () => {
   const [injectPerson2, setInjectPerson2] = useState("");
   const [injectPerson3, setInjectPerson3] = useState("");
 
+  const c = new Date();
+  const currentDate = c.toISOString().slice(0, 10);
+  const currentTime = c.toLocaleTimeString();
+
   // upload img
   const [imageUpload, setImageUpload] = useState(null);
 
   const useStyles = makeStyles((theme) => ({
     title: {
-      paddingBottom: '30px',
-      textTransform: 'uppercase',
-      textAlign: 'center',
+      paddingBottom: "30px",
+      textTransform: "uppercase",
+      textAlign: "center",
     },
   }));
 
@@ -71,6 +88,7 @@ const InjectionInfoRequest = () => {
     const imageRef = ref(storage, `${phone}/verifyImg`);
     uploadBytes(imageRef, imageUpload).then(() => {
       alert("Gửi lên thành công");
+      setImageUpload("");
     });
     const imageListRef = ref(storage, `${phone}/verifyImg`);
     getDownloadURL(imageListRef).then((url) => {
@@ -90,10 +108,11 @@ const InjectionInfoRequest = () => {
         infectedTimes: "",
         status: "pending",
         imageProof: url,
+        date: currentDate,
+        time: currentTime,
       });
       setDate("");
       setPlace("");
-      setTimes("");
     });
     setVaccineType1("");
     setVaccineType2("");
@@ -162,13 +181,15 @@ const InjectionInfoRequest = () => {
         <Card>
           <CardContent>
             <Stack>
-              <Typography variant="h2" className={classes.title} >
+              <Typography variant="h2" className={classes.title}>
                 Thông tin yêu cầu
               </Typography>
             </Stack>
             <Stack>
               {requestInfo?.status === "none" ? (
-                <Typography variant="subtitle2" sx={{ color: 'red' }}>*Chưa có yêu cầu nào</Typography>
+                <Typography variant="subtitle2" sx={{ color: "red" }}>
+                  *Chưa có yêu cầu nào
+                </Typography>
               ) : (
                 <Stack>
                   {requestInfo?.status === "pending" ? (
@@ -200,7 +221,7 @@ const InjectionInfoRequest = () => {
             <Stack>
               <FormControl
                 variant="outlined"
-                sx={{ margin: '20px 0', minWidth: 210 }}
+                sx={{ margin: "20px 0", minWidth: 210 }}
               >
                 <InputLabel id="demo-simple-select-label">
                   Số lần đã tiêm:{" "}
@@ -220,178 +241,376 @@ const InjectionInfoRequest = () => {
                 </Select>
               </FormControl>
             </Stack>
-            <Grid container spacing={3} justifyContent="center" alignItems="center">
-              <Grid item md={4}>
-                <Stack>
-                  <FormControl
-                    variant="outlined"
-                    sx={{ marginTop: 1, minWidth: 210 }}
+            {times === "Chưa tiêm" ? (
+              <></>
+            ) : (
+              <Stack>
+                {" "}
+                {times === "1 mũi" ? (
+                  <Grid item md={12}>
+                    {" "}
+                    <Stack>
+                      <FormControl
+                        variant="outlined"
+                        sx={{ marginTop: 1, minWidth: 210 }}
+                      >
+                        <InputLabel id="demo-simple-select-label">
+                          Mũi 1
+                        </InputLabel>
+                        <Select
+                          label={"Mũi 1"}
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          onChange={(e) => setVaccineType1(e.target.value)}
+                          value={vaccineType1}
+                        >
+                          <MenuItem value="" disabled>
+                            Chọn loại vaccine
+                          </MenuItem>
+                          <MenuItem value="Nanocovax">Nanocovax</MenuItem>
+                          <MenuItem value="Pfizer-BioNTech">
+                            Pfizer-BioNTech
+                          </MenuItem>
+                          <MenuItem value="AstraZeneca">AstraZeneca</MenuItem>
+                          <MenuItem value="Moderna">Moderna</MenuItem>
+                        </Select>
+                      </FormControl>
+                      <TextField
+                        sx={{ marginTop: 1, minWidth: 210 }}
+                        id="standard-basic"
+                        helperText="Ngày tiêm mũi 1"
+                        variant="outlined"
+                        type="date"
+                        className="register-dob"
+                        value={injectDate1}
+                        onChange={(e) => setInjectDate1(e.target.value)}
+                      />
+                      <TextField
+                        sx={{ marginTop: 1, minWidth: 210 }}
+                        autoComplete="off"
+                        id="standard-basic"
+                        variant="outlined"
+                        type="text"
+                        label="Đơn vị tiêm mũi 1"
+                        className="addInfo-findWithPhone"
+                        value={injectPerson1}
+                        onChange={(e) => setInjectPerson1(e.target.value)}
+                      />
+                    </Stack>
+                  </Grid>
+                ) : (
+                  <></>
+                )}
+                {times === "2 mũi" ? (
+                  <Grid
+                    container
+                    spacing={3}
+                    justifyContent="center"
+                    alignItems="center"
                   >
-                    <InputLabel id="demo-simple-select-label">Mũi 1</InputLabel>
-                    <Select
-                      label={"Mũi 1"}
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      onChange={(e) => setVaccineType1(e.target.value)}
-                      value={vaccineType1}
-                    >
-                      <MenuItem value="" disabled>
-                        Chọn loại vaccine
-                      </MenuItem>
-                      <MenuItem value="Nanocovax">Nanocovax</MenuItem>
-                      <MenuItem value="Pfizer-BioNTech">Pfizer-BioNTech</MenuItem>
-                      <MenuItem value="AstraZeneca">AstraZeneca</MenuItem>
-                      <MenuItem value="Moderna">Moderna</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <TextField
-                    sx={{ marginTop: 1, minWidth: 210 }}
-                    id="standard-basic"
-                    helperText="Ngày tiêm mũi 1"
-                    variant="outlined"
-                    type="date"
-                    className="register-dob"
-                    value={injectDate1}
-                    onChange={(e) => setInjectDate1(e.target.value)}
-                  />
-                  <TextField
-                    sx={{ marginTop: 1, minWidth: 210 }}
-                    autoComplete='off'
-                    id="standard-basic"
-                    variant="outlined"
-                    type="text"
-                    label="Đơn vị tiêm mũi 1"
-                    className="addInfo-findWithPhone"
-                    value={injectPerson1}
-                    onChange={(e) => setInjectPerson1(e.target.value)}
-                  />
-                </Stack>
-              </Grid>
-
-              <Grid item md={4}>
-                <Stack>
-                  <FormControl
-                    variant="outlined"
-                    sx={{ marginTop: 1, minWidth: 210 }}
+                    <Grid item md={6}>
+                      {" "}
+                      <Stack>
+                        <FormControl
+                          variant="outlined"
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                        >
+                          <InputLabel id="demo-simple-select-label">
+                            Mũi 1
+                          </InputLabel>
+                          <Select
+                            label={"Mũi 1"}
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            onChange={(e) => setVaccineType1(e.target.value)}
+                            value={vaccineType1}
+                          >
+                            <MenuItem value="" disabled>
+                              Chọn loại vaccine
+                            </MenuItem>
+                            <MenuItem value="Nanocovax">Nanocovax</MenuItem>
+                            <MenuItem value="Pfizer-BioNTech">
+                              Pfizer-BioNTech
+                            </MenuItem>
+                            <MenuItem value="AstraZeneca">AstraZeneca</MenuItem>
+                            <MenuItem value="Moderna">Moderna</MenuItem>
+                          </Select>
+                        </FormControl>
+                        <TextField
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                          id="standard-basic"
+                          helperText="Ngày tiêm mũi 1"
+                          variant="outlined"
+                          type="date"
+                          className="register-dob"
+                          value={injectDate1}
+                          onChange={(e) => setInjectDate1(e.target.value)}
+                        />
+                        <TextField
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                          autoComplete="off"
+                          id="standard-basic"
+                          variant="outlined"
+                          type="text"
+                          label="Đơn vị tiêm mũi 1"
+                          className="addInfo-findWithPhone"
+                          value={injectPerson1}
+                          onChange={(e) => setInjectPerson1(e.target.value)}
+                        />
+                      </Stack>
+                    </Grid>
+                    <Grid item md={6}>
+                      <Stack>
+                        <FormControl
+                          variant="outlined"
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                        >
+                          <InputLabel id="demo-simple-select-label">
+                            Mũi 2
+                          </InputLabel>
+                          <Select
+                            label={"Mũi 2"}
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            onChange={(e) => setVaccineType2(e.target.value)}
+                            value={vaccineType2}
+                          >
+                            <MenuItem value="Chưa tiêm" disabled>
+                              Chọn loại vaccine
+                            </MenuItem>
+                            <MenuItem value="Chưa tiêm">Chưa tiêm</MenuItem>
+                            <MenuItem value="Nanocovax">Nanocovax</MenuItem>
+                            <MenuItem value="Pfizer-BioNTech">
+                              Pfizer-BioNTech
+                            </MenuItem>
+                            <MenuItem value="AstraZeneca">AstraZeneca</MenuItem>
+                            <MenuItem value="Moderna">Moderna</MenuItem>
+                          </Select>
+                        </FormControl>
+                        <TextField
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                          id="standard-basic"
+                          helperText="Ngày tiêm mũi 2"
+                          variant="outlined"
+                          type="date"
+                          className="register-dob"
+                          value={injectDate2}
+                          onChange={(e) => setInjectDate2(e.target.value)}
+                        />
+                        <TextField
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                          id="standard-basic"
+                          variant="outlined"
+                          type="text"
+                          autoComplete="off"
+                          label="Đơn vị tiêm mũi 2"
+                          className="addInfo-findWithPhone"
+                          value={injectPerson2}
+                          onChange={(e) => setInjectPerson2(e.target.value)}
+                        />
+                      </Stack>
+                    </Grid>
+                  </Grid>
+                ) : (
+                  <></>
+                )}
+                {times === "3 mũi" ? (
+                  <Grid
+                    container
+                    spacing={3}
+                    justifyContent="center"
+                    alignItems="center"
                   >
-                    <InputLabel id="demo-simple-select-label">Mũi 2</InputLabel>
-                    <Select
-                      label={"Mũi 2"}
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      onChange={(e) => setVaccineType2(e.target.value)}
-                      value={vaccineType2}
-                    >
-                      <MenuItem value="Chưa tiêm" disabled>
-                        Chọn loại vaccine
-                      </MenuItem>
-                      <MenuItem value="Chưa tiêm">Chưa tiêm</MenuItem>
-                      <MenuItem value="Nanocovax">Nanocovax</MenuItem>
-                      <MenuItem value="Pfizer-BioNTech">Pfizer-BioNTech</MenuItem>
-                      <MenuItem value="AstraZeneca">AstraZeneca</MenuItem>
-                      <MenuItem value="Moderna">Moderna</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <TextField
-                    sx={{ marginTop: 1, minWidth: 210 }}
-                    id="standard-basic"
-                    helperText="Ngày tiêm mũi 2"
-                    variant="outlined"
-                    type="date"
-                    className="register-dob"
-                    value={injectDate2}
-                    onChange={(e) => setInjectDate2(e.target.value)}
-                  />
-                  <TextField
-                    sx={{ marginTop: 1, minWidth: 210 }}
-                    id="standard-basic"
-                    variant="outlined"
-                    type="text"
-                    autoComplete='off'
-                    label="Đơn vị tiêm mũi 2"
-                    className="addInfo-findWithPhone"
-                    value={injectPerson2}
-                    onChange={(e) => setInjectPerson2(e.target.value)}
-                  />
-                </Stack>
-              </Grid>
-              <Grid item md={4}>
-                <Stack>
-                  <FormControl
-                    variant="outlined"
-                    sx={{ marginTop: 1, minWidth: 210 }}
+                    <Grid item md={4}>
+                      {" "}
+                      <Stack>
+                        <FormControl
+                          variant="outlined"
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                        >
+                          <InputLabel id="demo-simple-select-label">
+                            Mũi 1
+                          </InputLabel>
+                          <Select
+                            label={"Mũi 1"}
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            onChange={(e) => setVaccineType1(e.target.value)}
+                            value={vaccineType1}
+                          >
+                            <MenuItem value="" disabled>
+                              Chọn loại vaccine
+                            </MenuItem>
+                            <MenuItem value="Nanocovax">Nanocovax</MenuItem>
+                            <MenuItem value="Pfizer-BioNTech">
+                              Pfizer-BioNTech
+                            </MenuItem>
+                            <MenuItem value="AstraZeneca">AstraZeneca</MenuItem>
+                            <MenuItem value="Moderna">Moderna</MenuItem>
+                          </Select>
+                        </FormControl>
+                        <TextField
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                          id="standard-basic"
+                          helperText="Ngày tiêm mũi 1"
+                          variant="outlined"
+                          type="date"
+                          className="register-dob"
+                          value={injectDate1}
+                          onChange={(e) => setInjectDate1(e.target.value)}
+                        />
+                        <TextField
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                          autoComplete="off"
+                          id="standard-basic"
+                          variant="outlined"
+                          type="text"
+                          label="Đơn vị tiêm mũi 1"
+                          className="addInfo-findWithPhone"
+                          value={injectPerson1}
+                          onChange={(e) => setInjectPerson1(e.target.value)}
+                        />
+                      </Stack>
+                    </Grid>
+                    <Grid item md={4}>
+                      <Stack>
+                        <FormControl
+                          variant="outlined"
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                        >
+                          <InputLabel id="demo-simple-select-label">
+                            Mũi 2
+                          </InputLabel>
+                          <Select
+                            label={"Mũi 2"}
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            onChange={(e) => setVaccineType2(e.target.value)}
+                            value={vaccineType2}
+                          >
+                            <MenuItem value="Chưa tiêm" disabled>
+                              Chọn loại vaccine
+                            </MenuItem>
+                            <MenuItem value="Chưa tiêm">Chưa tiêm</MenuItem>
+                            <MenuItem value="Nanocovax">Nanocovax</MenuItem>
+                            <MenuItem value="Pfizer-BioNTech">
+                              Pfizer-BioNTech
+                            </MenuItem>
+                            <MenuItem value="AstraZeneca">AstraZeneca</MenuItem>
+                            <MenuItem value="Moderna">Moderna</MenuItem>
+                          </Select>
+                        </FormControl>
+                        <TextField
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                          id="standard-basic"
+                          helperText="Ngày tiêm mũi 2"
+                          variant="outlined"
+                          type="date"
+                          className="register-dob"
+                          value={injectDate2}
+                          onChange={(e) => setInjectDate2(e.target.value)}
+                        />
+                        <TextField
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                          id="standard-basic"
+                          variant="outlined"
+                          type="text"
+                          autoComplete="off"
+                          label="Đơn vị tiêm mũi 2"
+                          className="addInfo-findWithPhone"
+                          value={injectPerson2}
+                          onChange={(e) => setInjectPerson2(e.target.value)}
+                        />
+                      </Stack>
+                    </Grid>
+                    <Grid item md={4}>
+                      <Stack>
+                        <FormControl
+                          variant="outlined"
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                        >
+                          <InputLabel id="demo-simple-select-label">
+                            Mũi 3
+                          </InputLabel>
+                          <Select
+                            label={"Mũi 3"}
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            onChange={(e) => setVaccineType3(e.target.value)}
+                            value={vaccineType3}
+                          >
+                            <MenuItem value="Chưa tiêm" disabled>
+                              Chọn loại vaccine
+                            </MenuItem>
+                            <MenuItem value="Chưa tiêm">Chưa tiêm</MenuItem>
+                            <MenuItem value="Nanocovax">Nanocovax</MenuItem>
+                            <MenuItem value="Pfizer-BioNTech">
+                              Pfizer-BioNTech
+                            </MenuItem>
+                            <MenuItem value="AstraZeneca">AstraZeneca</MenuItem>
+                            <MenuItem value="Moderna">Moderna</MenuItem>
+                          </Select>
+                        </FormControl>
+                        <TextField
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                          id="standard-basic"
+                          helperText="Ngày tiêm mũi 3"
+                          variant="outlined"
+                          type="date"
+                          className="register-dob"
+                          value={injectDate3}
+                          onChange={(e) => setInjectDate3(e.target.value)}
+                        />
+                        <TextField
+                          sx={{ marginTop: 1, minWidth: 210 }}
+                          id="standard-basic"
+                          variant="outlined"
+                          type="text"
+                          autoComplete="off"
+                          label="Đơn vị tiêm mũi 3"
+                          className="addInfo-findWithPhone"
+                          value={injectPerson3}
+                          onChange={(e) => setInjectPerson3(e.target.value)}
+                        />
+                      </Stack>
+                    </Grid>
+                  </Grid>
+                ) : (
+                  <></>
+                )}
+                <Stack sx={{ alignItems: "center" }}>
+                  <Button
+                    variant="contained"
+                    component="label"
+                    className="addInfo-button"
+                    sx={{ width: 120, marginTop: 4 }}
+                    color="info"
                   >
-                    <InputLabel id="demo-simple-select-label">Mũi 3</InputLabel>
-                    <Select
-                      label={"Mũi 3"}
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      onChange={(e) => setVaccineType3(e.target.value)}
-                      value={vaccineType3}
-                    >
-                      <MenuItem value="Chưa tiêm" disabled>
-                        Chọn loại vaccine
-                      </MenuItem>
-                      <MenuItem value="Chưa tiêm">Chưa tiêm</MenuItem>
-                      <MenuItem value="Nanocovax">Nanocovax</MenuItem>
-                      <MenuItem value="Pfizer-BioNTech">Pfizer-BioNTech</MenuItem>
-                      <MenuItem value="AstraZeneca">AstraZeneca</MenuItem>
-                      <MenuItem value="Moderna">Moderna</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <TextField
-                    sx={{ marginTop: 1, minWidth: 210 }}
-                    id="standard-basic"
-                    helperText="Ngày tiêm mũi 3"
-                    variant="outlined"
-                    type="date"
-                    className="register-dob"
-                    value={injectDate3}
-                    onChange={(e) => setInjectDate3(e.target.value)}
-                  />
-                  <TextField
-                    sx={{ marginTop: 1, minWidth: 210 }}
-                    id="standard-basic"
-                    variant="outlined"
-                    type="text"
-                    autoComplete='off'
-                    label="Đơn vị tiêm mũi 3"
-                    className="addInfo-findWithPhone"
-                    value={injectPerson3}
-                    onChange={(e) => setInjectPerson3(e.target.value)}
-                  />
+                    Tải ảnh lên
+                    <input
+                      hidden
+                      accept="image/*"
+                      multiple
+                      type="file"
+                      onChange={(e) => setImageUpload(e.target.files[0])}
+                    />
+                  </Button>
+                  <Typography sx={{ marginTop: 1 }}>
+                    {imageUpload?.name}
+                  </Typography>
                 </Stack>
-              </Grid>
-            </Grid>
-            <Stack sx={{ alignItems: "center" }}>
-              <Button
-                variant="contained"
-                component="label"
-                className="addInfo-button"
-                sx={{ width: 120, marginTop: 4 }}
-                color="info"
-              >
-                Tải ảnh lên
-                <input
-                  hidden
-                  accept="image/*"
-                  multiple
-                  type="file"
-                  onChange={(e) => setImageUpload(e.target.files[0])}
-                />
-              </Button>
-              <Typography sx={{ marginTop: 1 }}>{imageUpload?.name}</Typography>
-            </Stack>
-            <Stack sx={{ marginTop: 5, justifyContent: 'flex-end' }}>
-              <Button
-                variant="contained"
-                type="submit"
-                onClick={submitInfoHanlder}
-                color="error"
-              >
-                Gửi yêu cầu
-              </Button>
-            </Stack>
+                <Stack sx={{ marginTop: 5, justifyContent: "flex-end" }}>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    onClick={submitInfoHanlder}
+                    color="error"
+                  >
+                    Gửi yêu cầu
+                  </Button>
+                </Stack>
+              </Stack>
+            )}
           </CardContent>
         </Card>
       ) : (

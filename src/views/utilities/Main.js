@@ -304,7 +304,7 @@ const Main = () => {
                           <TextField
                             className={classes.textField}
                             label=" Đơn vị tiêm: "
-                            value={injectionInfo?.injectPerson3}
+                            value={injectionInfo?.injectPerson2}
                             InputProps={{
                               readOnly: true,
                             }}
