@@ -12,7 +12,7 @@ import {
 } from "../../firebase/firebase";
 import { onSnapshot, doc, setDoc, orderBy, addDoc } from "@firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { Container, Card, Button, TextField, Stack, MenuItem, FormControl, Select, InputLabel, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Link, CardContent, Grid } from "@mui/material";
+import { Container, Card, Button, TextField, Stack, MenuItem, FormControl, Select, InputhelperText, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Link, CardContent, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 const ConfirmChange = () => {
@@ -52,7 +52,7 @@ const ConfirmChange = () => {
       marginBottom: '30px'
     },
     textField: {
-      marginBottom: '38px'
+      marginBottom: '20px'
     }
   }));
   const classes = useStyles();
@@ -189,7 +189,7 @@ const ConfirmChange = () => {
                   {injectInfo?.numberOfInjections === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Số mũi đã tiêm:"
+                      helperText="Số mũi đã tiêm:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -200,7 +200,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Số mũi đã tiêm:"
+                      helperText="Số mũi đã tiêm:"
                       value={injectInfo?.numberOfInjections}
                       InputProps={{
                         readOnly: true,
@@ -212,7 +212,7 @@ const ConfirmChange = () => {
                   {injectInfo?.firstDose === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Mũi số 1:"
+                      helperText="Mũi số 1:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -223,7 +223,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Mũi số 1:"
+                      helperText="Mũi số 1:"
                       value={injectInfo?.firstDose}
                       InputProps={{
                         readOnly: true,
@@ -235,7 +235,7 @@ const ConfirmChange = () => {
                   {injectInfo?.injectDate1 === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Ngày tiêm mũi 1:"
+                      helperText="Ngày tiêm mũi 1:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -246,7 +246,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Ngày tiêm mũi 1:"
+                      helperText="Ngày tiêm mũi 1:"
                       value={injectInfo?.injectDate1}
                       InputProps={{
                         readOnly: true,
@@ -258,7 +258,7 @@ const ConfirmChange = () => {
                   {injectInfo?.injectPerson1 === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Đơn vị tiêm mũi 1: "
+                      helperText="Đơn vị tiêm mũi 1: "
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -269,7 +269,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Đơn vị tiêm mũi 1: "
+                      helperText="Đơn vị tiêm mũi 1: "
                       value={injectInfo?.injectPerson1}
                       InputProps={{
                         readOnly: true,
@@ -281,7 +281,7 @@ const ConfirmChange = () => {
                   {injectInfo?.secondDose === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Mũi số 2: "
+                      helperText="Mũi số 2: "
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -292,7 +292,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Mũi số 2: "
+                      helperText="Mũi số 2: "
                       value={injectInfo?.secondDose}
                       InputProps={{
                         readOnly: true,
@@ -304,7 +304,7 @@ const ConfirmChange = () => {
                   {injectInfo?.injectDate2 === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Ngày tiêm mũi 2: "
+                      helperText="Ngày tiêm mũi 2: "
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -315,7 +315,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Ngày tiêm mũi 2: "
+                      helperText="Ngày tiêm mũi 2: "
                       value={injectInfo?.injectDate2}
                       InputProps={{
                         readOnly: true,
@@ -327,7 +327,7 @@ const ConfirmChange = () => {
                   {injectInfo?.injectPerson2 === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Đơn vị tiêm mũi 2: "
+                      helperText="Đơn vị tiêm mũi 2: "
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -338,7 +338,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Đơn vị tiêm mũi 2: "
+                      helperText="Đơn vị tiêm mũi 2: "
                       value={injectInfo?.injectPerson2}
                       InputProps={{
                         readOnly: true,
@@ -350,7 +350,7 @@ const ConfirmChange = () => {
                   {injectInfo?.thirdDose === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Mũi số 3: "
+                      helperText="Mũi số 3: "
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -361,7 +361,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Mũi số 3: "
+                      helperText="Mũi số 3: "
                       value={injectInfo?.thirdDose}
                       InputProps={{
                         readOnly: true,
@@ -373,7 +373,7 @@ const ConfirmChange = () => {
                   {injectInfo?.injectDate3 === "" ? (
                     <TextField
                       className={classes.textField}
-                      label=" Ngày tiêm mũi 3:"
+                      helperText=" Ngày tiêm mũi 3:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -384,7 +384,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label=" Ngày tiêm mũi 3: "
+                      helperText=" Ngày tiêm mũi 3: "
                       value={injectInfo?.injectDate3}
                       InputProps={{
                         readOnly: true,
@@ -396,7 +396,7 @@ const ConfirmChange = () => {
                   {injectInfo?.injectPerson3 === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Đơn vị tiêm mũi 3:"
+                      helperText="Đơn vị tiêm mũi 3:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -407,7 +407,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Đơn vị tiêm mũi 3: "
+                      helperText="Đơn vị tiêm mũi 3: "
                       value={injectInfo?.injectPerson3}
                       InputProps={{
                         readOnly: true,
@@ -422,7 +422,7 @@ const ConfirmChange = () => {
                   {requestInfo?.numberOfInjections === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Số mũi đã tiêm:"
+                      helperText="Số mũi đã tiêm:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -433,7 +433,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Số mũi đã tiêm:"
+                      helperText="Số mũi đã tiêm:"
                       value={requestInfo?.numberOfInjections}
                       InputProps={{
                         readOnly: true,
@@ -445,7 +445,7 @@ const ConfirmChange = () => {
                   {requestInfo?.firstDose === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Mũi số 1:"
+                      helperText="Mũi số 1:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -456,7 +456,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Mũi số 1:"
+                      helperText="Mũi số 1:"
                       value={requestInfo?.firstDose}
                       InputProps={{
                         readOnly: true,
@@ -468,7 +468,7 @@ const ConfirmChange = () => {
                   {requestInfo?.injectDate1 === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Ngày tiêm mũi 1:"
+                      helperText="Ngày tiêm mũi 1:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -479,7 +479,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Ngày tiêm mũi 1:"
+                      helperText="Ngày tiêm mũi 1:"
                       value={requestInfo?.injectDate1}
                       InputProps={{
                         readOnly: true,
@@ -491,7 +491,7 @@ const ConfirmChange = () => {
                   {requestInfo?.injectPerson1 === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Đơn vị tiêm mũi 1:"
+                      helperText="Đơn vị tiêm mũi 1:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -502,7 +502,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Đơn vị tiêm mũi 1:"
+                      helperText="Đơn vị tiêm mũi 1:"
                       value={requestInfo?.injectPerson1}
                       InputProps={{
                         readOnly: true,
@@ -514,7 +514,7 @@ const ConfirmChange = () => {
                   {requestInfo?.secondDose === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Mũi số 2:"
+                      helperText="Mũi số 2:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -525,7 +525,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Mũi số 2:"
+                      helperText="Mũi số 2:"
                       value={requestInfo?.secondDose}
                       InputProps={{
                         readOnly: true,
@@ -537,7 +537,7 @@ const ConfirmChange = () => {
                   {requestInfo?.injectDate2 === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Ngày tiêm mũi 2:"
+                      helperText="Ngày tiêm mũi 2:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -548,7 +548,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Ngày tiêm mũi 2:"
+                      helperText="Ngày tiêm mũi 2:"
                       value={requestInfo?.injectDate2}
                       InputProps={{
                         readOnly: true,
@@ -560,7 +560,7 @@ const ConfirmChange = () => {
                   {requestInfo?.injectPerson2 === "" ? (
                     <TextField
                       className={classes.textField}
-                      label=" Đơn vị tiêm mũi 2:"
+                      helperText=" Đơn vị tiêm mũi 2:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -571,7 +571,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label=" Đơn vị tiêm mũi 2:"
+                      helperText=" Đơn vị tiêm mũi 2:"
                       value={requestInfo?.injectPerson2}
                       InputProps={{
                         readOnly: true,
@@ -583,7 +583,7 @@ const ConfirmChange = () => {
                   {requestInfo?.thirdDose === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Mũi số 3:"
+                      helperText="Mũi số 3:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -594,7 +594,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Mũi số 3:"
+                      helperText="Mũi số 3:"
                       value={requestInfo?.thirdDose}
                       InputProps={{
                         readOnly: true,
@@ -606,7 +606,7 @@ const ConfirmChange = () => {
                   {requestInfo?.injectDate3 === "" ? (
                     <TextField
                       className={classes.textField}
-                      label="Ngày tiêm mũi 3:"
+                      helperText="Ngày tiêm mũi 3:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -617,7 +617,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label="Ngày tiêm mũi 3:"
+                      helperText="Ngày tiêm mũi 3:"
                       value={requestInfo?.injectDate3}
                       InputProps={{
                         readOnly: true,
@@ -629,7 +629,7 @@ const ConfirmChange = () => {
                   {requestInfo?.injectPerson3 === "" ? (
                     <TextField
                       className={classes.textField}
-                      label=" Đơn vị tiêm mũi 3:"
+                      helperText=" Đơn vị tiêm mũi 3:"
                       value="Chưa có thông tin"
                       InputProps={{
                         readOnly: true,
@@ -640,7 +640,7 @@ const ConfirmChange = () => {
                   ) : (
                     <TextField
                       className={classes.textField}
-                      label=" Đơn vị tiêm mũi 3:"
+                      helperText=" Đơn vị tiêm mũi 3:"
                       value={requestInfo?.injectPerson3}
                       InputProps={{
                         readOnly: true,
@@ -690,7 +690,7 @@ const ConfirmChange = () => {
                       <TextField
                         margin="dense"
                         id="name"
-                        label="Nhập lí do"
+                        helperText="Nhập lí do"
                         type="text"
                         fullWidth
                         variant="standard"
@@ -714,7 +714,7 @@ const ConfirmChange = () => {
                     id="standard-basic"
                     variant="standard"
                     type="text"
-                    label="Tìm theo số điện thoại"
+                    helperText="Tìm theo số điện thoại"
                     className="addInfo-findWithPhone"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}

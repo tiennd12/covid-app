@@ -218,7 +218,6 @@ const RequestChange = () => {
                     id="standard=basic"
                     label="CMND/CCCD"
                     autoComplete="off"
-                    helperText=""
                     sx={{ margin: 1 }}
                     {...register("inputId", { required: "Nhập số CMND hoặc số CCCD" })}
                   />

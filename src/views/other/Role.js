@@ -35,9 +35,7 @@ import { AdminContext } from "../../context/adminContext";
 import { makeStyles } from "@mui/styles";
 
 import { IconSquareX } from "@tabler/icons";
-
 const AddRole = () => {
-  const { isAdmin } = useContext(AdminContext);
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("");
   const [roleSpecify, setRoleSpecify] = useState("");
@@ -56,7 +54,7 @@ const AddRole = () => {
 
   const [isAddRole, setIsAddRole] = useState(false);
   const [isDeleteRole, setIsDeleteRole] = useState(false);
-
+  const { isAdmin, setIsMod, setIsAdmin } = useContext(AdminContext);
   const navigate = useNavigate();
 
   const useStyles = makeStyles((theme) => ({
@@ -91,6 +89,12 @@ const AddRole = () => {
       onSnapshot(queryGetUserInfoByEmail(userEmail), (snapshot) => {
         snapshot.forEach((data) => setUserRole(data.data().assignedRole));
       });
+      if(userRole === 'admin') {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+        setIsMod(true);
+      }
     }
   });
 
@@ -110,6 +114,8 @@ const AddRole = () => {
           setInjectionInfo(data.data());
         });
       });
+
+
     }
   };
 
@@ -283,7 +289,7 @@ const AddRole = () => {
       )}
       <Card>
         {" "}
-        {userRole === "admin" ? (
+        {userRole === "admin" || userRole === "moderator"? (
           userInfo ? (
             <CardContent sx={{ textAlign: "center" }}>
               <Typography variant="h2" className={classes.header} gutterBottom>

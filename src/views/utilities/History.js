@@ -19,7 +19,7 @@ import {
 } from "../../firebase/firebase";
 
 import { onSnapshot, doc, setDoc, orderBy, getDocs } from "@firebase/firestore";
-import { Typography, Container, Stack, Card, CardContent, Box, Grid, Button } from "@mui/material";
+import { Typography, Container, Stack, Card, CardContent, Box, Grid, Button, TextField } from "@mui/material";
 
 import { Link as MUILink } from "@mui/material";
 
@@ -215,58 +215,88 @@ const History = () => {
                     <Stack>
                       {injectionInfo?.verifiedByAdmin ? (
                         <Stack>
-                          <Stack marginBottom={3}><Typography variant="h3" sx={{ color: 'green' }}>*Người dùng tự khai báo</Typography></Stack>
+                          <Typography variant="h3" sx={{ color: 'green', marginBottom: 3 }}>*Người dùng tự khai báo</Typography>
                           <Stack>
                             {injectionInfo?.infectedDate1 === "" ? (
                               ""
                             ) : (
-                              <Box spacing={2}>
-                                <Typography
-                                  variant="subtitle1"
-                                  gutterBottom
-                                >
-                                  Ngày nhiễm bệnh lần 1: {injectionInfo?.infectedDate1}
-                                </Typography>
-                                <Typography
-                                    variant="subtitle1"
-                                    gutterBottom
-                                  >
-                                    Ngày khỏi bệnh:{" "}
-                                    {injectionInfo?.curedDate1} {""}
-                                  </Typography>
-                                <Typography
-                                  variant="subtitle1"
-                                  gutterBottom
-                                >
-                                  Ghi chú: {injectionInfo?.infectedNote1}
-                                </Typography>
-                              </Box>
+                              <Stack spacing={2} sx={{ marginBottom: 5 }}>
+                                
+                                <TextField
+                                  sx={{ marginTop: 1, minWidth: 210 }}
+                                  helperText=" Ngày nhiễm bệnh lần 1:"
+                                  variant="outlined"
+                                  type="date"
+                                  className="register-dob"
+                                  value={injectionInfo?.infectedDate1}
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                />
+                                <TextField
+                                  sx={{ marginTop: 1, minWidth: 210 }}
+                                  helperText="Ngày khỏi bệnh:"
+                                  variant="outlined"
+                                  type="date"
+                                  className="register-dob"
+                                  value={injectionInfo?.curedDate1}
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                />
+                                <TextField
+                                  sx={{ marginTop: 1, minWidth: 210 }}
+                                  helperText="Ghi chú:"
+                                  variant="outlined"
+                                  type="text"
+                                  className="register-dob"
+                                  value={injectionInfo?.infectedNote1}
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                />
+                              </Stack>
                             )}
                           </Stack>
                           <Stack>
                             {injectionInfo?.infectedDate2 === "" ? (
                               ""
                             ) : (
-                              <Stack spacing={2}>
-                                <Typography
-                                  variant="subtitle1"
-                                  gutterBottom
-                                >
-                                  Ngày nhiễm bệnh lần 2: {injectionInfo?.infectedDate2}
-                                </Typography>
-                                <Typography
-                                    variant="subtitle1"
-                                    gutterBottom
-                                  >
-                                    Ngày khỏi bệnh:{" "}
-                                    {injectionInfo?.curedDate2} {""}
-                                  </Typography>
-                                <Typography
-                                  variant="subtitle1"
-                                  gutterBottom
-                                >
-                                  Ghi chú: {injectionInfo?.infectedNote2}
-                                </Typography>
+                              <Stack spacing={2} sx={{ marginBottom: 5 }}>
+                                
+                                <TextField
+                                  sx={{ marginTop: 1, minWidth: 210 }}
+                                  helperText=" Ngày nhiễm bệnh lần 2:"
+                                  variant="outlined"
+                                  type="date"
+                                  className="register-dob"
+                                  value={injectionInfo?.infectedDate2}
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                />
+                                <TextField
+                                  sx={{ marginTop: 1, minWidth: 210 }}
+                                  helperText="Ngày khỏi bệnh:"
+                                  variant="outlined"
+                                  type="date"
+                                  className="register-dob"
+                                  value={injectionInfo?.curedDate2}
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                />
+                                <TextField
+                                  sx={{ marginTop: 1, minWidth: 210 }}
+                                  helperText="Ghi chú:"
+                                  variant="outlined"
+                                  type="text"
+                                  className="register-dob"
+                                  value={injectionInfo?.infectedNote2}
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                />
                               </Stack>
                             )}
                           </Stack>
@@ -274,26 +304,41 @@ const History = () => {
                             {injectionInfo?.infectedDate3 === "" ? (
                               ""
                             ) : (
-                              <Stack spacing={2}>
-                                <Typography
-                                  variant="subtitle1"
-                                  gutterBottom
-                                >
-                                  Ngày nhiễm bệnh lần 3: {injectionInfo?.infectedDate3}
-                                </Typography>
-                                <Typography
-                                    variant="subtitle1"
-                                    gutterBottom
-                                  >
-                                    Ngày khỏi bệnh:{" "}
-                                    {injectionInfo?.curedDate3} {""}
-                                  </Typography>
-                                <Typography
-                                  variant="subtitle1"
-                                  gutterBottom
-                                >
-                                  Ghi chú: {injectionInfo?.infectedNote3}
-                                </Typography>
+                              <Stack spacing={2} sx={{ marginBottom: 5 }}>
+                                
+                                <TextField
+                                  sx={{ marginTop: 1, minWidth: 210 }}
+                                  helperText=" Ngày nhiễm bệnh lần 3:"
+                                  variant="outlined"
+                                  type="date"
+                                  className="register-dob"
+                                  value={injectionInfo?.infectedDate3}
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                />
+                                <TextField
+                                  sx={{ marginTop: 1, minWidth: 210 }}
+                                  helperText="Ngày khỏi bệnh:"
+                                  variant="outlined"
+                                  type="date"
+                                  className="register-dob"
+                                  value={injectionInfo?.curedDate3}
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                />
+                                <TextField
+                                  sx={{ marginTop: 1, minWidth: 210 }}
+                                  helperText="Ghi chú:"
+                                  variant="outlined"
+                                  type="text"
+                                  className="register-dob"
+                                  value={injectionInfo?.infectedNote3}
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                />
                               </Stack>
                             )}
                           </Stack>
@@ -301,32 +346,46 @@ const History = () => {
                       ) : (
                         <Stack>
                           <Stack marginBottom={3}>
-                            <Typography variant="h3" sx={{ color: 'red' }}>*Người dùng tự khai báo</Typography>
+                            <Typography variant="h3" sx={{ color: 'red', marginBottom: 3 }}>*Người dùng tự khai báo</Typography>
                             <Stack>
                               {injectionInfo?.infectedDate1 === "" ? (
                                 ""
                               ) : (
-                                <Stack spacing={2}>
-                                  <Typography
-                                    variant="subtitle1"
-                                    gutterBottom
-                                  >
-                                    Ngày nhiễm bệnh lần 1:{" "}
-                                    {injectionInfo?.infectedDate1} {""}
-                                  </Typography>
-                                  <Typography
-                                    variant="subtitle1"
-                                    gutterBottom
-                                  >
-                                    Ngày khỏi bệ:{" "}
-                                    {injectionInfo?.curedDate1} {""}
-                                  </Typography>
-                                  <Typography
-                                    variant="subtitle1"
-                                    gutterBottom
-                                  >
-                                    Ghi chú: {injectionInfo?.infectedNote1}
-                                  </Typography>
+                                <Stack spacing={2} sx={{ marginBottom: 5 }}>
+                                  
+                                  <TextField
+                                    sx={{ marginTop: 1, minWidth: 210 }}
+                                    helperText=" Ngày nhiễm bệnh lần 1:"
+                                    variant="outlined"
+                                    type="date"
+                                    className="register-dob"
+                                    value={injectionInfo?.infectedDate1}
+                                    InputProps={{
+                                      readOnly: true,
+                                    }}
+                                  />
+                                  <TextField
+                                    sx={{ marginTop: 1, minWidth: 210 }}
+                                    helperText="Ngày khỏi bệnh:"
+                                    variant="outlined"
+                                    type="date"
+                                    className="register-dob"
+                                    value={injectionInfo?.curedDate1}
+                                    InputProps={{
+                                      readOnly: true,
+                                    }}
+                                  />
+                                  <TextField
+                                    sx={{ marginTop: 1, minWidth: 210 }}
+                                    helperText="Ghi chú:"
+                                    variant="outlined"
+                                    type="text"
+                                    className="register-dob"
+                                    value={injectionInfo?.infectedNote1}
+                                    InputProps={{
+                                      readOnly: true,
+                                    }}
+                                  />
                                 </Stack>
                               )}
                             </Stack>
@@ -334,27 +393,41 @@ const History = () => {
                               {injectionInfo?.infectedDate2 === "" ? (
                                 ""
                               ) : (
-                                <Stack spacing={2}>
-                                  <Typography
-                                    variant="subtitle1"
-                                    gutterBottom
-                                  >
-                                    Ngày nhiễm bệnh lần 2:{" "}
-                                    {injectionInfo?.infectedDate2} {""}
-                                  </Typography>
-                                  <Typography
-                                    variant="subtitle1"
-                                    gutterBottom
-                                  >
-                                    Ngày khỏi bệnh:{" "}
-                                    {injectionInfo?.curedDate2} {""}
-                                  </Typography>
-                                  <Typography
-                                    variant="subtitle1"
-                                    gutterBottom
-                                  >
-                                    Ghi chú: {injectionInfo?.infectedNote2}
-                                  </Typography>
+                                <Stack spacing={2} sx={{ marginBottom: 5 }}>
+                                  
+                                  <TextField
+                                    sx={{ marginTop: 1, minWidth: 210 }}
+                                    helperText=" Ngày nhiễm bệnh lần 2:"
+                                    variant="outlined"
+                                    type="date"
+                                    className="register-dob"
+                                    value={injectionInfo?.infectedDate2}
+                                    InputProps={{
+                                      readOnly: true,
+                                    }}
+                                  />
+                                  <TextField
+                                    sx={{ marginTop: 1, minWidth: 210 }}
+                                    helperText="Ngày khỏi bệnh:"
+                                    variant="outlined"
+                                    type="date"
+                                    className="register-dob"
+                                    value={injectionInfo?.curedDate2}
+                                    InputProps={{
+                                      readOnly: true,
+                                    }}
+                                  />
+                                  <TextField
+                                    sx={{ marginTop: 1, minWidth: 210 }}
+                                    helperText="Ghi chú:"
+                                    variant="outlined"
+                                    type="text"
+                                    className="register-dob"
+                                    value={injectionInfo?.infectedNote2}
+                                    InputProps={{
+                                      readOnly: true,
+                                    }}
+                                  />
                                 </Stack>
                               )}
                             </Stack>
@@ -362,27 +435,41 @@ const History = () => {
                               {injectionInfo?.infectedDate3 === "" ? (
                                 ""
                               ) : (
-                                <Stack spacing={2}>
-                                  <Typography
-                                    variant="subtitle1"
-                                    gutterBottom
-                                  >
-                                    Ngày nhiễm bệnh lần 3:{" "}
-                                    {injectionInfo?.infectedDate3} {""}
-                                  </Typography>
-                                  <Typography
-                                    variant="subtitle1"
-                                    gutterBottom
-                                  >
-                                    Ngày khỏi bệnh:{" "}
-                                    {injectionInfo?.curedDate3} {""}
-                                  </Typography>
-                                  <Typography
-                                    variant="subtitle1"
-                                    gutterBottom
-                                  >
-                                    Ghi chú: {injectionInfo?.infectedNote3}
-                                  </Typography>
+                                <Stack spacing={2} sx={{ marginBottom: 5 }}>
+                                  
+                                  <TextField
+                                    sx={{ marginTop: 1, minWidth: 210 }}
+                                    helperText=" Ngày nhiễm bệnh lần 3:"
+                                    variant="outlined"
+                                    type="date"
+                                    className="register-dob"
+                                    value={injectionInfo?.infectedDate3}
+                                    InputProps={{
+                                      readOnly: true,
+                                    }}
+                                  />
+                                  <TextField
+                                    sx={{ marginTop: 1, minWidth: 210 }}
+                                    helperText="Ngày khỏi bệnh:"
+                                    variant="outlined"
+                                    type="date"
+                                    className="register-dob"
+                                    value={injectionInfo?.curedDate3}
+                                    InputProps={{
+                                      readOnly: true,
+                                    }}
+                                  />
+                                  <TextField
+                                    sx={{ marginTop: 1, minWidth: 210 }}
+                                    helperText="Ghi chú:"
+                                    variant="outlined"
+                                    type="text"
+                                    className="register-dob"
+                                    value={injectionInfo?.infectedNote3}
+                                    InputProps={{
+                                      readOnly: true,
+                                    }}
+                                  />
                                 </Stack>
                               )}
                             </Stack>

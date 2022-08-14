@@ -46,7 +46,7 @@ import { AdminContext } from '../../../../context/adminContext';
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
-    const { setIsUser, setIsAdmin } = useContext(AdminContext);
+    const { setIsUser, setIsAdmin, setIsMod } = useContext(AdminContext);
     const theme = useTheme();
     const customization = useSelector((state) => state.customization);
     const navigate = useNavigate();
@@ -122,6 +122,7 @@ const ProfileSection = () => {
                 setIsLoggedIn(null);
                 setIsUser(false);
                 setIsAdmin(false);
+                setIsMod(false);
             }
         });
 
