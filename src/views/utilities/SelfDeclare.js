@@ -97,8 +97,8 @@ const SelfDeclare = () => {
 
   const submitSelfDeclareHandler = (e) => {
     e.preventDefault();
-    setDoc(doc(db, "selfDeclareData", declareRefId), {
-      ...declareRefInfo,
+    setDoc(doc(db, "injectionData", injectRefId), {
+      ...injectRefInfo,
       infectedDate1: infectedDate1,
       infectedDate2: infectedDate2,
       infectedDate3: infectedDate3,
@@ -109,7 +109,8 @@ const SelfDeclare = () => {
       curedDate2,
       curedDate3,
       isCurrentlyInfected,
-
+      infectedTimes,
+      verifiedByAdmin: false,
     });
     // setDoc(doc(db, "injectionData", injectRefId), {
     //   ...declareRefInfo,
@@ -176,7 +177,7 @@ const SelfDeclare = () => {
         userRole === "moderator" ||
         userRole === "user" ? (
         <Card>
-          {declareRefInfo ? (
+          {injectRefInfo ? (
             <CardContent sx={{ textAlign: "center" }}>
               <Grid container spacing={2} >
                 <Grid item sm={6}>
@@ -205,20 +206,20 @@ const SelfDeclare = () => {
                     <Typography variant="h6" gutterBottom>
                       Lịch sử lây nhiễm
                     </Typography>
-                    {declareRefInfo.infectedTimes === "" ? (
+                    {injectRefInfo.infectedTimes === "" ? (
                       <Typography variant="subtitle1" gutterBottom>
                         <em>Bạn chưa từng nhiễm bệnh</em>
                       </Typography>
                     ) : (
                       <Stack>
-                        {declareRefInfo.infectedDate1 === "" ? (
+                        {injectRefInfo.infectedDate1 === "" ? (
                           <></>
                         ) : (
                           <>
                             <TextField
                               className={classes.textField}
                               label="Ngày nhiễm bệnh lần 1:"
-                              value={declareRefInfo.infectedDate1}
+                              value={injectRefInfo.infectedDate1}
                               InputProps={{
                                 readOnly: true,
                               }}
@@ -227,14 +228,14 @@ const SelfDeclare = () => {
                             <TextField
                               className={classes.textField}
                               label="Ngày khỏi bệnh:"
-                              value={declareRefInfo.curedDate1}
+                              value={injectRefInfo.curedDate1}
                               InputProps={{
                                 readOnly: true,
                               }}
                               fullWidth
                             />
                             <>
-                              {declareRefInfo.infectedNote1 === "" ? (
+                              {injectRefInfo.infectedNote1 === "" ? (
                                 <TextField
                                   className={classes.textField}
                                   label="Ghi chú"
@@ -248,7 +249,7 @@ const SelfDeclare = () => {
                                 <TextField
                                   className={classes.textField}
                                   label="Ghi chú:"
-                                  value={declareRefInfo.infectedNote1}
+                                  value={injectRefInfo.infectedNote1}
                                   InputProps={{
                                     readOnly: true,
                                   }}
@@ -265,7 +266,7 @@ const SelfDeclare = () => {
                             <TextField
                               className={classes.textField}
                               label="Ngày nhiễm bệnh lần 2:"
-                              value={declareRefInfo.infectedDate2}
+                              value={injectRefInfo.infectedDate2}
                               InputProps={{
                                 readOnly: true,
                               }}
@@ -274,14 +275,14 @@ const SelfDeclare = () => {
                             <TextField
                               className={classes.textField}
                               label="Ngày khỏi bệnh:"
-                              value={declareRefInfo.curedDate2}
+                              value={injectRefInfo.curedDate2}
                               InputProps={{
                                 readOnly: true,
                               }}
                               fullWidth
                             />
                             <>
-                              {declareRefInfo.infectedNote2 === "" ? (
+                              {injectRefInfo.infectedNote2 === "" ? (
                                 <TextField
                                   className={classes.textField}
                                   label="Không có"
@@ -294,7 +295,7 @@ const SelfDeclare = () => {
                                 <TextField
                                   className={classes.textField}
                                   label="Ghi chú:"
-                                  value={declareRefInfo.infectedNote2}
+                                  value={injectRefInfo.infectedNote2}
                                   InputProps={{
                                     readOnly: true,
                                   }}
@@ -304,14 +305,14 @@ const SelfDeclare = () => {
                             </>
                           </>
                         )}
-                        {declareRefInfo.infectedDate3 === "" ? (
+                        {injectRefInfo.infectedDate3 === "" ? (
                           ""
                         ) : (
                           <>
                             <TextField
                               className={classes.textField}
                               label="Ngày nhiễm bệnh lần 2:"
-                              value={declareRefInfo.infectedDate3}
+                              value={injectRefInfo.infectedDate3}
                               InputProps={{
                                 readOnly: true,
                               }}
@@ -320,14 +321,14 @@ const SelfDeclare = () => {
                             <TextField
                               className={classes.textField}
                               label="Ngày khỏi bệnh:"
-                              value={declareRefInfo.curedDate3}
+                              value={injectRefInfo.curedDate3}
                               InputProps={{
                                 readOnly: true,
                               }}
                               fullWidth
                             />
                             <>
-                              {declareRefInfo.infectedNote3 === "" ? (
+                              {injectRefInfo.infectedNote3 === "" ? (
                                 <TextField
                                   className={classes.textField}
                                   label="Không có"
@@ -340,7 +341,7 @@ const SelfDeclare = () => {
                                 <TextField
                                   className={classes.textField}
                                   label="Ghi chú:"
-                                  value={declareRefInfo.infectedNote3}
+                                  value={injectRefInfo.infectedNote3}
                                   InputProps={{
                                     readOnly: true,
                                   }}

@@ -281,7 +281,7 @@ const History = () => {
                           <div>
                             <Typography variant="h6" sx={{ color: 'red' }}>*Người dùng tự khai báo</Typography>
                             <div>
-                              {declareRefInfo?.infectedDate1 === "" ? (
+                              {injectionInfo?.infectedDate1 === "" ? (
                                 ""
                               ) : (
                                 <Stack spacing={2}>
@@ -290,19 +290,19 @@ const History = () => {
                                     gutterBottom
                                   >
                                     Ngày nhiễm bệnh lần 1:{" "}
-                                    {declareRefInfo?.infectedDate1} {""}
+                                    {injectionInfo?.infectedDate1} {""}
                                   </Typography>
                                   <Typography
                                     variant="subtitle1"
                                     gutterBottom
                                   >
-                                    Ghi chú: {declareRefInfo?.infectedNote1}
+                                    Ghi chú: {injectionInfo?.infectedNote1}
                                   </Typography>
                                 </Stack>
                               )}
                             </div>
                             <div>
-                              {declareRefInfo?.infectedDate2 === "" ? (
+                              {injectionInfo?.infectedDate2 === "" ? (
                                 ""
                               ) : (
                                 <Stack spacing={2}>
@@ -311,19 +311,19 @@ const History = () => {
                                     gutterBottom
                                   >
                                     Ngày nhiễm bệnh lần 2:{" "}
-                                    {declareRefInfo?.infectedDate2} {""}
+                                    {injectionInfo?.infectedDate2} {""}
                                   </Typography>
                                   <Typography
                                     variant="subtitle1"
                                     gutterBottom
                                   >
-                                    Ghi chú: {declareRefInfo?.infectedNote2}
+                                    Ghi chú: {injectionInfo?.infectedNote2}
                                   </Typography>
                                 </Stack>
                               )}
                             </div>
                             <div>
-                              {declareRefInfo?.infectedDate3 === "" ? (
+                              {injectionInfo?.infectedDate3 === "" ? (
                                 ""
                               ) : (
                                 <Stack spacing={2}>
@@ -332,13 +332,13 @@ const History = () => {
                                     gutterBottom
                                   >
                                     Ngày nhiễm bệnh lần 3:{" "}
-                                    {declareRefInfo?.infectedDate3} {""}
+                                    {injectionInfo?.infectedDate3} {""}
                                   </Typography>
                                   <Typography
                                     variant="subtitle1"
                                     gutterBottom
                                   >
-                                    Ghi chú: {declareRefInfo?.infectedNote3}
+                                    Ghi chú: {injectionInfo?.infectedNote3}
                                   </Typography>
                                 </Stack>
                               )}
