@@ -216,11 +216,11 @@ const Main = () => {
               {injectionInfo && (
                 <>
                   {!injectionInfo.dataSubmitted ? (
-                    <Stack sx={{ height: '80vh', textAlign: 'center' }}>
+                    <Stack sx={{ height: '75vh', textAlign: 'center' }}>
                       <Typography variant="h4" >
                         Chưa có dữ liệu tiêm chủng của bạn
                       </Typography>
-                      <Typography variant="subtitle1" gutterBottom>
+                      {/* <Typography variant="subtitle1" gutterBottom>
                         Để yêu cầu thay đổi thông tin, vui lòng bấm
                         <MUILink
                           to="/utils/injection-info-request"
@@ -231,7 +231,7 @@ const Main = () => {
                         >
                           <Button variant="outlined" color="error">vào đây</Button>
                         </MUILink>
-                      </Typography>
+                      </Typography> */}
                     </Stack>
                   ) : (
                     <Typography variant="h2" sx={{ textAlign: 'center' }} className={classes.title}>
