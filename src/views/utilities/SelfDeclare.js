@@ -322,7 +322,7 @@ const SelfDeclare = () => {
                           <>
                             <TextField
                               className={classes.textField}
-                              label="Ngày nhiễm bệnh lần 2:"
+                              label="Ngày nhiễm bệnh lần 3:"
                               value={injectRefInfo.infectedDate3}
                               InputProps={{
                                 readOnly: true,

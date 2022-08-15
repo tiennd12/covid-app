@@ -215,7 +215,7 @@ const History = () => {
                     <Stack>
                       {injectionInfo?.verifiedByAdmin ? (
                         <Stack>
-                          <Typography variant="h3" sx={{ color: 'green', marginBottom: 3 }}>*Người dùng tự khai báo</Typography>
+                          <Typography variant="h3" sx={{ color: 'green', marginBottom: 3 }}>Xác thực bởi người quản trị</Typography>
                           <Stack>
                             {injectionInfo?.infectedDate1 === "" ? (
                               ""

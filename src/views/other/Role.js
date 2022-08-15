@@ -54,7 +54,7 @@ const AddRole = () => {
 
   const [isAddRole, setIsAddRole] = useState(false);
   const [isDeleteRole, setIsDeleteRole] = useState(false);
-  const { isAdmin, setIsMod, setIsAdmin } = useContext(AdminContext);
+  const { isAdmin, setIsMod, setIsAdmin, setIsUser } = useContext(AdminContext);
   const navigate = useNavigate();
 
   const useStyles = makeStyles((theme) => ({
@@ -63,7 +63,7 @@ const AddRole = () => {
       textTransform: "uppercase",
     },
     textField: {
-      margin: "20px 0",
+      margin: "15px 0",
     },
     box: {
       border: "2px solid black",
@@ -91,9 +91,20 @@ const AddRole = () => {
       });
       if(userRole === 'admin') {
         setIsAdmin(true);
-      } else {
+        setIsMod(false);
+        setIsUser(false);
+      } else if(userRole === 'moderator') {
         setIsAdmin(false);
         setIsMod(true);
+        setIsUser(false);
+      } else if(userRole === 'user'){
+        setIsAdmin(false);
+        setIsMod(false);
+        setIsUser(true);
+      } else {
+        setIsAdmin(false);
+        setIsMod(false);
+        setIsUser(false);
       }
     }
   });
@@ -297,7 +308,7 @@ const AddRole = () => {
               </Typography>{" "}
               <TextField
                 className={classes.textField}
-                label="Họ và tên:"
+                helperText="Họ và tên:"
                 value={userInfo.name}
                 InputProps={{
                   readOnly: true,
@@ -307,7 +318,7 @@ const AddRole = () => {
               />
               <TextField
                 className={classes.textField}
-                label="Phân quyền:"
+                helperText="Phân quyền:"
                 value={userInfo.assignedRole}
                 InputProps={{
                   readOnly: true,
@@ -317,7 +328,7 @@ const AddRole = () => {
               />
               <TextField
                 className={classes.textField}
-                label="Vai trò:"
+                helperText="Vai trò:"
                 value={userInfo.department}
                 InputProps={{
                   readOnly: true,
