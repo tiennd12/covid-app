@@ -82,6 +82,18 @@ const InjectionInfoRequest = () => {
     }
   });
 
+  const checkExistenceHandler = async (e) => {
+    await onSnapshot(
+      queryGetUserInfoByPhone(injectionRequestRef, phone),
+      (snapshot) => {
+        snapshot.forEach((data) => {
+          setRequestInfo(data.data());
+          setRequestId(data.id);
+        });
+      }
+    );
+  }
+
   const submitInfoHanlder = (e) => {
     e.preventDefault();
     if (imageUpload === null) return;
@@ -151,28 +163,9 @@ const InjectionInfoRequest = () => {
       });
       setRequestUsers(users);
     });
-    if (requestUsers) {
-      onSnapshot(
-        queryGetUserInfoByPhone(injectionRequestRef, phone),
-        (snapshot) => {
-          snapshot.forEach((data) => {
-            setRequestInfo(data.data());
-            setRequestId(data.id);
-          });
-          if (snapshot._snapshot.docChanges.length === 0) {
-            addDoc(injectionRequestRef, {
-              phone: phone,
-              firstDose: "",
-              secondDose: "",
-              thirdDose: "",
-              numberOfInjections: "",
-              status: "none",
-              name: authInfo.name,
-            });
-          }
-        }
-      );
-    }
+      checkExistenceHandler()
+
+    console.log(requestId)
   }, [isLoggedIn, userId, requestId]);
 
   return (

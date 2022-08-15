@@ -88,12 +88,12 @@ const ConfirmChange = () => {
       infectedTimes: "",
       verifiedByAdmin: true,
       status: "approved",
-    });
+    }).then("Xác thực thành công");
     setOpen(false);
   };
   const handleCloseReject = (e) => {
     e.preventDefault();
-    setDoc(doc(db, "injectionRequestData", requestId), {
+     setDoc(doc(db, "injectionRequestData", requestId), {
       ...requestInfo,
       numberOfInjections: "",
       firstDose: "",

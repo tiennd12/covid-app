@@ -17,9 +17,10 @@ import {
   injectionRef,
   dataRef,
   selfDeclareRef,
+  injectionRequestRef,
 } from "../../firebase/firebase";
 
-import { onSnapshot, doc, setDoc, orderBy, getDocs } from "@firebase/firestore";
+import { onSnapshot, doc, setDoc, orderBy, getDocs, addDoc } from "@firebase/firestore";
 import { Typography, Stack, Container, Card, Box, CardContent, Button, Grid, TextField } from "@mui/material";
 import axios from "axios";
 
@@ -136,6 +137,25 @@ const Main = () => {
     e.preventDefault();
     setUserInfoQuery("");
   };
+  
+  const checkExistenceHandler = async (e) => {
+   await onSnapshot(
+      queryGetUserInfoByPhone(injectionRequestRef, phone),
+      (snapshot) => {
+        if (snapshot._snapshot.docChanges.length === 0) {
+          addDoc(injectionRequestRef, {
+            phone: phone,
+            firstDose: "",
+            secondDose: "",
+            thirdDose: "",
+            numberOfInjections: "",
+            status: "none",
+            name: authInfo.name,
+          });
+        }
+      }
+    );
+  }
 
   //axios
   const fetchCases = async () => {
@@ -366,7 +386,7 @@ const Main = () => {
                           component={RouterLink}
                           sx={{ fontWeight: 'bold', m: 1 }}
                         >
-                          <Button variant="outlined" color="error">vào đây</Button>
+                          <Button variant="outlined" color="error" onClick={checkExistenceHandler}>vào đây</Button>
                         </MUILink>
                       </Typography>
                     </Grid>
@@ -389,7 +409,7 @@ const Main = () => {
                         component={RouterLink}
                         sx={{ fontWeight: 'bold', m: 1 }}
                       >
-                        <Button variant="outlined" color="error">vào đây</Button>
+                        <Button variant="outlined" color="error" onClick={checkExistenceHandler}>vào đây</Button>
                       </MUILink>
                     </Typography>
                   </Grid>
