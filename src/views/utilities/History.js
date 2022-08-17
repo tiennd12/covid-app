@@ -216,6 +216,17 @@ const History = () => {
                       {injectionInfo?.verifiedByAdmin ? (
                         <Stack>
                           <Typography variant="h3" sx={{ color: 'green', marginBottom: 3 }}>Xác thực bởi người quản trị</Typography>
+                          <TextField
+                                  sx={{ marginTop: 1, minWidth: 210, marginBottom: 3 }}
+                                  helperText="Tình trạng nhiễm bệnh hiện tại"
+                                  variant="outlined"
+                                  type="text"
+                                  className="register-dob"
+                                  value={injectionInfo?.isCurrentlyInfected ? ("Đang nhiễm bệnh") :  ( "Không nhiễm bệnh")}
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                />
                           <Stack>
                             {injectionInfo?.infectedDate1 === "" ? (
                               ""
@@ -347,6 +358,17 @@ const History = () => {
                         <Stack>
                           <Stack marginBottom={3}>
                             <Typography variant="h3" sx={{ color: 'red', marginBottom: 3 }}>*Người dùng tự khai báo</Typography>
+                            <TextField
+                                  sx={{ marginTop: 1, minWidth: 210, marginBottom: 3 }}
+                                  helperText="Tình trạng nhiễm bệnh hiện tại"
+                                  variant="outlined"
+                                  type="text"
+                                  className="register-dob"
+                                  value={injectionInfo?.isCurrentlyInfected ? ("Đang nhiễm bệnh") :  ( "Không nhiễm bệnh")}
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                />
                             <Stack>
                               {injectionInfo?.infectedDate1 === "" ? (
                                 ""
